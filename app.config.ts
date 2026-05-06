@@ -41,6 +41,7 @@ const env = {
 const config: ExpoConfig = {
   name: env.appName,
   slug: env.appSlug,
+  description: "むすび島 - 数秘術占いサブスクアプリ",
   version: "1.0.0",
   orientation: "portrait",
   icon: "https://d2xsxph8kpxj0f.cloudfront.net/310519663461903953/jt3aebbKf6VPyyB8W9VSJZ/icon_a638cb05.png",
