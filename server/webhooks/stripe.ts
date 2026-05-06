@@ -4,9 +4,11 @@ import { eq } from 'drizzle-orm';
 import { db } from '../db/client';
 import { users } from '../db/schema';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
-  apiVersion: '2025-04-30.basil',
-});
+function getStripe(): Stripe {
+  return new Stripe(process.env.STRIPE_SECRET_KEY ?? '', {
+    apiVersion: '2025-04-30.basil',
+  });
+}
 
 export async function handleStripeWebhook(req: Request, res: Response): Promise<void> {
   const sig = req.headers['stripe-signature'];
@@ -19,6 +21,7 @@ export async function handleStripeWebhook(req: Request, res: Response): Promise<
 
   let event: Stripe.Event;
   try {
+    const stripe = getStripe();
     event = stripe.webhooks.constructEvent(req.body, sig, webhookSecret);
   } catch (err) {
     console.error('[Stripe Webhook] Signature verification failed:', err);

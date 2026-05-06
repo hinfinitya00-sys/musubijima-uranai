@@ -1,4 +1,6 @@
-import "dotenv/config";
+import { config } from "dotenv";
+config({ path: ".env.local" });
+config();
 import express from "express";
 import { createServer } from "http";
 import net from "net";
