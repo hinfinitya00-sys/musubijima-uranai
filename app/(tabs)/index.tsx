@@ -60,7 +60,7 @@ const FORTUNE_MENU: FortuneMenuItem[] = [
     emoji: '🌀',
     title: 'むすび族占い（相性）',
     description: '気になる人との相性を診断',
-    route: '/fortune/negative-god',
+    route: '/fortune/musubian',
     requiresPlan: true,
   },
   {
