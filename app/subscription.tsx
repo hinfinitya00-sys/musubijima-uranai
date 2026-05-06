@@ -20,7 +20,7 @@ const FEATURES = [
   { emoji: "✨", title: "ガイドからのメッセージ", desc: "あなたのガイドからの特別なメッセージが届きます" },
   { emoji: "📅", title: "占い履歴の保存", desc: "過去のカード占い結果をいつでも振り返れます" },
   { emoji: "🌟", title: "ポジティブな言葉だけ", desc: "気持ちが上がる言葉だけをお届けします" },
-  { emoji: "🏝️", title: "ありが島の世界観", desc: "4つの島（土・風・水・火）の神秘的な世界を体験" },
+  { emoji: "🏝️", title: "むすび島の世界観", desc: "4つの島（土・風・水・火）の神秘的な世界を体験" },
 ];
 
 export default function SubscriptionScreen() {
@@ -36,10 +36,10 @@ export default function SubscriptionScreen() {
       await subscribe();
       Alert.alert(
         "ご登録ありがとうございます！",
-        "月額会員へのご登録が完了しました。\nありが島の世界をお楽しみください ✨",
+        "月額会員へのご登録が完了しました。\nむすび島の世界をお楽しみください ✨",
         [
           {
-            text: "ありが島へ",
+            text: "むすび島へ",
             onPress: () => router.replace("/(tabs)"),
           },
         ]
@@ -70,7 +70,7 @@ export default function SubscriptionScreen() {
           {/* メインビジュアル */}
           <View style={styles.heroSection}>
             <Text style={styles.heroEmoji}>🏝️</Text>
-            <Text style={styles.heroTitle}>ありが島 月額会員</Text>
+            <Text style={styles.heroTitle}>むすび島 月額会員</Text>
             <Text style={styles.heroSubtitle}>
               毎日の占いで、あなたの可能性を{"\n"}最大限に引き出しましょう
             </Text>

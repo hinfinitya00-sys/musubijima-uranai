@@ -1,0 +1,145 @@
+export type Attribute = 'fire' | 'water' | 'wind' | 'earth';
+
+export interface CharacterData {
+  id: number;
+  name: string;
+  nameJa: string;
+  attribute: Attribute;
+  lifePathNumbers: number[];
+  description: string;
+  descriptionFull: string;
+  personality: string;
+}
+
+export const INITIAL_CHARACTERS: CharacterData[] = [
+  {
+    id: 1,
+    name: 'Gola',
+    nameJa: 'ゴーラ',
+    attribute: 'fire',
+    lifePathNumbers: [1],
+    description: '情熱的で行動力あふれるリーダー気質のキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはGola。火属性の情熱的なむすび族。リーダーシップと勇気を持ち、新しいことに果敢に挑戦する。',
+  },
+  {
+    id: 2,
+    name: 'Pooch',
+    nameJa: 'プーチ',
+    attribute: 'water',
+    lifePathNumbers: [2],
+    description: '繊細で協調性に優れた癒しのキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはPooch。水属性の穏やかなむすび族。共感力が高く、人と人をつなぐ架け橋となる。',
+  },
+  {
+    id: 3,
+    name: 'Geene',
+    nameJa: 'ジーン',
+    attribute: 'wind',
+    lifePathNumbers: [3],
+    description: '創造力豊かで表現力に満ちたキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはGeene。風属性の自由なむすび族。創造力と表現力で周囲を明るくする。',
+  },
+  {
+    id: 4,
+    name: 'Neo',
+    nameJa: 'ネオ',
+    attribute: 'earth',
+    lifePathNumbers: [4],
+    description: '堅実で安定感のある頼もしいキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはNeo。土属性の安定したむすび族。計画性と忍耐力で着実に夢を形にする。',
+  },
+  {
+    id: 5,
+    name: 'Gria',
+    nameJa: 'グリア',
+    attribute: 'fire',
+    lifePathNumbers: [5],
+    description: '冒険心旺盛で変化を楽しむキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはGria。火属性の冒険好きなむすび族。自由を愛し、多様な経験から知恵を得る。',
+  },
+  {
+    id: 6,
+    name: 'Pante',
+    nameJa: 'パンテ',
+    attribute: 'water',
+    lifePathNumbers: [6],
+    description: '愛情深く責任感の強い母性的なキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはPante。水属性の愛情深いむすび族。家族や仲間を大切にし、調和を保つ。',
+  },
+  {
+    id: 7,
+    name: 'Leesa',
+    nameJa: 'リーサ',
+    attribute: 'wind',
+    lifePathNumbers: [7],
+    description: '知性的で探究心旺盛な神秘的キャラクター',
+    descriptionFull: '',
+    personality: 'あなたはLeesa。風属性の知的なむすび族。深い洞察力と直感力で真理を探求する。',
+  },
+  {
+    id: 8,
+    name: 'Pallecia',
+    nameJa: 'パレシア',
+    attribute: 'earth',
+    lifePathNumbers: [8],
+    description: '野心的で実行力のあるパワフルなキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはPallecia。土属性のパワフルなむすび族。目標達成への強い意志と実行力を持つ。',
+  },
+  {
+    id: 9,
+    name: 'Jori',
+    nameJa: 'ジョリ',
+    attribute: 'fire',
+    lifePathNumbers: [9],
+    description: '博愛精神にあふれた思いやりのキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはJori。火属性の慈愛に満ちたむすび族。すべての人への思いやりと奉仕の心を持つ。',
+  },
+  {
+    id: 10,
+    name: 'Mirra',
+    nameJa: 'ミラ',
+    attribute: 'water',
+    lifePathNumbers: [10],
+    description: '直感力と感受性に優れた夢見るキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはMirra。水属性の直感的なむすび族。感性豊かに世界の美しさを見出す。',
+  },
+  {
+    id: 11,
+    name: 'Gre',
+    nameJa: 'グレ',
+    attribute: 'wind',
+    lifePathNumbers: [11],
+    description: 'マスターナンバー11。高い霊感と直感力を持つ特別なキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはGre。風属性のマスターむすび族。霊的な直感力と啓示の力を持ち、周囲を導く光となる。',
+  },
+  {
+    id: 12,
+    name: 'Coola',
+    nameJa: 'クーラ',
+    attribute: 'earth',
+    lifePathNumbers: [22],
+    description: 'マスターナンバー22。壮大なビジョンを現実化する力を持つキャラクター',
+    descriptionFull: '',
+    personality: 'あなたはCoola。土属性のマスターむすび族。大きな夢を現実の形にする建設者。',
+  },
+  {
+    id: 13,
+    name: 'Kastro',
+    nameJa: 'カストロ',
+    attribute: 'fire',
+    lifePathNumbers: [33],
+    description: 'マスターナンバー33。究極の愛と奉仕の精神を持つ最上位キャラクター',
+    descriptionFull: '',
+    personality: 'あなたはKastro。火属性のマスターむすび族。宇宙的な愛と叡智で全ての存在を照らす。',
+  },
+];

@@ -52,9 +52,9 @@ type AppAction =
 
 const TRIAL_DAYS = 7;
 const STORAGE_KEYS = {
-  PROFILE: "@arigajima/profile",
-  SUBSCRIPTION: "@arigajima/subscription",
-  READING_HISTORY: "@arigajima/reading_history",
+  PROFILE: "@musubijima/profile",
+  SUBSCRIPTION: "@musubijima/subscription",
+  READING_HISTORY: "@musubijima/reading_history",
 };
 
 function getTodayString(): string {

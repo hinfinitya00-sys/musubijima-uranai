@@ -136,19 +136,19 @@ export default function SettingsScreen() {
               <View style={styles.appInfoHeader}>
                 <Text style={styles.appInfoEmoji}>🏝️</Text>
                 <View>
-                  <Text style={styles.appInfoTitle}>ありが島 誕生日占い</Text>
+                  <Text style={styles.appInfoTitle}>むすび島 数秘術占い</Text>
                   <Text style={styles.appInfoVersion}>バージョン 1.0.0</Text>
                 </View>
               </View>
               <View style={styles.divider} />
               <Text style={styles.appInfoDescription}>
-                「ありが島誕生日占い」は、生年月日から算出したガイド数をもとに、
-                あなただけのガイドとつながり、毎日ポジティブなメッセージをお届けするアプリです。
+                「むすび島数秘術占い」は、生年月日から算出したライフパス数をもとに、
+                あなただけのむすび族キャラクターとつながり、毎日ポジティブなメッセージをお届けするアプリです。
               </Text>
               <View style={styles.divider} />
               <Text style={styles.copyrightText}>
-                占いコンテンツ：masajiart.gr.jp/arigajima{"\n"}
-                © 2024 ありが島 誕生日占い
+                占いコンテンツ：むすび島{"\n"}
+                © 2024 むすび島 数秘術占い
               </Text>
             </View>
           </View>

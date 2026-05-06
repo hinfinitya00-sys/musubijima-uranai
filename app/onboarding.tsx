@@ -112,7 +112,7 @@ export default function OnboardingScreen() {
           >
             <LinearGradient colors={["#F2D06B", "#E8A87C"] as const} style={styles.startButtonGradient}>
               <Text style={styles.startButtonText}>
-                {isLoading ? "設定中..." : "ありが島へ出発する ✨"}
+                {isLoading ? "設定中..." : "むすび島へ出発する ✨"}
               </Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -129,7 +129,7 @@ export default function OnboardingScreen() {
         {/* ロゴ・タイトル */}
         <View style={styles.logoSection}>
           <Text style={styles.logoEmoji}>🏝️</Text>
-          <Text style={styles.appTitle}>ありが島</Text>
+          <Text style={styles.appTitle}>むすび島</Text>
           <Text style={styles.appSubtitle}>誕生日占い</Text>
           <Text style={styles.appDescription}>
             生年月日から、あなただけのガイドを見つけましょう
