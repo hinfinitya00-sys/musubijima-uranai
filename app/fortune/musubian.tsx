@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import {
   View,
   Text,
-  TextInput,
   TouchableOpacity,
   ScrollView,
   StyleSheet,
@@ -14,6 +13,43 @@ import { LinearGradient } from 'expo-linear-gradient';
 const HEADER_IMG = 'https://musubijima.com/wp-content/uploads/2021/03/contents_header.jpg';
 import { calculateLifePathNumber, getCharacterIdByLifePath } from '@/lib/numerology';
 import { INITIAL_CHARACTERS } from '@/constants/characters';
+
+const years = Array.from({ length: 91 }, (_, i) => ({ value: String(1920 + i), label: `${1920 + i}年` }));
+const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
+const days = Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}日` }));
+
+function WebSelect({ value, onChange, items }: { value: string; onChange: (v: string) => void; items: { value: string; label: string }[] }) {
+  if (Platform.OS === 'web') {
+    return (
+      <select
+        value={value}
+        onChange={(e: any) => onChange(e.target.value)}
+        style={{
+          flex: 1,
+          backgroundColor: 'rgba(0,0,0,0.5)',
+          color: '#E5E7EB',
+          border: '1px solid rgba(196,181,253,0.4)',
+          borderRadius: 8,
+          padding: '10px 8px',
+          fontSize: 14,
+          cursor: 'pointer',
+          outline: 'none',
+        } as any}
+      >
+        {items.map((item) => (
+          <option key={item.value} value={item.value} style={{ background: '#0D0B1E' }}>
+            {item.label}
+          </option>
+        ))}
+      </select>
+    );
+  }
+  return (
+    <TouchableOpacity style={styles.nativePicker}>
+      <Text style={styles.nativePickerText}>{items.find(i => i.value === value)?.label ?? value}</Text>
+    </TouchableOpacity>
+  );
+}
 
 function getCompatibilityScore(lifePathA: number, lifePathB: number): number {
   const highCompat: Record<number, number[]> = {
@@ -51,9 +87,9 @@ function getCompatibilityMessage(score: number): string {
 }
 
 export default function MusubianScreen() {
-  const [partnerYear, setPartnerYear] = useState('');
-  const [partnerMonth, setPartnerMonth] = useState('');
-  const [partnerDay, setPartnerDay] = useState('');
+  const [partnerYear, setPartnerYear] = useState('1990');
+  const [partnerMonth, setPartnerMonth] = useState('1');
+  const [partnerDay, setPartnerDay] = useState('1');
   const [result, setResult] = useState<{
     myLifePath: number;
     partnerLifePath: number;
@@ -63,11 +99,7 @@ export default function MusubianScreen() {
     message: string;
   } | null>(null);
 
-  const isFormValid = partnerYear.length >= 4 && partnerMonth.length > 0 && partnerDay.length > 0;
-
   const handleDiagnose = () => {
-    if (!isFormValid) return;
-
     const partnerDate = new Date(
       parseInt(partnerYear),
       parseInt(partnerMonth) - 1,
@@ -75,7 +107,6 @@ export default function MusubianScreen() {
     );
     const partnerLifePath = calculateLifePathNumber(partnerDate);
 
-    // 自分は仮にライフパス3（本来はプロフィールから取得）
     const myLifePath = 3;
     const myCharId = getCharacterIdByLifePath(myLifePath);
     const partnerCharId = getCharacterIdByLifePath(partnerLifePath);
@@ -91,9 +122,9 @@ export default function MusubianScreen() {
 
   const handleReset = () => {
     setResult(null);
-    setPartnerYear('');
-    setPartnerMonth('');
-    setPartnerDay('');
+    setPartnerYear('1990');
+    setPartnerMonth('1');
+    setPartnerDay('1');
   };
 
   return (
@@ -119,64 +150,33 @@ export default function MusubianScreen() {
           <View style={styles.inputSection}>
             <Text style={styles.inputLabel}>相手の生年月日</Text>
             <View style={styles.dateRow}>
-              <TextInput
-                style={[styles.input, styles.yearInput]}
-                value={partnerYear}
-                onChangeText={setPartnerYear}
-                placeholder="1990"
-                placeholderTextColor="#6B7280"
-                keyboardType="numeric"
-                maxLength={4}
-              />
-              <Text style={styles.dateSeparator}>年</Text>
-              <TextInput
-                style={[styles.input, styles.smallInput]}
-                value={partnerMonth}
-                onChangeText={setPartnerMonth}
-                placeholder="1"
-                placeholderTextColor="#6B7280"
-                keyboardType="numeric"
-                maxLength={2}
-              />
-              <Text style={styles.dateSeparator}>月</Text>
-              <TextInput
-                style={[styles.input, styles.smallInput]}
-                value={partnerDay}
-                onChangeText={setPartnerDay}
-                placeholder="1"
-                placeholderTextColor="#6B7280"
-                keyboardType="numeric"
-                maxLength={2}
-              />
-              <Text style={styles.dateSeparator}>日</Text>
+              <WebSelect value={partnerYear} onChange={setPartnerYear} items={years} />
+              <View style={{ width: 8 }} />
+              <WebSelect value={partnerMonth} onChange={setPartnerMonth} items={months} />
+              <View style={{ width: 8 }} />
+              <WebSelect value={partnerDay} onChange={setPartnerDay} items={days} />
             </View>
 
             <TouchableOpacity
               style={styles.diagnoseButton}
               onPress={handleDiagnose}
-              disabled={!isFormValid}
               activeOpacity={0.7}
             >
               <LinearGradient
-                colors={isFormValid ? ['#7F77DD', '#6D28D9'] : ['#374151', '#1F2937']}
+                colors={['#7F77DD', '#6D28D9']}
                 style={styles.diagnoseButtonGradient}
               >
-                <Text style={[
-                  styles.diagnoseButtonText,
-                  !isFormValid && styles.diagnoseButtonTextDisabled,
-                ]}>相性を診断する</Text>
+                <Text style={styles.diagnoseButtonText}>相性を診断する</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
         ) : (
           <View style={styles.resultSection}>
-            {/* スコア */}
             <View style={styles.scoreContainer}>
               <Text style={styles.scoreLabel}>相性スコア</Text>
               <Text style={styles.scoreValue}>{result.score}%</Text>
             </View>
 
-            {/* キャラ比較 */}
             <View style={styles.characterComparison}>
               <View style={styles.characterBox}>
                 <Text style={styles.characterEmoji}>
@@ -203,7 +203,6 @@ export default function MusubianScreen() {
               </View>
             </View>
 
-            {/* メッセージ */}
             <View style={styles.messageCard}>
               <Text style={styles.messageText}>{result.message}</Text>
             </View>
@@ -229,23 +228,15 @@ const styles = StyleSheet.create({
   inputSection: { width: '100%', paddingHorizontal: 20 },
   inputLabel: { fontSize: 16, fontWeight: '600', color: '#E5E7EB', marginBottom: 12 },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  input: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 12,
-    padding: 14,
-    fontSize: 16,
-    color: '#fff',
-    borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.15)',
+  nativePicker: {
+    flex: 1, backgroundColor: 'rgba(255,255,255,0.08)',
+    borderRadius: 8, padding: 10, borderWidth: 1, borderColor: 'rgba(196,181,253,0.3)',
   },
-  yearInput: { flex: 2 },
-  smallInput: { flex: 1, marginLeft: 8 },
-  dateSeparator: { color: '#9CA3AF', marginHorizontal: 4, fontSize: 14 },
+  nativePickerText: { color: '#E5E7EB', fontSize: 14 },
   diagnoseButton: { borderRadius: 16, overflow: 'hidden' },
   diagnoseButtonGradient: { paddingVertical: 18, alignItems: 'center' },
   diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
-  diagnoseButtonTextDisabled: { color: '#6B7280' },
-  resultSection: { alignItems: 'center', width: '100%' },
+  resultSection: { alignItems: 'center', width: '100%', paddingHorizontal: 20 },
   scoreContainer: { alignItems: 'center', marginBottom: 24 },
   scoreLabel: { fontSize: 14, color: '#9CA3AF', marginBottom: 4 },
   scoreValue: { fontSize: 56, fontWeight: 'bold', color: '#E8C547' },
