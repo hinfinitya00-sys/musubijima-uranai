@@ -59,8 +59,10 @@ export default function MusubianScreen() {
     message: string;
   } | null>(null);
 
+  const isFormValid = partnerYear.length >= 4 && partnerMonth.length > 0 && partnerDay.length > 0;
+
   const handleDiagnose = () => {
-    if (!partnerYear || !partnerMonth || !partnerDay) return;
+    if (!isFormValid) return;
 
     const partnerDate = new Date(
       parseInt(partnerYear),
@@ -139,12 +141,19 @@ export default function MusubianScreen() {
             </View>
 
             <TouchableOpacity
-              style={[styles.diagnoseButton, (!partnerYear || !partnerMonth || !partnerDay) && styles.buttonDisabled]}
+              style={styles.diagnoseButton}
               onPress={handleDiagnose}
-              disabled={!partnerYear || !partnerMonth || !partnerDay}
+              disabled={!isFormValid}
+              activeOpacity={0.7}
             >
-              <LinearGradient colors={['#7F77DD', '#6D28D9']} style={styles.diagnoseButtonGradient}>
-                <Text style={styles.diagnoseButtonText}>相性を診断する</Text>
+              <LinearGradient
+                colors={isFormValid ? ['#7F77DD', '#6D28D9'] : ['#374151', '#1F2937']}
+                style={styles.diagnoseButtonGradient}
+              >
+                <Text style={[
+                  styles.diagnoseButtonText,
+                  !isFormValid && styles.diagnoseButtonTextDisabled,
+                ]}>相性を診断する</Text>
               </LinearGradient>
             </TouchableOpacity>
           </View>
@@ -221,9 +230,9 @@ const styles = StyleSheet.create({
   smallInput: { flex: 1, marginLeft: 8 },
   dateSeparator: { color: '#9CA3AF', marginHorizontal: 4, fontSize: 14 },
   diagnoseButton: { borderRadius: 16, overflow: 'hidden' },
-  buttonDisabled: { opacity: 0.5 },
   diagnoseButtonGradient: { paddingVertical: 18, alignItems: 'center' },
   diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
+  diagnoseButtonTextDisabled: { color: '#6B7280' },
   resultSection: { alignItems: 'center', width: '100%' },
   scoreContainer: { alignItems: 'center', marginBottom: 24 },
   scoreLabel: { fontSize: 14, color: '#9CA3AF', marginBottom: 4 },
