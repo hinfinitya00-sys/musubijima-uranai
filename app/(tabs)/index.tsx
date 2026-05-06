@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React from "react";
 import {
   View,
   Text,
@@ -77,13 +77,7 @@ export default function HomeScreen() {
   const { state, canReadToday, hasAccess } = useApp();
   const { profile, subscription, isLoading } = state;
 
-  useEffect(() => {
-    if (!isLoading && !profile?.setupCompleted) {
-      router.replace("/onboarding");
-    }
-  }, [isLoading, profile]);
-
-  if (isLoading || !profile) {
+  if (isLoading) {
     return (
       <LinearGradient colors={["#0D0B1E", "#1D1B4B"]} style={styles.loadingContainer}>
         <Text style={styles.loadingText}>✨ 読み込み中...</Text>
@@ -97,8 +91,9 @@ export default function HomeScreen() {
   const weekday = weekdays[today.getDay()];
 
   // キャラクター情報（ガイド数からむすび族を取得）
+  const guideNumber = profile?.guideNumber ?? 1;
   const character = INITIAL_CHARACTERS.find(c =>
-    c.lifePathNumbers.includes(profile.guideNumber)
+    c.lifePathNumbers.includes(guideNumber)
   ) ?? INITIAL_CHARACTERS[0];
 
   const hasSubscriptionAccess = hasAccess();

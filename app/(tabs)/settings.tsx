@@ -26,7 +26,7 @@ export default function SettingsScreen() {
       "誕生日を変更すると、ガイドが変わる場合があります。変更しますか？",
       [
         { text: "キャンセル", style: "cancel" },
-        { text: "変更する", onPress: () => router.push("/onboarding") },
+        { text: "変更する", onPress: () => router.push("/(auth)/register") },
       ]
     );
   };
