@@ -384,12 +384,9 @@ function HeaderImage() {
         src={HEADER_IMAGE_URL}
         alt="み・たまカード"
         style={{
-          width: width * 0.8,
-          maxWidth: 400,
-          height: 'auto',
-          borderRadius: 16,
-          marginBottom: 16,
-        }}
+          width: '100%',
+          display: 'block',
+        } as any}
       />
     );
   }
@@ -397,11 +394,9 @@ function HeaderImage() {
     <Image
       source={{ uri: HEADER_IMAGE_URL }}
       style={{
-        width: width * 0.8,
-        height: width * 0.4,
-        borderRadius: 16,
-        marginBottom: 16,
-        resizeMode: 'contain',
+        width: '100%',
+        height: 300,
+        resizeMode: 'cover',
       }}
     />
   );
@@ -593,7 +588,8 @@ const styles = StyleSheet.create({
     alignItems: 'center',
   },
   headerImageWrap: {
-    alignItems: 'center',
+    width: '100%',
+    backgroundColor: '#000',
     marginBottom: 8,
   },
   header: {
