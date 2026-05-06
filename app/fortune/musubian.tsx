@@ -6,8 +6,12 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Platform,
+  Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+const HEADER_IMG = 'https://musubijima.com/wp-content/uploads/2021/03/contents_header.jpg';
 import { calculateLifePathNumber, getCharacterIdByLifePath } from '@/lib/numerology';
 import { INITIAL_CHARACTERS } from '@/constants/characters';
 
@@ -95,12 +99,19 @@ export default function MusubianScreen() {
   return (
     <LinearGradient colors={['#0D0B1E', '#1D1B4B', '#0D0B1E']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+        {/* ヘッダー画像 */}
+        <View style={styles.heroContainer}>
+          {Platform.OS === 'web' ? (
+            <img src={HEADER_IMG} alt="むすび族占い" style={{ width: '100%', display: 'block' } as any} />
+          ) : (
+            <Image source={{ uri: HEADER_IMG }} style={styles.heroImage} resizeMode="cover" />
+          )}
+        </View>
+
         <View style={styles.header}>
-          <Text style={styles.headerEmoji}>🌀</Text>
-          <Text style={styles.title}>むすび族占い</Text>
+          <Text style={styles.title}>むすび族占い（相性診断）</Text>
           <Text style={styles.subtitle}>
-            相手の生年月日を入力して{'\n'}
-            むすび族同士の相性を診断しましょう
+            あなたと相手のむすびキャラの相性を診断します
           </Text>
         </View>
 
@@ -209,12 +220,13 @@ export default function MusubianScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { padding: 20, paddingTop: 60 },
-  header: { alignItems: 'center', marginBottom: 32 },
-  headerEmoji: { fontSize: 48, marginBottom: 8 },
+  scrollContent: { paddingBottom: 80 },
+  heroContainer: { width: '100%', backgroundColor: '#000' },
+  heroImage: { width: '100%', height: 200 },
+  header: { alignItems: 'center', marginBottom: 32, paddingHorizontal: 20, paddingTop: 24 },
   title: { fontSize: 28, fontWeight: 'bold', color: '#C4B5FD', marginBottom: 8 },
   subtitle: { fontSize: 14, color: '#9CA3AF', textAlign: 'center', lineHeight: 22 },
-  inputSection: { width: '100%' },
+  inputSection: { width: '100%', paddingHorizontal: 20 },
   inputLabel: { fontSize: 16, fontWeight: '600', color: '#E5E7EB', marginBottom: 12 },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   input: {

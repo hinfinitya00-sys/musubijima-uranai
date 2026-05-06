@@ -781,7 +781,7 @@ export default function OmikujiScreen() {
               {currentItem.subtitle && currentItem.subtitle.length > 0
                 ? currentItem.subtitle
                 : currentItem.title.startsWith('おみくじ_')
-                  ? `第${currentItem.num}番`
+                  ? `第${currentItem.num}番のおみくじ`
                   : currentItem.title}
             </Text>
 
