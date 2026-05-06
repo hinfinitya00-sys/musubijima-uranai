@@ -46,7 +46,7 @@ const FORTUNE_MENU: FortuneMenuItem[] = [
     emoji: '🎴',
     title: '今日のおみくじ',
     description: 'むすび島のおみくじを引こう',
-    route: '/card-reading',
+    route: '/fortune/omikuji',
   },
   {
     id: 'negative-god',
@@ -68,7 +68,7 @@ const FORTUNE_MENU: FortuneMenuItem[] = [
     emoji: '🃏',
     title: 'み・たまカード',
     description: '直感で選ぶメッセージカード',
-    route: '/card-reading',
+    route: '/fortune/mitama',
     requiresPlan: true,
   },
 ];
