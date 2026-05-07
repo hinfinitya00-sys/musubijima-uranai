@@ -632,7 +632,7 @@ export default function OmikujiScreen() {
 
             {currentItem.tehanasu.length > 0 && (
               <View style={styles.tehanasuBox}>
-                <Text style={styles.tehanasuLabel}>【手放す】</Text>
+                <Text style={styles.tehanasuLabel}>【ご神名】</Text>
                 <Text style={styles.tehanasuText}>{currentItem.tehanasu}</Text>
               </View>
             )}

@@ -229,15 +229,8 @@ export default function MitamaScreen() {
 
               {/* Card Title */}
               <Text style={styles.cardTitle}>
-                {selectedCard.title.startsWith('第') && selectedCard.title.includes('番')
-                  ? (selectedCard.subtitle || selectedCard.title)
-                  : selectedCard.title}
+                {selectedCard.subtitle || `第${selectedCard.num}番`}
               </Text>
-
-              {/* Subtitle */}
-              {selectedCard.subtitle && !selectedCard.title.startsWith('第') ? (
-                <Text style={styles.cardSubtitle}>{selectedCard.subtitle}</Text>
-              ) : null}
 
               {/* Info Row: 願望 & 手放す */}
               <View style={styles.infoRow}>
