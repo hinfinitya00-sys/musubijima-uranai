@@ -228,10 +228,14 @@ export default function MitamaScreen() {
               </View>
 
               {/* Card Title */}
-              <Text style={styles.cardTitle}>{selectedCard.title}</Text>
+              <Text style={styles.cardTitle}>
+                {selectedCard.title.startsWith('第') && selectedCard.title.includes('番')
+                  ? (selectedCard.subtitle || selectedCard.title)
+                  : selectedCard.title}
+              </Text>
 
               {/* Subtitle */}
-              {selectedCard.subtitle ? (
+              {selectedCard.subtitle && !selectedCard.title.startsWith('第') ? (
                 <Text style={styles.cardSubtitle}>{selectedCard.subtitle}</Text>
               ) : null}
 
