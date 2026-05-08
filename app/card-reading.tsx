@@ -173,53 +173,55 @@ export default function CardReadingScreen() {
           )}
 
           {(step === "reveal") && card && (
-            <Animated.View
-              style={[
-                styles.revealContainer,
-                { transform: [{ scale: cardScale }], opacity: cardOpacity },
-              ]}
-            >
-              {/* グロー効果 */}
+            <>
               <Animated.View
-                style={[styles.glowEffect, { opacity: glowOpacity }]}
-              />
+                style={[
+                  styles.revealContainer,
+                  { transform: [{ scale: cardScale }], opacity: cardOpacity },
+                ]}
+              >
+                {/* グロー効果 */}
+                <Animated.View
+                  style={[styles.glowEffect, { opacity: glowOpacity }]}
+                />
 
-              {/* カード */}
-              <View style={styles.revealCard}>
-                <LinearGradient
-                  colors={["rgba(242,208,107,0.2)", "rgba(123,94,167,0.3)"] as const}
-                  style={styles.revealCardGradient}
-                >
-                  <Text style={styles.revealCardEmoji}>{card.emoji}</Text>
-                  <Text style={styles.revealCardTheme}>{card.themeLabel}</Text>
-                  <Text style={styles.revealCardTitle}>{card.title}</Text>
-                  <Text style={styles.revealCardMessage}>{card.message}</Text>
-                  <Text style={styles.revealCardAdvice}>{card.advice}</Text>
+                {/* カード */}
+                <View style={styles.revealCard}>
+                  <LinearGradient
+                    colors={["rgba(242,208,107,0.2)", "rgba(123,94,167,0.3)"] as const}
+                    style={styles.revealCardGradient}
+                  >
+                    <Text style={styles.revealCardEmoji}>{card.emoji}</Text>
+                    <Text style={styles.revealCardTheme}>{card.themeLabel}</Text>
+                    <Text style={styles.revealCardTitle}>{card.title}</Text>
+                    <Text style={styles.revealCardMessage}>{card.message}</Text>
+                    <Text style={styles.revealCardAdvice}>{card.advice}</Text>
 
-                  {groupMessage ? (
-                    <View style={styles.groupMessageBox}>
-                      <Text style={styles.groupMessageText}>{groupMessage}</Text>
-                    </View>
-                  ) : null}
+                    {groupMessage ? (
+                      <View style={styles.groupMessageBox}>
+                        <Text style={styles.groupMessageText}>{groupMessage}</Text>
+                      </View>
+                    ) : null}
 
-                  <View style={styles.luckySection}>
-                    <View style={styles.luckyItem}>
-                      <Text style={styles.luckyLabel}>ラッキーカラー</Text>
-                      <Text style={styles.luckyValue}>{card.luckyColor}</Text>
+                    <View style={styles.luckySection}>
+                      <View style={styles.luckyItem}>
+                        <Text style={styles.luckyLabel}>ラッキーカラー</Text>
+                        <Text style={styles.luckyValue}>{card.luckyColor}</Text>
+                      </View>
+                      <View style={styles.luckyDivider} />
+                      <View style={styles.luckyItem}>
+                        <Text style={styles.luckyLabel}>ラッキーアイテム</Text>
+                        <Text style={styles.luckyValue}>{card.luckyItem}</Text>
+                      </View>
+                      <View style={styles.luckyDivider} />
+                      <View style={styles.luckyItem}>
+                        <Text style={styles.luckyLabel}>ラッキーナンバー</Text>
+                        <Text style={styles.luckyValue}>{card.luckyNumber}</Text>
+                      </View>
                     </View>
-                    <View style={styles.luckyDivider} />
-                    <View style={styles.luckyItem}>
-                      <Text style={styles.luckyLabel}>ラッキーアイテム</Text>
-                      <Text style={styles.luckyValue}>{card.luckyItem}</Text>
-                    </View>
-                    <View style={styles.luckyDivider} />
-                    <View style={styles.luckyItem}>
-                      <Text style={styles.luckyLabel}>ラッキーナンバー</Text>
-                      <Text style={styles.luckyValue}>{card.luckyNumber}</Text>
-                    </View>
-                  </View>
-                </LinearGradient>
-              </View>
+                  </LinearGradient>
+                </View>
+              </Animated.View>
 
               <TouchableOpacity
                 style={[styles.saveButton, isSaving && styles.saveButtonDisabled]}
@@ -235,7 +237,7 @@ export default function CardReadingScreen() {
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
-            </Animated.View>
+            </>
           )}
         </View>
       </ScreenContainer>
