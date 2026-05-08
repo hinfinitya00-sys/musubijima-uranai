@@ -182,6 +182,7 @@ export default function CardReadingScreen() {
               >
                 {/* グロー効果 */}
                 <Animated.View
+                  pointerEvents="none"
                   style={[styles.glowEffect, { opacity: glowOpacity }]}
                 />
 
