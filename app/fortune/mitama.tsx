@@ -7,8 +7,6 @@ import {
   StyleSheet,
   Animated,
   Image,
-  Dimensions,
-  useWindowDimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -23,7 +21,6 @@ import {
 import type { MitamaCard } from '../../constants/mitama-cards';
 
 export default function MitamaScreen() {
-  const { width } = useWindowDimensions();
   const [selectedCard, setSelectedCard] = useState<MitamaCard | null>(null);
   const [isDrawn, setIsDrawn] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -242,7 +239,8 @@ const styles = StyleSheet.create({
 
   /* Card Back */
   drawButton: {
-    width: width * 0.7,
+    width: '70%',
+    alignSelf: 'center',
     aspectRatio: 0.65,
     borderRadius: 20,
     overflow: 'hidden',
@@ -321,8 +319,8 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
   },
   cardImage: {
-    width: width * 0.7,
-    height: width * 0.7,
+    width: '100%',
+    aspectRatio: 1,
     borderRadius: 12,
   },
   cardNumber: {
