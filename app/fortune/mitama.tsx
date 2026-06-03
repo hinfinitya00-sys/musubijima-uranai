@@ -11,8 +11,6 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import {
   MITAMA_CARDS,
-  MITAMA_INTRO,
-  MITAMA_HOWTO,
   MITAMA_OUTRO,
   MITAMA_PROFILE,
   MITAMA_CREDIT,
@@ -54,16 +52,6 @@ export default function MitamaScreen() {
         contentContainerStyle={styles.scrollContent}
         showsVerticalScrollIndicator={false}
       >
-        {/* Intro Section */}
-        <View style={styles.introSection}>
-          <Text style={styles.mainTitle}>み・たまカード</Text>
-          <Text style={styles.introHeading}>みたまカードとは</Text>
-          <Text style={styles.introText}>{MITAMA_INTRO}</Text>
-
-          <Text style={styles.introHeading}>メッセージの受け取り方</Text>
-          <Text style={styles.introText}>{MITAMA_HOWTO}</Text>
-        </View>
-
         {!isDrawn ? (
           /* Card Back / Draw Button */
           <>
@@ -178,7 +166,18 @@ export default function MitamaScreen() {
               resizeMode="cover"
             />
             <Text style={styles.profileHeading}>占い師プロフィール</Text>
-            <Text style={styles.profileText}>{MITAMA_PROFILE}</Text>
+            {MITAMA_PROFILE.split('\n').map((line, i) => {
+              const yearMatch = line.match(/^(\d{4}年)\s*　*(.*)/);
+              if (yearMatch) {
+                return (
+                  <View key={i} style={{ flexDirection: 'row', width: '100%', marginBottom: 4 }}>
+                    <Text style={[styles.profileText, { width: 60, flexShrink: 0 }]}>{yearMatch[1]}</Text>
+                    <Text style={[styles.profileText, { flex: 1, textAlign: 'left' }]}>{yearMatch[2]}</Text>
+                  </View>
+                );
+              }
+              return <Text key={i} style={styles.profileText}>{line}</Text>;
+            })}
           </View>
 
           <View style={styles.creditSection}>
@@ -199,31 +198,6 @@ const styles = StyleSheet.create({
     paddingTop: 60,
     paddingBottom: 40,
     alignItems: 'center',
-  },
-
-  /* Intro */
-  introSection: {
-    width: '100%',
-    marginBottom: 32,
-  },
-  mainTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: '#E8C547',
-    textAlign: 'center',
-    marginBottom: 24,
-  },
-  introHeading: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#C4B5FD',
-    marginBottom: 8,
-    marginTop: 16,
-  },
-  introText: {
-    fontSize: 14,
-    color: '#D1D5DB',
-    lineHeight: 24,
   },
 
   /* Draw Prompt */
