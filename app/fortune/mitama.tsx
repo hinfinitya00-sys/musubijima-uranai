@@ -8,6 +8,7 @@ import {
   Animated,
   Image,
   Dimensions,
+  useWindowDimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -21,9 +22,8 @@ import {
 } from '../../constants/mitama-cards';
 import type { MitamaCard } from '../../constants/mitama-cards';
 
-const { width } = Dimensions.get('window');
-
 export default function MitamaScreen() {
+  const { width } = useWindowDimensions();
   const [selectedCard, setSelectedCard] = useState<MitamaCard | null>(null);
   const [isDrawn, setIsDrawn] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
