@@ -166,18 +166,34 @@ export default function MitamaScreen() {
               resizeMode="cover"
             />
             <Text style={styles.profileHeading}>占い師プロフィール</Text>
-            {MITAMA_PROFILE.split('\n').map((line, i) => {
-              const yearMatch = line.match(/^(\d{4}年)\s*　*(.*)/);
-              if (yearMatch) {
+            {(() => {
+              const lines = MITAMA_PROFILE.split('\n').map(l => l.trim()).filter(Boolean);
+              const rows: ({ year: string; desc: string } | string)[] = [];
+              let idx = 0;
+              while (idx < lines.length) {
+                const yearOnly = lines[idx].match(/^(\d{4}年)$/);
+                if (yearOnly && idx + 1 < lines.length && !lines[idx + 1].match(/^[\d【]/)) {
+                  rows.push({ year: yearOnly[1], desc: lines[idx + 1] });
+                  idx += 2;
+                } else {
+                  rows.push(lines[idx]);
+                  idx++;
+                }
+              }
+              return rows.map((row, j) => {
+                if (typeof row === 'string') {
+                  return (
+                    <Text key={j} style={styles.profileText}>{row}</Text>
+                  );
+                }
                 return (
-                  <View key={i} style={{ flexDirection: 'row', width: '100%', marginBottom: 4 }}>
-                    <Text style={[styles.profileText, { width: 60, flexShrink: 0 }]}>{yearMatch[1]}</Text>
-                    <Text style={[styles.profileText, { flex: 1, textAlign: 'left' }]}>{yearMatch[2]}</Text>
+                  <View key={j} style={{ flexDirection: 'row', width: '100%', maxWidth: 400, marginBottom: 6, paddingHorizontal: 8 }}>
+                    <Text style={[styles.profileText, { width: 56, flexShrink: 0, color: '#C4B5FD', fontWeight: '600' }]}>{row.year}</Text>
+                    <Text style={[styles.profileText, { flex: 1, textAlign: 'left' }]}>{row.desc}</Text>
                   </View>
                 );
-              }
-              return <Text key={i} style={styles.profileText}>{line}</Text>;
-            })}
+              });
+            })()}
           </View>
 
           <View style={styles.creditSection}>
