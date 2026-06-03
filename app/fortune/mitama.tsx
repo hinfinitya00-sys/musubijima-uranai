@@ -123,7 +123,6 @@ export default function MitamaScreen() {
               </View>
 
               {/* Card Number & Title */}
-              <Text style={styles.cardNumber}>第{selectedCard.num}番</Text>
               <Text style={styles.cardTitle}>{selectedCard.title}</Text>
               <Text style={styles.cardSubtitle}>{selectedCard.subtitle}</Text>
 
