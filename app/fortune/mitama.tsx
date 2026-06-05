@@ -12,11 +12,22 @@ import { LinearGradient } from 'expo-linear-gradient';
 import {
   MITAMA_CARDS,
   MITAMA_OUTRO,
-  MITAMA_PROFILE,
   MITAMA_CREDIT,
   MITAMA_PROFILE_IMG,
 } from '../../constants/mitama-cards';
 import type { MitamaCard } from '../../constants/mitama-cards';
+
+const PROFILE_HEADER = '其田 寿枝（そのだ ひさえ）\n1972年　神奈川県生まれ　福岡県飯塚市で育つ\n書籍　kindle電子出版\n占い本「ネコ占い」「今年の運勢」\n短編小説「コーヒーの香り」';
+
+const PROFILE_HISTORY = [
+  { year: '2001年', desc: '夫より事業継承　マサジアートギャラリー代表となる' },
+  { year: '2003年', desc: '占いカウンセリングをはじめる' },
+  { year: '2006年', desc: '自社ギャラリーにて占い講座を始める' },
+  { year: '2014年', desc: 'オリジナル専用占いカード制作' },
+  { year: '2015年', desc: 'TNC文化サークルにて占い講座開講（2020年3月まで）' },
+  { year: '2021年', desc: '想形楽合同会社　設立' },
+  { year: '2021年', desc: '洋風いなり寿司のお店「うまいなり」オープン' },
+];
 
 export default function MitamaScreen() {
   const [selectedCard, setSelectedCard] = useState<MitamaCard | null>(null);
@@ -166,34 +177,19 @@ export default function MitamaScreen() {
               resizeMode="cover"
             />
             <Text style={styles.profileHeading}>占い師プロフィール</Text>
-            {(() => {
-              const lines = MITAMA_PROFILE.split('\n').map(l => l.trim()).filter(Boolean);
-              const rows: ({ year: string; desc: string } | string)[] = [];
-              let idx = 0;
-              while (idx < lines.length) {
-                const yearOnly = lines[idx].match(/^(\d{4}年)$/);
-                if (yearOnly && idx + 1 < lines.length && !lines[idx + 1].match(/^[\d【]/)) {
-                  rows.push({ year: yearOnly[1], desc: lines[idx + 1] });
-                  idx += 2;
-                } else {
-                  rows.push(lines[idx]);
-                  idx++;
-                }
-              }
-              return rows.map((row, j) => {
-                if (typeof row === 'string') {
-                  return (
-                    <Text key={j} style={styles.profileText}>{row}</Text>
-                  );
-                }
-                return (
-                  <View key={j} style={{ flexDirection: 'row', width: '100%', maxWidth: 400, marginBottom: 6, paddingHorizontal: 8 }}>
-                    <Text style={[styles.profileText, { width: 56, flexShrink: 0, color: '#C4B5FD', fontWeight: '600' }]}>{row.year}</Text>
-                    <Text style={[styles.profileText, { flex: 1, textAlign: 'left' }]}>{row.desc}</Text>
-                  </View>
-                );
-              });
-            })()}
+            <Text style={styles.profileText}>{PROFILE_HEADER}</Text>
+            <View style={{ width: '100%', maxWidth: 400, marginTop: 12 }}>
+              {PROFILE_HISTORY.map((item, i) => (
+                <View key={i} style={{ flexDirection: 'row', marginBottom: 8, paddingHorizontal: 8 }}>
+                  <Text style={[styles.profileText, { width: 56, flexShrink: 0, color: '#C4B5FD', fontWeight: '600' }]}>
+                    {item.year}
+                  </Text>
+                  <Text style={[styles.profileText, { flex: 1, textAlign: 'left' }]}>
+                    {item.desc}
+                  </Text>
+                </View>
+              ))}
+            </View>
           </View>
 
           <View style={styles.creditSection}>
