@@ -7,6 +7,7 @@ import {
   StyleSheet,
   Animated,
   Image,
+  ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import {
@@ -55,9 +56,10 @@ export default function MitamaScreen() {
   };
 
   return (
-    <LinearGradient
-      colors={['#0D0B1E', '#1D1B4B', '#0D0B1E']}
+    <ImageBackground
+      source={require('../../assets/mitama/kirie.jpg')}
       style={styles.container}
+      imageStyle={{ opacity: 0.07, resizeMode: 'cover' }}
     >
       <ScrollView
         contentContainerStyle={styles.scrollContent}
@@ -197,13 +199,14 @@ export default function MitamaScreen() {
           </View>
         </View>
       </ScrollView>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#FFFFFF',
   },
   scrollContent: {
     padding: 20,
@@ -218,7 +221,7 @@ const styles = StyleSheet.create({
   },
   drawPromptText: {
     fontSize: 14,
-    color: '#9CA3AF',
+    color: '#6B7280',
     textAlign: 'center',
     lineHeight: 22,
   },
@@ -359,7 +362,7 @@ const styles = StyleSheet.create({
   cardDivider: {
     width: 60,
     height: 2,
-    backgroundColor: 'rgba(232,197,71,0.4)',
+    backgroundColor: 'rgba(109,40,217,0.3)',
     marginBottom: 16,
   },
 
@@ -399,12 +402,12 @@ const styles = StyleSheet.create({
   footerDivider: {
     width: 80,
     height: 1,
-    backgroundColor: 'rgba(196,181,253,0.3)',
+    backgroundColor: 'rgba(109,40,217,0.2)',
     marginBottom: 24,
   },
   outroText: {
     fontSize: 14,
-    color: '#D1D5DB',
+    color: '#374151',
     lineHeight: 24,
     textAlign: 'center',
     marginBottom: 32,
@@ -423,12 +426,12 @@ const styles = StyleSheet.create({
   profileHeading: {
     fontSize: 16,
     fontWeight: '700',
-    color: '#C4B5FD',
+    color: '#4C1D95',
     marginBottom: 12,
   },
   profileText: {
     fontSize: 13,
-    color: '#9CA3AF',
+    color: '#4B5563',
     lineHeight: 22,
     textAlign: 'center',
   },
@@ -442,7 +445,7 @@ const styles = StyleSheet.create({
   },
   creditText: {
     fontSize: 12,
-    color: '#6B7280',
+    color: '#9CA3AF',
     textAlign: 'center',
   },
 });
