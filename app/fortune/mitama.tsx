@@ -66,7 +66,6 @@ export default function MitamaScreen() {
         showsVerticalScrollIndicator={false}
       >
         {!isDrawn ? (
-          /* Card Back / Draw Button */
           <>
             <View style={styles.drawPrompt}>
               <Text style={styles.drawPromptText}>
@@ -75,26 +74,15 @@ export default function MitamaScreen() {
               </Text>
             </View>
             <TouchableOpacity
-              style={styles.drawButton}
+              style={styles.drawButtonSimple}
               onPress={handleDrawCard}
-              activeOpacity={0.85}
+              activeOpacity={0.8}
             >
               <LinearGradient
-                colors={['#1E1B4B', '#312E81', '#1E1B4B']}
-                style={styles.cardBackGradient}
+                colors={['#4C1D95', '#6D28D9', '#4C1D95']}
+                style={styles.drawButtonGradient}
               >
-                <View style={styles.starPattern}>
-                  <Text style={styles.starLarge}>&#10022;</Text>
-                  <View style={styles.starRow}>
-                    <Text style={styles.starSmall}>&#10023;</Text>
-                    <Text style={styles.starMed}>&#10022;</Text>
-                    <Text style={styles.starSmall}>&#10023;</Text>
-                  </View>
-                  <Text style={styles.starLarge}>&#10022;</Text>
-                </View>
-                <View style={styles.cardBackBorder}>
-                  <Text style={styles.drawButtonText}>カードを引く</Text>
-                </View>
+                <Text style={styles.drawButtonText}>✦　カードを引く　✦</Text>
               </LinearGradient>
             </TouchableOpacity>
           </>
@@ -226,55 +214,22 @@ const styles = StyleSheet.create({
     lineHeight: 22,
   },
 
-  /* Card Back */
-  drawButton: {
-    width: '70%',
-    alignSelf: 'center',
-    aspectRatio: 0.65,
-    borderRadius: 20,
+  /* Draw Button */
+  drawButtonSimple: {
+    borderRadius: 50,
     overflow: 'hidden',
-    elevation: 8,
-    shadowColor: '#7F77DD',
+    marginTop: 48,
+    marginBottom: 48,
+    shadowColor: '#4C1D95',
     shadowOffset: { width: 0, height: 4 },
-    shadowOpacity: 0.4,
+    shadowOpacity: 0.3,
     shadowRadius: 12,
+    elevation: 6,
   },
-  cardBackGradient: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    borderWidth: 2,
-    borderColor: 'rgba(232,197,71,0.4)',
-    borderRadius: 20,
-  },
-  starPattern: {
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  starRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-    gap: 16,
-    marginVertical: 8,
-  },
-  starLarge: {
-    fontSize: 40,
-    color: '#E8C547',
-  },
-  starMed: {
-    fontSize: 32,
-    color: '#C4B5FD',
-  },
-  starSmall: {
-    fontSize: 20,
-    color: 'rgba(232,197,71,0.5)',
-  },
-  cardBackBorder: {
-    borderWidth: 1,
-    borderColor: 'rgba(232,197,71,0.5)',
-    borderRadius: 12,
-    paddingHorizontal: 24,
-    paddingVertical: 12,
+  drawButtonGradient: {
+    paddingHorizontal: 48,
+    paddingVertical: 20,
+    borderRadius: 50,
   },
   drawButtonText: {
     fontSize: 18,
