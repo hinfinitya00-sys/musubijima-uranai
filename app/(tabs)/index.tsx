@@ -8,6 +8,7 @@ import {
   Dimensions,
   Platform,
   Image,
+  ImageBackground,
 } from "react-native";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
@@ -101,7 +102,11 @@ export default function HomeScreen() {
   const weekday = weekdays[today.getDay()];
 
   return (
-    <LinearGradient colors={["#0D0B1E", "#1a0a2e", "#0D0B1E"]} style={styles.container}>
+    <ImageBackground
+      source={require('../../assets/mitama/kirie.jpg')}
+      style={styles.container}
+      imageStyle={{ opacity: 0.07, resizeMode: 'cover' }}
+    >
       <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -152,14 +157,14 @@ export default function HomeScreen() {
           <View style={{ height: 30 }} />
         </ScrollView>
       </ScreenContainer>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
   loadingContainer: { flex: 1, alignItems: "center", justifyContent: "center" },
-  loadingText: { fontSize: 18, color: "#E8C547" },
+  loadingText: { fontSize: 18, color: "#4C1D95" },
   scrollContent: { padding: 20, paddingTop: 8 },
 
   // Header
@@ -167,18 +172,18 @@ const styles = StyleSheet.create({
   logoText: {
     fontSize: 36,
     fontWeight: "800",
-    color: "#E8C547",
+    color: "#4C1D95",
     letterSpacing: 6,
   },
   logoSubtext: {
     fontSize: 11,
-    color: "rgba(232,197,71,0.5)",
+    color: "#6D28D9",
     letterSpacing: 8,
     marginBottom: 12,
   },
   dateText: {
     fontSize: 14,
-    color: "rgba(255,255,255,0.5)",
+    color: "#9CA3AF",
   },
 
   // Card Grid
