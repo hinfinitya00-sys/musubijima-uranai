@@ -153,6 +153,20 @@ export default function SettingsScreen() {
             </View>
           </View>
 
+          {/* 法的情報 */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>法的情報</Text>
+            <View style={styles.card}>
+              <TouchableOpacity
+                style={styles.linkRow}
+                onPress={() => router.push('/legal/tokutei' as never)}
+              >
+                <Text style={styles.linkRowText}>特定商取引法に基づく表記</Text>
+                <Text style={styles.linkRowArrow}>›</Text>
+              </TouchableOpacity>
+            </View>
+          </View>
+
           <View style={{ height: 20 }} />
         </ScrollView>
       </ScreenContainer>
@@ -331,5 +345,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "rgba(245,239,230,0.4)",
     lineHeight: 20,
+  },
+  linkRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  linkRowText: {
+    fontSize: 14,
+    color: "#A89BC2",
+    fontWeight: "500",
+  },
+  linkRowArrow: {
+    fontSize: 18,
+    color: "#A89BC2",
   },
 });
