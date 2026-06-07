@@ -14,6 +14,7 @@ import { LinearGradient } from "expo-linear-gradient";
 import { ScreenContainer } from "@/components/screen-container";
 import { useApp } from "@/lib/app-context";
 import { usePlanGate } from "@/hooks/usePlanGate";
+import { TrialBanner } from "@/components/TrialBanner";
 
 const GRID_GAP = 8;
 
@@ -54,6 +55,8 @@ export default function HomeScreen() {
               {todayStr}（{weekday}）
             </Text>
           </View>
+
+          <TrialBanner />
 
           {/* Section Label */}
           <Text style={styles.sectionLabel}>今日のメニュー</Text>

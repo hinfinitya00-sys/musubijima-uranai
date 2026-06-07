@@ -200,12 +200,15 @@ export default function PlansScreen() {
             )}
 
             {plan.recommended && (
-              <View style={styles.reasonBox}>
-                <Text style={styles.reasonTitle}>おすすめ理由</Text>
-                <Text style={styles.reasonText}>
-                  全ての占いが使い放題になる最もコスパの良いプランです
-                </Text>
-              </View>
+              <>
+                <Text style={styles.trialPromo}>今すぐ登録で7日間無料体験</Text>
+                <View style={styles.reasonBox}>
+                  <Text style={styles.reasonTitle}>おすすめ理由</Text>
+                  <Text style={styles.reasonText}>
+                    全ての占いが使い放題になる最もコスパの良いプランです
+                  </Text>
+                </View>
+              </>
             )}
 
             <View style={styles.featureList}>
@@ -312,6 +315,7 @@ const styles = StyleSheet.create({
   planName: { fontSize: 20, fontWeight: 'bold', color: '#374151', marginBottom: 4 },
   planPrice: { fontSize: 28, fontWeight: 'bold', color: '#4C1D95', marginBottom: 4 },
   priceSub: { fontSize: 12, color: '#9CA3AF', marginBottom: 12 },
+  trialPromo: { fontSize: 12, color: '#F59E0B', fontWeight: '500', marginBottom: 8 },
 
   reasonBox: {
     backgroundColor: '#FFFBEB',
