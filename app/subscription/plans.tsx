@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -7,8 +7,14 @@ import {
   StyleSheet,
   Alert,
   ImageBackground,
+  Platform,
 } from 'react-native';
+import { router } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
+import * as Linking from 'expo-linking';
+import { supabase } from '@/lib/supabase';
+
+const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
 
 interface FeatureRow {
   label: string;
@@ -20,6 +26,7 @@ interface PlanCard {
   id: string;
   name: string;
   price: string;
+  priceId?: string;
   priceSub?: string;
   features: FeatureRow[];
   recommended?: boolean;
@@ -47,6 +54,7 @@ const PLAN_DATA: PlanCard[] = [
     id: 'light',
     name: 'ライト',
     price: '300円/月',
+    priceId: 'STRIPE_PRICE_LIGHT',
     priceSub: '1日わずか10円',
     recommended: true,
     badge: 'いちばん人気',
@@ -66,6 +74,7 @@ const PLAN_DATA: PlanCard[] = [
     id: 'standard',
     name: 'スタンダード',
     price: '980円/月',
+    priceId: 'STRIPE_PRICE_STANDARD',
     badge: 'プレミアム',
     badgeBg: '#6D28D9',
     features: [
@@ -81,19 +90,71 @@ const PLAN_DATA: PlanCard[] = [
 ];
 
 export default function PlansScreen() {
-  const [currentPlan] = useState('free');
+  const [currentPlan, setCurrentPlan] = useState('free');
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleSelectPlan = async (planId: string) => {
-    if (planId === 'free' || planId === currentPlan) return;
+  useEffect(() => {
+    const loadCurrentPlan = async () => {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (session) {
+        const { data } = await supabase
+          .from('profiles')
+          .select('plan_type')
+          .eq('id', session.user.id)
+          .single();
+        if (data?.plan_type) setCurrentPlan(data.plan_type);
+      }
+    };
+    loadCurrentPlan();
+  }, []);
+
+  const handleSubscribe = async (priceId: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+
+    if (!session) {
+      router.push('/(auth)/login' as never);
+      return;
+    }
+
     setIsLoading(true);
     try {
-      Alert.alert('決済画面へ', 'Stripe Checkoutに遷移します（実装予定）');
-    } catch {
-      Alert.alert('エラー', '処理に失敗しました。');
+      const response = await fetch(
+        `${SUPABASE_URL}/functions/v1/create-checkout-session`,
+        {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Authorization': `Bearer ${session.access_token}`,
+          },
+          body: JSON.stringify({
+            priceId,
+            userId: session.user.id,
+            email: session.user.email,
+          }),
+        }
+      );
+
+      const { url, error } = await response.json();
+
+      if (error) throw new Error(error);
+
+      if (url) {
+        if (Platform.OS === 'web') {
+          window.location.href = url;
+        } else {
+          await Linking.openURL(url);
+        }
+      }
+    } catch (e: unknown) {
+      const message = e instanceof Error ? e.message : '決済の開始に失敗しました。';
+      Alert.alert('エラー', message);
     } finally {
       setIsLoading(false);
     }
+  };
+
+  const handleFreePlan = () => {
+    router.push('/' as never);
   };
 
   return (
@@ -163,21 +224,31 @@ export default function PlansScreen() {
               ))}
             </View>
 
-            {plan.id !== 'free' && currentPlan !== plan.id && (
+            {currentPlan === plan.id ? (
+              <View style={styles.currentPlanButton}>
+                <Text style={styles.currentPlanText}>利用中</Text>
+              </View>
+            ) : plan.id === 'free' ? (
               <TouchableOpacity
                 style={styles.selectButton}
-                onPress={() => handleSelectPlan(plan.id)}
+                onPress={handleFreePlan}
+              >
+                <View style={styles.freeButtonInner}>
+                  <Text style={styles.freeButtonText}>このまま無料で使う</Text>
+                </View>
+              </TouchableOpacity>
+            ) : (
+              <TouchableOpacity
+                style={[styles.selectButton, isLoading && styles.buttonDisabled]}
+                onPress={() => handleSubscribe(plan.priceId!)}
                 disabled={isLoading}
               >
                 <LinearGradient
                   colors={plan.recommended ? ['#F59E0B', '#F97316'] : ['#4C1D95', '#6D28D9']}
                   style={styles.selectButtonGradient}
                 >
-                  <Text style={[
-                    styles.selectButtonText,
-                    plan.recommended && { color: '#FFFFFF' },
-                  ]}>
-                    このプランを選ぶ
+                  <Text style={styles.selectButtonText}>
+                    {isLoading ? '処理中...' : 'このプランを選ぶ'}
                   </Text>
                 </LinearGradient>
               </TouchableOpacity>
@@ -262,8 +333,21 @@ const styles = StyleSheet.create({
   featureValue: { fontSize: 11, color: '#6D28D9', fontWeight: '500' },
 
   selectButton: { borderRadius: 12, overflow: 'hidden' },
+  buttonDisabled: { opacity: 0.6 },
   selectButtonGradient: { paddingVertical: 14, alignItems: 'center' },
   selectButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
+
+  freeButtonInner: {
+    paddingVertical: 14, alignItems: 'center',
+    borderWidth: 1, borderColor: '#D1D5DB', borderRadius: 12,
+  },
+  freeButtonText: { fontSize: 15, fontWeight: '600', color: '#6B7280' },
+
+  currentPlanButton: {
+    paddingVertical: 14, alignItems: 'center',
+    backgroundColor: '#F0FDF4', borderRadius: 12,
+  },
+  currentPlanText: { fontSize: 15, fontWeight: '600', color: '#22C55E' },
 
   ctaBanner: {
     marginTop: 8,
