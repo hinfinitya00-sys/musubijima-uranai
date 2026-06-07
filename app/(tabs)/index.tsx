@@ -3,8 +3,10 @@ import {
   View,
   Text,
   TouchableOpacity,
+  ScrollView,
   StyleSheet,
   ImageBackground,
+  Image,
   useWindowDimensions,
 } from "react-native";
 import { router } from "expo-router";
@@ -133,13 +135,38 @@ export default function HomeScreen() {
               onPress={() => router.push("/subscription/plans")}
             >
               <LinearGradient colors={["#E8C547", "#F59E0B"]} style={styles.ctaGradient}>
-                <Text style={styles.ctaTitle}>月額980円で全機能解放</Text>
+                <Text style={styles.ctaTitle}>月額300円から全機能解放</Text>
                 <Text style={styles.ctaSubtitle}>
                   スタンダードプランで全ての占いを無制限に
                 </Text>
               </LinearGradient>
             </TouchableOpacity>
           )}
+
+          {/* 占い師プロフィール */}
+          <View style={styles.profileCard}>
+            <View style={styles.profileRow}>
+              <Image
+                source={require('../../assets/mitama/profile.jpg')}
+                style={styles.profileAvatar}
+                resizeMode="cover"
+              />
+              <View style={styles.profileInfo}>
+                <Text style={styles.profileName}>其田 寿枝（そのだ としえ）</Text>
+                <Text style={styles.profileRole}>数秘術占い師・むすび島主宰</Text>
+              </View>
+            </View>
+            <Text style={styles.profileMessage}>
+              数字には、あなたの魂の声が宿っています。生年月日に秘められたリズムを読み解き、今このときのあなたに必要なメッセージをお届けします。
+            </Text>
+            <ScrollView horizontal showsHorizontalScrollIndicator={false} style={styles.pillScroll}>
+              {['占い歴20年以上', '延べ3,000人以上鑑定', '数秘術×神道の融合'].map((label) => (
+                <View key={label} style={styles.pill}>
+                  <Text style={styles.pillText}>{label}</Text>
+                </View>
+              ))}
+            </ScrollView>
+          </View>
         </View>
       </ScreenContainer>
     </ImageBackground>
@@ -212,4 +239,57 @@ const styles = StyleSheet.create({
   ctaGradient: { padding: 20, alignItems: "center" },
   ctaTitle: { fontSize: 16, fontWeight: "800", color: "#1F2937", marginBottom: 4 },
   ctaSubtitle: { fontSize: 13, color: "#374151" },
+
+  // Profile
+  profileCard: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: 16,
+    borderWidth: 0.5,
+    borderColor: '#E5E7EB',
+    padding: 20,
+    marginTop: 16,
+  },
+  profileRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
+  profileAvatar: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+  },
+  profileInfo: {
+    marginLeft: 12,
+    flex: 1,
+  },
+  profileName: {
+    fontSize: 15,
+    fontWeight: '500',
+    color: '#4C1D95',
+  },
+  profileRole: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
+  profileMessage: {
+    fontSize: 13,
+    color: '#374151',
+    lineHeight: 22,
+    marginTop: 12,
+  },
+  pillScroll: {
+    marginTop: 12,
+  },
+  pill: {
+    backgroundColor: '#EDE9FE',
+    borderRadius: 20,
+    paddingHorizontal: 10,
+    paddingVertical: 4,
+    marginRight: 8,
+  },
+  pillText: {
+    fontSize: 11,
+    color: '#5B21B6',
+  },
 });
