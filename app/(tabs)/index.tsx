@@ -171,7 +171,7 @@ export default function HomeScreen() {
                 resizeMode="cover"
               />
               <View style={styles.profileInfo}>
-                <Text style={styles.profileName}>其田 寿枝（そのだ としえ）</Text>
+                <Text style={styles.profileName}>其田 寿枝（そのだ ひさえ）</Text>
                 <Text style={styles.profileRole}>数秘術占い師・むすび島主宰</Text>
               </View>
             </View>
