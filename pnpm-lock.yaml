@@ -29,6 +29,9 @@ importers:
       '@stripe/stripe-js':
         specifier: ^9.4.0
         version: 9.4.0
+      '@supabase/auth-helpers-react':
+        specifier: ^0.15.0
+        version: 0.15.0(@supabase/supabase-js@2.105.3)
       '@supabase/supabase-js':
         specifier: ^2.105.3
         version: 2.105.3
@@ -2157,6 +2160,12 @@ packages:
   '@stripe/stripe-js@9.4.0':
     resolution: {integrity: sha512-zXG86DnoLU5nH2U18tX5ApTE3IAm+txoiPm4YFyEtRS0K5y7ZDH9M8e1Le/cZyI6wvW3BkJn2daZe2FqZOrSSg==}
     engines: {node: '>=12.16'}
+
+  '@supabase/auth-helpers-react@0.15.0':
+    resolution: {integrity: sha512-ddyCelBWeOtBNJiJ1x947ZxVEbjydIvpo9hIQ/J/uf+ozLj2buOal+P273rfUIyUf5mIfOtWo9l2hnAqsP/x0w==}
+    deprecated: Package no longer supported. Contact Support at https://www.npmjs.com/support for more info.
+    peerDependencies:
+      '@supabase/supabase-js': ^2.76.1
 
   '@supabase/auth-js@2.105.3':
     resolution: {integrity: sha512-hMFuzP++mjRfe0/BUq4/e82CXIDgyjUgg0khLN8waol/gzoM1t2iGmhfJSGvQHQ1dr3XqWpP6ThAw4bLHMot5Q==}
@@ -8208,6 +8217,11 @@ snapshots:
   '@stablelib/base64@1.0.1': {}
 
   '@stripe/stripe-js@9.4.0': {}
+
+  '@supabase/auth-helpers-react@0.15.0(@supabase/supabase-js@2.105.3)':
+    dependencies:
+      '@supabase/supabase-js': 2.105.3
+      cookie: 1.1.1
 
   '@supabase/auth-js@2.105.3':
     dependencies:
