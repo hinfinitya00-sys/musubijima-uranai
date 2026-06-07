@@ -31,13 +31,33 @@ function calcPersonalYear(birthDate: Date): number {
 }
 
 function parseBirthDate(input: string): Date | null {
-  const match = input.replace(/[年月]/g, '/').replace(/日/g, '').match(/^(\d{4})[\/\-](\d{1,2})[\/\-](\d{1,2})$/);
-  if (!match) return null;
-  const y = parseInt(match[1], 10);
-  const m = parseInt(match[2], 10);
-  const d = parseInt(match[3], 10);
-  if (y < 1900 || y > 2030 || m < 1 || m > 12 || d < 1 || d > 31) return null;
-  return new Date(y, m - 1, d);
+  const clean = input.trim();
+
+  // 8桁数字 YYYYMMDD
+  if (/^\d{8}$/.test(clean)) {
+    const year = parseInt(clean.slice(0, 4));
+    const month = parseInt(clean.slice(4, 6));
+    const day = parseInt(clean.slice(6, 8));
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) {
+      return date;
+    }
+    return null;
+  }
+
+  // スラッシュまたはハイフン区切り YYYY/MM/DD or YYYY-MM-DD
+  const parts = clean.split(/[\/\-]/);
+  if (parts.length === 3) {
+    const year = parseInt(parts[0]);
+    const month = parseInt(parts[1]);
+    const day = parseInt(parts[2]);
+    const date = new Date(year, month - 1, day);
+    if (date.getFullYear() === year && date.getMonth() === month - 1 && date.getDate() === day) {
+      return date;
+    }
+  }
+
+  return null;
 }
 
 const KEYWORD_LABELS = [
@@ -84,7 +104,7 @@ export default function LifeRhythmScreen() {
   const handleCalc = () => {
     const date = parseBirthDate(input);
     if (!date) {
-      setError('正しい形式で入力してください（例：1990/05/15）');
+      setError('正しい形式で入力してください（例：19940128）');
       return;
     }
     setError('');
@@ -116,7 +136,7 @@ export default function LifeRhythmScreen() {
             </Text>
             <TextInput
               style={s.textInput}
-              placeholder="例：1990/05/15"
+              placeholder="例：19940128 または 1994/01/28"
               placeholderTextColor="#9CA3AF"
               value={input}
               onChangeText={setInput}
