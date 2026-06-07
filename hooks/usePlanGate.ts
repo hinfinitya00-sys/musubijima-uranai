@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
+const DEBUG_UNLOCK_ALL = true; // 開発確認用・本番リリース前にfalseに戻す
+
 export function usePlanGate() {
   const [plan, setPlan] = useState<string>('free');
   const [isTrialActive, setIsTrialActive] = useState(false);
@@ -29,7 +31,7 @@ export function usePlanGate() {
     load();
   }, []);
 
-  const effectivePlan = isTrialActive && plan === 'free' ? 'light' : plan;
+  const effectivePlan = DEBUG_UNLOCK_ALL ? 'standard' : (isTrialActive && plan === 'free' ? 'light' : plan);
 
   return {
     plan,
