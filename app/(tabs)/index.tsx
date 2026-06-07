@@ -13,12 +13,14 @@ import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScreenContainer } from "@/components/screen-container";
 import { useApp } from "@/lib/app-context";
+import { usePlanGate } from "@/hooks/usePlanGate";
 
 const GRID_GAP = 8;
 
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { state } = useApp();
+  const { canUse, isFree } = usePlanGate();
   const { subscription, isLoading } = state;
   const gridCardWidth = (width - 32 - GRID_GAP) / 2;
 
@@ -90,9 +92,16 @@ export default function HomeScreen() {
 
             <TouchableOpacity
               style={[styles.gridCard, { width: gridCardWidth }]}
-              onPress={() => router.push('/fortune/negative-god' as never)}
+              onPress={() => {
+                if (!canUse.negativeGod) {
+                  router.push('/subscription/plans' as never);
+                  return;
+                }
+                router.push('/fortune/negative-god' as never);
+              }}
               activeOpacity={0.8}
             >
+              {isFree && <Text style={styles.lockBadge}>🔒</Text>}
               <View style={[styles.gridIconWrap, { backgroundColor: '#1C1C2E' }]}>
                 <Text style={styles.gridIconEmoji}>🌑</Text>
               </View>
@@ -117,9 +126,16 @@ export default function HomeScreen() {
 
             <TouchableOpacity
               style={[styles.gridCard, { width: gridCardWidth }]}
-              onPress={() => router.push('/fortune/musubian' as never)}
+              onPress={() => {
+                if (!canUse.musubian) {
+                  router.push('/subscription/plans' as never);
+                  return;
+                }
+                router.push('/fortune/musubian' as never);
+              }}
               activeOpacity={0.8}
             >
+              {isFree && <Text style={styles.lockBadge}>🔒</Text>}
               <View style={[styles.gridIconWrap, { backgroundColor: '#FFF7ED' }]}>
                 <Text style={styles.gridIconEmoji}>🤝</Text>
               </View>
@@ -231,6 +247,7 @@ const styles = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center',
   },
   gridIconEmoji: { fontSize: 18 },
+  lockBadge: { fontSize: 12, position: 'absolute' as const, top: 8, right: 8 },
   gridTitle: { fontSize: 13, fontWeight: '500', color: '#374151', marginTop: 8 },
   gridSub: { fontSize: 11, color: '#9CA3AF', marginTop: 2 },
 

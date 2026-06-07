@@ -14,6 +14,8 @@ import {
   LIFE_RHYTHM_YEARS,
 } from '../../constants/life-rhythm';
 import { shareResult } from '../../lib/share';
+import { usePlanGate } from '../../hooks/usePlanGate';
+import { PlanGate } from '../../components/PlanGate';
 import type { LifeRhythmYear } from '../../constants/life-rhythm';
 
 function reduceToSingle(n: number): number {
@@ -97,6 +99,7 @@ function YearCard({ year, isHighlight }: { year: LifeRhythmYear; isHighlight: bo
 }
 
 export default function LifeRhythmScreen() {
+  const { canUse } = usePlanGate();
   const [input, setInput] = useState('');
   const [result, setResult] = useState<number | null>(null);
   const [showAll, setShowAll] = useState(false);
@@ -180,17 +183,19 @@ export default function LifeRhythmScreen() {
               <Text style={s.shareButtonText}>今年のリズムをシェアする 🌿</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity
-              style={s.showAllButton}
-              onPress={() => setShowAll(!showAll)}
-              activeOpacity={0.8}
-            >
-              <Text style={s.showAllText}>
-                {showAll ? '閉じる' : '9年のサイクルを全部見る'}
-              </Text>
-            </TouchableOpacity>
+            <PlanGate locked={!canUse.lifeRhythmAll}>
+              <TouchableOpacity
+                style={s.showAllButton}
+                onPress={() => setShowAll(!showAll)}
+                activeOpacity={0.8}
+              >
+                <Text style={s.showAllText}>
+                  {showAll ? '閉じる' : '9年のサイクルを全部見る'}
+                </Text>
+              </TouchableOpacity>
+            </PlanGate>
 
-            {showAll && LIFE_RHYTHM_YEARS.filter(y => y.num !== result).map(year => (
+            {showAll && canUse.lifeRhythmAll && LIFE_RHYTHM_YEARS.filter(y => y.num !== result).map(year => (
               <YearCard key={year.num} year={year} isHighlight={false} />
             ))}
 

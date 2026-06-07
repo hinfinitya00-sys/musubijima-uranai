@@ -11,6 +11,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { shareResult } from '../../lib/share';
+import { usePlanGate } from '../../hooks/usePlanGate';
 import {
   MITAMA_CARDS,
   MITAMA_OUTRO,
@@ -32,6 +33,7 @@ const PROFILE_HISTORY = [
 ];
 
 export default function MitamaScreen() {
+  const { isFree } = usePlanGate();
   const [selectedCard, setSelectedCard] = useState<MitamaCard | null>(null);
   const [isDrawn, setIsDrawn] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
@@ -73,6 +75,9 @@ export default function MitamaScreen() {
                 心を静めて、深呼吸を3回。{'\n'}
                 準備ができたら直感で1枚引いてください。
               </Text>
+              {isFree && (
+                <Text style={styles.freeLimit}>今月の残り回数: 3回</Text>
+              )}
             </View>
             <TouchableOpacity
               style={styles.drawButtonSimple}
@@ -225,6 +230,13 @@ const styles = StyleSheet.create({
     color: '#6B7280',
     textAlign: 'center',
     lineHeight: 22,
+  },
+
+  freeLimit: {
+    fontSize: 12,
+    color: '#9CA3AF',
+    textAlign: 'center',
+    marginTop: 8,
   },
 
   /* Draw Button */
