@@ -42,11 +42,30 @@ export const PLANS: Record<string, Plan> = {
       liveSession: false,
     },
   },
+  light: {
+    id: 'light',
+    name: 'ライト',
+    price: 300,
+    stripePriceId: process.env.STRIPE_STANDARD_PRICE_ID,
+    features: {
+      characterReveal: true,
+      omikuji: Infinity,
+      fortuneBasic: true,
+      fortuneFull: true,
+      compatibilityCheck: Infinity,
+      dailyMessage: false,
+      characterDetail: true,
+      monthlyReport: false,
+      nineYearCycle: true,
+      aiChat: false,
+      liveSession: false,
+    },
+  },
   standard: {
     id: 'standard',
     name: 'スタンダード',
     price: 980,
-    stripePriceId: process.env.STRIPE_STANDARD_PRICE_ID,
+    stripePriceId: process.env.STRIPE_PREMIUM_PRICE_ID,
     features: {
       characterReveal: true,
       omikuji: Infinity,
@@ -61,29 +80,37 @@ export const PLANS: Record<string, Plan> = {
       liveSession: false,
     },
   },
-  premium: {
-    id: 'premium',
-    name: 'プレミアム',
-    price: 3980,
-    stripePriceId: process.env.STRIPE_PREMIUM_PRICE_ID,
-    maxUsers: 20,
-    features: {
-      characterReveal: true,
-      omikuji: Infinity,
-      fortuneBasic: true,
-      fortuneFull: true,
-      compatibilityCheck: Infinity,
-      dailyMessage: true,
-      characterDetail: true,
-      monthlyReport: true,
-      nineYearCycle: true,
-      aiChat: true,
-      liveSession: 1,
-      aiConsult: 5,
-      familyReading: true,
-      yearlyCalendar: true,
-      courseArchive: true,
-      newCharacterEarly: true,
-    },
+};
+
+// 新プラン機能ゲーティング定義（Stripe連携後に実際のゲーティングロジックで使用）
+export type PlanType = 'free' | 'light' | 'standard';
+
+export const PLAN_FEATURES = {
+  free: {
+    omikuji: true,
+    mitama: 3,
+    lifeRhythm: 'current' as const,
+    negativeGod: false,
+    musubian: false,
+    lineDelivery: false,
+    monthlyReport: false,
+  },
+  light: {
+    omikuji: true,
+    mitama: true,
+    lifeRhythm: 'all' as const,
+    negativeGod: true,
+    musubian: true,
+    lineDelivery: false,
+    monthlyReport: false,
+  },
+  standard: {
+    omikuji: true,
+    mitama: true,
+    lifeRhythm: 'all' as const,
+    negativeGod: true,
+    musubian: true,
+    lineDelivery: true,
+    monthlyReport: true,
   },
 };

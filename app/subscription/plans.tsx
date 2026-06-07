@@ -6,15 +6,26 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+
+interface FeatureRow {
+  label: string;
+  value: string;
+  enabled: boolean;
+}
 
 interface PlanCard {
   id: string;
   name: string;
   price: string;
-  features: string[];
+  priceSub?: string;
+  features: FeatureRow[];
   recommended?: boolean;
+  badge?: string;
+  badgeBg?: string;
+  highlight?: string;
 }
 
 const PLAN_DATA: PlanCard[] = [
@@ -23,40 +34,48 @@ const PLAN_DATA: PlanCard[] = [
     name: 'フリー',
     price: '0円',
     features: [
-      'キャラ診断（1回）',
-      'おみくじ（月3回）',
-      '基本占い',
-      '相性診断（月1回）',
+      { label: 'おみくじ', value: '毎日無制限', enabled: true },
+      { label: 'み・たまカード', value: '月3回', enabled: true },
+      { label: '人生リズム', value: '今年の年のみ', enabled: true },
+      { label: 'ネガティブ神占い', value: '', enabled: false },
+      { label: 'むすび族占い', value: '', enabled: false },
+      { label: 'LINEおみくじ配信', value: '', enabled: false },
+      { label: '月次レポートPDF', value: '', enabled: false },
+    ],
+  },
+  {
+    id: 'light',
+    name: 'ライト',
+    price: '300円/月',
+    priceSub: '1日わずか10円',
+    recommended: true,
+    badge: 'いちばん人気',
+    badgeBg: '#F59E0B',
+    highlight: '#F59E0B',
+    features: [
+      { label: 'おみくじ', value: '毎日無制限', enabled: true },
+      { label: 'み・たまカード', value: '毎日引ける', enabled: true },
+      { label: '人生リズム', value: '9年サイクル全部', enabled: true },
+      { label: 'ネガティブ神占い', value: '使い放題', enabled: true },
+      { label: 'むすび族占い', value: '使い放題', enabled: true },
+      { label: 'LINEおみくじ配信', value: '', enabled: false },
+      { label: '月次レポートPDF', value: '', enabled: false },
     ],
   },
   {
     id: 'standard',
     name: 'スタンダード',
     price: '980円/月',
-    recommended: true,
+    badge: 'プレミアム',
+    badgeBg: '#6D28D9',
     features: [
-      'フリーの全機能',
-      'おみくじ無制限',
-      '全占いコンテンツ',
-      '毎日のAIメッセージ',
-      'キャラ詳細解説',
-      '月次レポートPDF',
-      '9年サイクル診断',
-      'AIキャラチャット',
-    ],
-  },
-  {
-    id: 'premium',
-    name: 'プレミアム',
-    price: '3,980円/月',
-    features: [
-      'スタンダードの全機能',
-      'LIVE鑑定（月1回）',
-      'AI個別相談（月5回）',
-      '家族・パートナー鑑定',
-      '年間数秘カレンダー',
-      '占い講座動画',
-      '新キャラ先行解放',
+      { label: 'おみくじ', value: '毎日無制限', enabled: true },
+      { label: 'み・たまカード', value: '毎日引ける', enabled: true },
+      { label: '人生リズム', value: '9年サイクル全部', enabled: true },
+      { label: 'ネガティブ神占い', value: '使い放題', enabled: true },
+      { label: 'むすび族占い', value: '使い放題', enabled: true },
+      { label: 'LINEおみくじ配信', value: '毎朝配信', enabled: true },
+      { label: '月次レポートPDF', value: '毎月届く', enabled: true },
     ],
   },
 ];
@@ -67,12 +86,10 @@ export default function PlansScreen() {
 
   const handleSelectPlan = async (planId: string) => {
     if (planId === 'free' || planId === currentPlan) return;
-
     setIsLoading(true);
     try {
-      // Stripe Checkout redirect will be implemented here
       Alert.alert('決済画面へ', 'Stripe Checkoutに遷移します（実装予定）');
-    } catch (error) {
+    } catch {
       Alert.alert('エラー', '処理に失敗しました。');
     } finally {
       setIsLoading(false);
@@ -80,7 +97,11 @@ export default function PlansScreen() {
   };
 
   return (
-    <LinearGradient colors={['#1A0A2E', '#2D1B4E', '#1A0A2E']} style={styles.container}>
+    <ImageBackground
+      source={require('../../assets/mitama/kirie.jpg')}
+      style={styles.container}
+      imageStyle={{ opacity: 0.07, resizeMode: 'cover' }}
+    >
       <ScrollView contentContainerStyle={styles.scrollContent}>
         <Text style={styles.title}>プランを選ぶ</Text>
         <Text style={styles.subtitle}>あなたに合ったプランで、むすび島の体験を広げましょう</Text>
@@ -91,12 +112,13 @@ export default function PlansScreen() {
             style={[
               styles.planCard,
               plan.recommended && styles.planCardRecommended,
+              plan.highlight ? { borderColor: plan.highlight, borderWidth: 2 } : null,
               currentPlan === plan.id && styles.planCardCurrent,
             ]}
           >
-            {plan.recommended && (
-              <View style={styles.recommendedBadge}>
-                <Text style={styles.recommendedText}>おすすめ</Text>
+            {plan.badge && (
+              <View style={[styles.badge, { backgroundColor: plan.badgeBg }]}>
+                <Text style={styles.badgeText}>{plan.badge}</Text>
               </View>
             )}
             {currentPlan === plan.id && (
@@ -106,13 +128,37 @@ export default function PlansScreen() {
             )}
 
             <Text style={styles.planName}>{plan.name}</Text>
-            <Text style={styles.planPrice}>{plan.price}</Text>
+            <Text style={[
+              styles.planPrice,
+              plan.recommended && { fontSize: 32, color: '#F59E0B' },
+            ]}>
+              {plan.price}
+            </Text>
+            {plan.priceSub && (
+              <Text style={styles.priceSub}>{plan.priceSub}</Text>
+            )}
+
+            {plan.recommended && (
+              <View style={styles.reasonBox}>
+                <Text style={styles.reasonTitle}>おすすめ理由</Text>
+                <Text style={styles.reasonText}>
+                  全ての占いが使い放題になる最もコスパの良いプランです
+                </Text>
+              </View>
+            )}
 
             <View style={styles.featureList}>
-              {plan.features.map((feature, idx) => (
+              {plan.features.map((feat, idx) => (
                 <View key={idx} style={styles.featureRow}>
-                  <Text style={styles.featureCheck}>✓</Text>
-                  <Text style={styles.featureText}>{feature}</Text>
+                  <Text style={feat.enabled ? styles.featureCheck : styles.featureCross}>
+                    {feat.enabled ? '✓' : '✕'}
+                  </Text>
+                  <Text style={[styles.featureLabel, !feat.enabled && styles.featureDisabled]}>
+                    {feat.label}
+                  </Text>
+                  {feat.enabled && feat.value ? (
+                    <Text style={styles.featureValue}>{feat.value}</Text>
+                  ) : null}
                 </View>
               ))}
             </View>
@@ -123,64 +169,106 @@ export default function PlansScreen() {
                 onPress={() => handleSelectPlan(plan.id)}
                 disabled={isLoading}
               >
-                <LinearGradient colors={['#F2D06B', '#E8A87C']} style={styles.selectButtonGradient}>
-                  <Text style={styles.selectButtonText}>このプランを選ぶ</Text>
+                <LinearGradient
+                  colors={plan.recommended ? ['#F59E0B', '#F97316'] : ['#4C1D95', '#6D28D9']}
+                  style={styles.selectButtonGradient}
+                >
+                  <Text style={[
+                    styles.selectButtonText,
+                    plan.recommended && { color: '#FFFFFF' },
+                  ]}>
+                    このプランを選ぶ
+                  </Text>
                 </LinearGradient>
               </TouchableOpacity>
             )}
           </View>
         ))}
+
+        <View style={styles.ctaBanner}>
+          <Text style={styles.ctaBannerText}>月額300円から全機能解放</Text>
+        </View>
       </ScrollView>
-    </LinearGradient>
+    </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1 },
-  scrollContent: { padding: 20, paddingTop: 40 },
-  title: { fontSize: 24, fontWeight: 'bold', color: '#F2D06B', textAlign: 'center', marginBottom: 8 },
-  subtitle: { fontSize: 14, color: '#ccc', textAlign: 'center', marginBottom: 24 },
+  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  scrollContent: { padding: 20, paddingTop: 40, paddingBottom: 40 },
+  title: { fontSize: 24, fontWeight: 'bold', color: '#4C1D95', textAlign: 'center', marginBottom: 8 },
+  subtitle: { fontSize: 14, color: '#6B7280', textAlign: 'center', marginBottom: 24 },
+
   planCard: {
-    backgroundColor: 'rgba(255,255,255,0.06)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: 'rgba(255,255,255,0.1)',
+    borderColor: '#E5E7EB',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.05,
+    shadowRadius: 8,
+    elevation: 2,
   },
   planCardRecommended: {
-    borderColor: '#F2D06B',
-    borderWidth: 2,
+    paddingVertical: 28,
   },
   planCardCurrent: {
-    borderColor: '#2ECC71',
+    borderColor: '#22C55E',
     borderWidth: 2,
   },
-  recommendedBadge: {
-    backgroundColor: '#F2D06B',
+
+  badge: {
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 12,
     alignSelf: 'flex-start',
     marginBottom: 12,
   },
-  recommendedText: { fontSize: 12, fontWeight: 'bold', color: '#1A0A2E' },
+  badgeText: { fontSize: 12, fontWeight: 'bold', color: '#FFFFFF' },
   currentBadge: {
-    backgroundColor: '#2ECC71',
+    backgroundColor: '#22C55E',
     paddingHorizontal: 12,
     paddingVertical: 4,
     borderRadius: 12,
     alignSelf: 'flex-start',
     marginBottom: 12,
   },
-  currentBadgeText: { fontSize: 12, fontWeight: 'bold', color: '#fff' },
-  planName: { fontSize: 20, fontWeight: 'bold', color: '#fff', marginBottom: 4 },
-  planPrice: { fontSize: 28, fontWeight: 'bold', color: '#F2D06B', marginBottom: 16 },
+  currentBadgeText: { fontSize: 12, fontWeight: 'bold', color: '#FFFFFF' },
+
+  planName: { fontSize: 20, fontWeight: 'bold', color: '#374151', marginBottom: 4 },
+  planPrice: { fontSize: 28, fontWeight: 'bold', color: '#4C1D95', marginBottom: 4 },
+  priceSub: { fontSize: 12, color: '#9CA3AF', marginBottom: 12 },
+
+  reasonBox: {
+    backgroundColor: '#FFFBEB',
+    borderRadius: 10,
+    padding: 12,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#FDE68A',
+  },
+  reasonTitle: { fontSize: 12, fontWeight: '700', color: '#F59E0B', marginBottom: 4 },
+  reasonText: { fontSize: 13, color: '#92400E', lineHeight: 20 },
+
   featureList: { marginBottom: 16 },
-  featureRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 8 },
-  featureCheck: { color: '#2ECC71', marginRight: 8, fontSize: 16 },
-  featureText: { color: '#ddd', fontSize: 14 },
+  featureRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 10 },
+  featureCheck: { color: '#22C55E', marginRight: 8, fontSize: 14, fontWeight: '700', width: 18 },
+  featureCross: { color: '#D1D5DB', marginRight: 8, fontSize: 14, fontWeight: '700', width: 18 },
+  featureLabel: { fontSize: 13, color: '#374151', flex: 1 },
+  featureDisabled: { color: '#D1D5DB' },
+  featureValue: { fontSize: 11, color: '#6D28D9', fontWeight: '500' },
+
   selectButton: { borderRadius: 12, overflow: 'hidden' },
   selectButtonGradient: { paddingVertical: 14, alignItems: 'center' },
-  selectButtonText: { fontSize: 16, fontWeight: 'bold', color: '#1A0A2E' },
+  selectButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
+
+  ctaBanner: {
+    marginTop: 8,
+    paddingVertical: 16,
+    alignItems: 'center',
+  },
+  ctaBannerText: { fontSize: 14, color: '#9CA3AF', fontWeight: '500' },
 });
