@@ -10,6 +10,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { shareResult } from '../../lib/share';
 import {
   MITAMA_CARDS,
   MITAMA_OUTRO,
@@ -138,6 +139,18 @@ export default function MitamaScreen() {
                 {selectedCard.message}
               </Text>
             </View>
+
+            {/* Share Button */}
+            <TouchableOpacity
+              style={styles.shareButton}
+              onPress={() => shareResult({
+                title: '今日のみ・たまカード',
+                message: `【今日引いたみ・たまカード】\n${selectedCard.title}「${selectedCard.subtitle}」\n\n言霊：${selectedCard.kotodama.slice(0, 50)}...`,
+              })}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.shareButtonText}>カードをシェアする 🎴</Text>
+            </TouchableOpacity>
 
             {/* Reset Button */}
             <TouchableOpacity
@@ -327,6 +340,25 @@ const styles = StyleSheet.create({
     color: '#374151',
     lineHeight: 28,
     width: '100%',
+  },
+
+  /* Share */
+  shareButton: {
+    borderWidth: 1,
+    borderColor: '#6D28D9',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    backgroundColor: 'transparent',
+  },
+  shareButtonText: {
+    color: '#6D28D9',
+    fontSize: 14,
+    fontWeight: '500',
   },
 
   /* Retry */

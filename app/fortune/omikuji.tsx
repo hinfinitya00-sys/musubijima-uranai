@@ -9,6 +9,7 @@ import {
   Platform,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { shareResult } from '@/lib/share';
 
 interface OmikujiItem {
   num: number;
@@ -661,6 +662,17 @@ export default function OmikujiScreen() {
             </View>
 
             <TouchableOpacity
+              style={styles.shareButton}
+              onPress={() => shareResult({
+                title: '今日のおみくじ',
+                message: `【今日のおみくじ】\n${currentItem.title}\n\n${currentItem.message.slice(0, 100)}...`,
+              })}
+              activeOpacity={0.8}
+            >
+              <Text style={styles.shareButtonText}>結果をシェアする 🔮</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
               style={styles.redrawButton}
               onPress={handleRedraw}
               activeOpacity={0.8}
@@ -807,6 +819,23 @@ const styles = StyleSheet.create({
     color: '#E5E7EB',
     lineHeight: 28,
     textAlign: 'center',
+  },
+  shareButton: {
+    borderWidth: 1,
+    borderColor: '#6D28D9',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 16,
+    backgroundColor: 'transparent',
+  },
+  shareButtonText: {
+    color: '#6D28D9',
+    fontSize: 14,
+    fontWeight: '500',
   },
   redrawButton: {
     paddingHorizontal: 32,

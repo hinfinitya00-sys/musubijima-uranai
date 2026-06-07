@@ -13,6 +13,7 @@ import {
   LIFE_RHYTHM_INTRO,
   LIFE_RHYTHM_YEARS,
 } from '../../constants/life-rhythm';
+import { shareResult } from '../../lib/share';
 import type { LifeRhythmYear } from '../../constants/life-rhythm';
 
 function reduceToSingle(n: number): number {
@@ -169,6 +170,17 @@ export default function LifeRhythmScreen() {
             <YearCard year={resultYear} isHighlight />
 
             <TouchableOpacity
+              style={s.shareButton}
+              onPress={() => shareResult({
+                title: '私の今年の人生リズム',
+                message: `【私の今年の人生リズム】\n${resultYear.title}「${resultYear.subtitle}」\n\n${resultYear.body.slice(0, 80)}...`,
+              })}
+              activeOpacity={0.8}
+            >
+              <Text style={s.shareButtonText}>今年のリズムをシェアする 🌿</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
               style={s.showAllButton}
               onPress={() => setShowAll(!showAll)}
               activeOpacity={0.8}
@@ -260,6 +272,24 @@ const s = StyleSheet.create({
   },
   luckyLabel: { fontSize: 11, color: '#9CA3AF', fontWeight: '600', marginBottom: 4 },
   luckyValue: { fontSize: 13, color: '#374151' },
+
+  shareButton: {
+    borderWidth: 1,
+    borderColor: '#6D28D9',
+    borderRadius: 12,
+    paddingVertical: 12,
+    paddingHorizontal: 24,
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 16,
+    backgroundColor: 'transparent',
+  },
+  shareButtonText: {
+    color: '#6D28D9',
+    fontSize: 14,
+    fontWeight: '500',
+  },
 
   showAllButton: {
     marginVertical: 16, paddingVertical: 12, paddingHorizontal: 24,
