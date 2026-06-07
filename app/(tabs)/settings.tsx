@@ -26,7 +26,7 @@ export default function SettingsScreen() {
       "誕生日を変更すると、ガイドが変わる場合があります。変更しますか？",
       [
         { text: "キャンセル", style: "cancel" },
-        { text: "変更する", onPress: () => router.push("/onboarding") },
+        { text: "変更する", onPress: () => router.push("/(auth)/register") },
       ]
     );
   };
@@ -136,20 +136,34 @@ export default function SettingsScreen() {
               <View style={styles.appInfoHeader}>
                 <Text style={styles.appInfoEmoji}>🏝️</Text>
                 <View>
-                  <Text style={styles.appInfoTitle}>ありが島 誕生日占い</Text>
+                  <Text style={styles.appInfoTitle}>むすび島 数秘術占い</Text>
                   <Text style={styles.appInfoVersion}>バージョン 1.0.0</Text>
                 </View>
               </View>
               <View style={styles.divider} />
               <Text style={styles.appInfoDescription}>
-                「ありが島誕生日占い」は、生年月日から算出したガイド数をもとに、
-                あなただけのガイドとつながり、毎日ポジティブなメッセージをお届けするアプリです。
+                「むすび島数秘術占い」は、生年月日から算出したライフパス数をもとに、
+                あなただけのむすび族キャラクターとつながり、毎日ポジティブなメッセージをお届けするアプリです。
               </Text>
               <View style={styles.divider} />
               <Text style={styles.copyrightText}>
-                占いコンテンツ：masajiart.gr.jp/arigajima{"\n"}
-                © 2024 ありが島 誕生日占い
+                占いコンテンツ：むすび島{"\n"}
+                © 2024 むすび島 数秘術占い
               </Text>
+            </View>
+          </View>
+
+          {/* 法的情報 */}
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>法的情報</Text>
+            <View style={styles.card}>
+              <TouchableOpacity
+                style={styles.linkRow}
+                onPress={() => router.push('/legal/tokutei' as never)}
+              >
+                <Text style={styles.linkRowText}>特定商取引法に基づく表記</Text>
+                <Text style={styles.linkRowArrow}>›</Text>
+              </TouchableOpacity>
             </View>
           </View>
 
@@ -331,5 +345,20 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: "rgba(245,239,230,0.4)",
     lineHeight: 20,
+  },
+  linkRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+    paddingVertical: 4,
+  },
+  linkRowText: {
+    fontSize: 14,
+    color: "#A89BC2",
+    fontWeight: "500",
+  },
+  linkRowArrow: {
+    fontSize: 18,
+    color: "#A89BC2",
   },
 });

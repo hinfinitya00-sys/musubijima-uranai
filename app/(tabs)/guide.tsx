@@ -35,7 +35,7 @@ export default function GuideScreen() {
             <Text style={styles.emptyTitle}>まずは誕生日を登録しましょう</Text>
             <TouchableOpacity
               style={styles.setupButton}
-              onPress={() => router.push("/onboarding")}
+              onPress={() => router.push("/(auth)/register")}
             >
               <LinearGradient colors={["#7B5EA7", "#9B7EC7"] as const} style={styles.setupButtonGradient}>
                 <Text style={styles.setupButtonText}>登録する</Text>
@@ -130,7 +130,7 @@ export default function GuideScreen() {
                 </Text>
                 <TouchableOpacity
                   style={styles.changeButton}
-                  onPress={() => router.push("/onboarding")}
+                  onPress={() => router.push("/(auth)/register")}
                 >
                   <Text style={styles.changeButtonText}>変更する</Text>
                 </TouchableOpacity>

@@ -90,7 +90,6 @@ export default function RootLayout() {
           <Stack screenOptions={{ headerShown: false }}>
             <Stack.Screen name="(tabs)" />
             <Stack.Screen name="oauth/callback" />
-            <Stack.Screen name="onboarding" />
             <Stack.Screen name="card-reading" options={{ presentation: "fullScreenModal" }} />
             <Stack.Screen name="subscription" options={{ presentation: "fullScreenModal" }} />
           </Stack>
