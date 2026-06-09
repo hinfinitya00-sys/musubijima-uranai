@@ -16,14 +16,11 @@ import { useApp } from "@/lib/app-context";
 import { usePlanGate } from "@/hooks/usePlanGate";
 import { TrialBanner } from "@/components/TrialBanner";
 
-const GRID_GAP = 8;
-
 export default function HomeScreen() {
   const { width } = useWindowDimensions();
   const { state } = useApp();
   const { canUse, isFree } = usePlanGate();
   const { subscription, isLoading } = state;
-  const gridCardWidth = (width - 32 - GRID_GAP) / 2;
 
   if (isLoading) {
     return (
@@ -61,90 +58,82 @@ export default function HomeScreen() {
           {/* Section Label */}
           <Text style={styles.sectionLabel}>今日のメニュー</Text>
 
-          {/* Hero Card - みたまカード */}
-          <TouchableOpacity
-            style={styles.heroCard}
-            onPress={() => router.push('/fortune/mitama' as never)}
-            activeOpacity={0.8}
-          >
-            <View style={[styles.iconWrap, { backgroundColor: '#EDE9FE' }]}>
-              <Text style={styles.iconEmoji}>🎴</Text>
+          {/* Center Oracle Layout */}
+          <View style={styles.oracleContainer}>
+            {/* 上段：2つの占い */}
+            <View style={styles.oracleTopRow}>
+              <TouchableOpacity style={styles.orbitalCard} onPress={() => router.push('/fortune/omikuji' as never)} activeOpacity={0.8}>
+                <View style={[styles.orbitalIcon, { backgroundColor: '#EDE9FE' }]}>
+                  <Text style={styles.orbitalEmoji}>🔮</Text>
+                </View>
+                <Text style={styles.orbitalTitle}>おみくじ</Text>
+                <Text style={styles.orbitalSub}>今日の運勢</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.orbitalCard} onPress={() => router.push('/fortune/mitama' as never)} activeOpacity={0.8}>
+                <View style={[styles.orbitalIcon, { backgroundColor: '#F3E8FF' }]}>
+                  <Text style={styles.orbitalEmoji}>🎴</Text>
+                </View>
+                <Text style={styles.orbitalTitle}>み・たまカード</Text>
+                <Text style={styles.orbitalSub}>今日の一枚</Text>
+              </TouchableOpacity>
             </View>
-            <View style={styles.heroTextArea}>
-              <Text style={styles.heroTitle}>み・たまカード</Text>
-              <Text style={styles.heroSub}>今日の一枚を引く</Text>
+
+            {/* Center：寿枝さん写真 */}
+            <View style={styles.centerProfileWrap}>
+              <View style={styles.centerProfileRing}>
+                <Image
+                  source={require('../../assets/mitama/profile.jpg')}
+                  style={styles.centerProfileImage}
+                  resizeMode="cover"
+                />
+              </View>
+              <Text style={styles.centerProfileName}>其田 寿枝</Text>
+              <Text style={styles.centerProfileRole}>数秘術占い師</Text>
             </View>
-            <View style={styles.badge}>
-              <Text style={styles.badgeText}>毎日</Text>
+
+            {/* 下段：3つの占い */}
+            <View style={styles.oracleBottomRow}>
+              <TouchableOpacity
+                style={styles.orbitalCard}
+                onPress={() => {
+                  if (!canUse.negativeGod) { router.push('/subscription/plans' as never); return; }
+                  router.push('/fortune/negative-god' as never);
+                }}
+                activeOpacity={0.8}
+              >
+                {isFree && <Text style={styles.lockBadge}>🔒</Text>}
+                <View style={[styles.orbitalIcon, { backgroundColor: '#1C1C2E' }]}>
+                  <Text style={styles.orbitalEmoji}>🌑</Text>
+                </View>
+                <Text style={styles.orbitalTitle}>ネガティブ神</Text>
+                <Text style={styles.orbitalSub}>闇の導き</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity style={styles.orbitalCard} onPress={() => router.push('/fortune/life-rhythm' as never)} activeOpacity={0.8}>
+                <View style={[styles.orbitalIcon, { backgroundColor: '#F0FDF4' }]}>
+                  <Text style={styles.orbitalEmoji}>🌿</Text>
+                </View>
+                <Text style={styles.orbitalTitle}>人生リズム</Text>
+                <Text style={styles.orbitalSub}>9年の流れ</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.orbitalCard}
+                onPress={() => {
+                  if (!canUse.musubian) { router.push('/subscription/plans' as never); return; }
+                  router.push('/fortune/musubian' as never);
+                }}
+                activeOpacity={0.8}
+              >
+                {isFree && <Text style={styles.lockBadge}>🔒</Text>}
+                <View style={[styles.orbitalIcon, { backgroundColor: '#FFF7ED' }]}>
+                  <Text style={styles.orbitalEmoji}>🤝</Text>
+                </View>
+                <Text style={styles.orbitalTitle}>むすび族</Text>
+                <Text style={styles.orbitalSub}>相性・縁</Text>
+              </TouchableOpacity>
             </View>
-          </TouchableOpacity>
-
-          {/* Grid Row 1 */}
-          <View style={styles.gridRow}>
-            <TouchableOpacity
-              style={[styles.gridCard, { width: gridCardWidth }]}
-              onPress={() => router.push('/fortune/omikuji' as never)}
-              activeOpacity={0.8}
-            >
-              <View style={[styles.gridIconWrap, { backgroundColor: '#EDE9FE' }]}>
-                <Text style={styles.gridIconEmoji}>🔮</Text>
-              </View>
-              <Text style={styles.gridTitle}>おみくじ</Text>
-              <Text style={styles.gridSub}>今日の運勢</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.gridCard, { width: gridCardWidth }]}
-              onPress={() => {
-                if (!canUse.negativeGod) {
-                  router.push('/subscription/plans' as never);
-                  return;
-                }
-                router.push('/fortune/negative-god' as never);
-              }}
-              activeOpacity={0.8}
-            >
-              {isFree && <Text style={styles.lockBadge}>🔒</Text>}
-              <View style={[styles.gridIconWrap, { backgroundColor: '#1C1C2E' }]}>
-                <Text style={styles.gridIconEmoji}>🌑</Text>
-              </View>
-              <Text style={styles.gridTitle}>ネガティブ神</Text>
-              <Text style={styles.gridSub}>闇からの導き</Text>
-            </TouchableOpacity>
-          </View>
-
-          {/* Grid Row 2 */}
-          <View style={styles.gridRow}>
-            <TouchableOpacity
-              style={[styles.gridCard, { width: gridCardWidth }]}
-              onPress={() => router.push('/fortune/life-rhythm' as never)}
-              activeOpacity={0.8}
-            >
-              <View style={[styles.gridIconWrap, { backgroundColor: '#F0FDF4' }]}>
-                <Text style={styles.gridIconEmoji}>🌿</Text>
-              </View>
-              <Text style={styles.gridTitle}>人生リズム</Text>
-              <Text style={styles.gridSub}>今年の流れを知る</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.gridCard, { width: gridCardWidth }]}
-              onPress={() => {
-                if (!canUse.musubian) {
-                  router.push('/subscription/plans' as never);
-                  return;
-                }
-                router.push('/fortune/musubian' as never);
-              }}
-              activeOpacity={0.8}
-            >
-              {isFree && <Text style={styles.lockBadge}>🔒</Text>}
-              <View style={[styles.gridIconWrap, { backgroundColor: '#FFF7ED' }]}>
-                <Text style={styles.gridIconEmoji}>🤝</Text>
-              </View>
-              <Text style={styles.gridTitle}>むすび族占い</Text>
-              <Text style={styles.gridSub}>相性・縁を知る</Text>
-            </TouchableOpacity>
           </View>
 
           {/* CTA */}
@@ -164,17 +153,6 @@ export default function HomeScreen() {
 
           {/* 占い師プロフィール */}
           <View style={styles.profileCard}>
-            <View style={styles.profileRow}>
-              <Image
-                source={require('../../assets/mitama/profile.jpg')}
-                style={styles.profileAvatar}
-                resizeMode="cover"
-              />
-              <View style={styles.profileInfo}>
-                <Text style={styles.profileName}>其田 寿枝（そのだ ひさえ）</Text>
-                <Text style={styles.profileRole}>数秘術占い師・むすび島主宰</Text>
-              </View>
-            </View>
             <Text style={styles.profileMessage}>
               数字には、あなたの魂の声が宿っています。生年月日に秘められたリズムを読み解き、今このときのあなたに必要なメッセージをお届けします。
             </Text>
@@ -217,42 +195,83 @@ const styles = StyleSheet.create({
     marginBottom: 10, textTransform: "uppercase",
   },
 
-  // Hero Card
-  heroCard: {
-    flexDirection: 'row', alignItems: 'center',
-    height: 80, backgroundColor: '#FFFFFF',
-    borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 14,
-    paddingHorizontal: 16, marginBottom: 8,
+  // Oracle Layout
+  oracleContainer: {
+    width: '100%',
+    alignItems: 'center',
+    paddingVertical: 8,
+    marginBottom: 8,
   },
-  iconWrap: {
-    width: 48, height: 48, borderRadius: 12,
-    alignItems: 'center', justifyContent: 'center',
+  oracleTopRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginBottom: 16,
   },
-  iconEmoji: { fontSize: 22 },
-  heroTextArea: { flex: 1, marginLeft: 12 },
-  heroTitle: { fontSize: 14, fontWeight: '500', color: '#374151' },
-  heroSub: { fontSize: 12, color: '#9CA3AF', marginTop: 2 },
-  badge: {
-    backgroundColor: '#EDE9FE', borderRadius: 20,
-    paddingHorizontal: 8, paddingVertical: 3,
+  oracleBottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
+    width: '100%',
+    marginTop: 16,
   },
-  badgeText: { fontSize: 10, color: '#5B21B6', fontWeight: '600' },
+  orbitalCard: {
+    alignItems: 'center',
+    width: 90,
+    position: 'relative' as const,
+  },
+  orbitalIcon: {
+    width: 60,
+    height: 60,
+    borderRadius: 30,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 6,
+    shadowColor: '#4C1D95',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.12,
+    shadowRadius: 8,
+    elevation: 3,
+  },
+  orbitalEmoji: { fontSize: 26 },
+  orbitalTitle: { fontSize: 12, fontWeight: '600', color: '#374151', textAlign: 'center' },
+  orbitalSub: { fontSize: 10, color: '#9CA3AF', textAlign: 'center', marginTop: 2 },
+  lockBadge: { fontSize: 12, position: 'absolute' as const, top: -2, right: 2 },
 
-  // Grid
-  gridRow: { flexDirection: 'row', gap: GRID_GAP, marginTop: 0, marginBottom: 8 },
-  gridCard: {
-    height: 110, backgroundColor: '#FFFFFF',
-    borderWidth: 1, borderColor: '#E5E7EB', borderRadius: 12,
-    padding: 12,
+  // Center Profile
+  centerProfileWrap: {
+    alignItems: 'center',
+    marginVertical: 8,
   },
-  gridIconWrap: {
-    width: 36, height: 36, borderRadius: 9,
-    alignItems: 'center', justifyContent: 'center',
+  centerProfileRing: {
+    width: 120,
+    height: 120,
+    borderRadius: 60,
+    borderWidth: 3,
+    borderColor: '#C4B5FD',
+    padding: 3,
+    shadowColor: '#4C1D95',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 12,
+    elevation: 6,
   },
-  gridIconEmoji: { fontSize: 18 },
-  lockBadge: { fontSize: 12, position: 'absolute' as const, top: 8, right: 8 },
-  gridTitle: { fontSize: 13, fontWeight: '500', color: '#374151', marginTop: 8 },
-  gridSub: { fontSize: 11, color: '#9CA3AF', marginTop: 2 },
+  centerProfileImage: {
+    width: '100%',
+    height: '100%',
+    borderRadius: 57,
+  },
+  centerProfileName: {
+    fontSize: 15,
+    fontWeight: '700',
+    color: '#4C1D95',
+    marginTop: 10,
+    letterSpacing: 1,
+  },
+  centerProfileRole: {
+    fontSize: 11,
+    color: '#9CA3AF',
+    marginTop: 2,
+  },
 
   // CTA
   ctaSection: { borderRadius: 16, overflow: "hidden", marginTop: 8 },
@@ -260,7 +279,7 @@ const styles = StyleSheet.create({
   ctaTitle: { fontSize: 16, fontWeight: "800", color: "#1F2937", marginBottom: 4 },
   ctaSubtitle: { fontSize: 13, color: "#374151" },
 
-  // Profile
+  // Profile Card
   profileCard: {
     backgroundColor: '#FFFFFF',
     borderRadius: 16,
@@ -269,34 +288,10 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 16,
   },
-  profileRow: {
-    flexDirection: 'row',
-    alignItems: 'center',
-  },
-  profileAvatar: {
-    width: 64,
-    height: 64,
-    borderRadius: 32,
-  },
-  profileInfo: {
-    marginLeft: 12,
-    flex: 1,
-  },
-  profileName: {
-    fontSize: 15,
-    fontWeight: '500',
-    color: '#4C1D95',
-  },
-  profileRole: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    marginTop: 2,
-  },
   profileMessage: {
     fontSize: 13,
     color: '#374151',
     lineHeight: 22,
-    marginTop: 12,
   },
   pillScroll: {
     marginTop: 12,

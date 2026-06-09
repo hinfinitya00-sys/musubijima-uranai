@@ -110,7 +110,7 @@ export default function MitamaScreen() {
                 <Image
                   source={selectedCard.img}
                   style={styles.cardImage}
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
               </View>
 
@@ -282,14 +282,17 @@ const styles = StyleSheet.create({
   },
   cardImageWrap: {
     width: '100%',
+    aspectRatio: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 16,
     borderRadius: 12,
     overflow: 'hidden',
+    backgroundColor: '#F9F5FF',
   },
   cardImage: {
     width: '100%',
-    aspectRatio: 1,
+    height: '100%',
     borderRadius: 12,
   },
   cardNumber: {
