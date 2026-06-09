@@ -55,83 +55,80 @@ export default function HomeScreen() {
 
           <TrialBanner />
 
-          {/* Section Label */}
-          <Text style={styles.sectionLabel}>今日のメニュー</Text>
-
-          {/* Center Oracle Layout */}
+          {/* Oracle Layout */}
           <View style={styles.oracleContainer}>
-            {/* 上段：2つの占い */}
-            <View style={styles.oracleTopRow}>
-              <TouchableOpacity style={styles.orbitalCard} onPress={() => router.push('/fortune/omikuji' as never)} activeOpacity={0.8}>
-                <View style={[styles.orbitalIcon, { backgroundColor: '#EDE9FE' }]}>
-                  <Text style={styles.orbitalEmoji}>🔮</Text>
+            {/* 上段：2つ */}
+            <View style={styles.oracleRow}>
+              <TouchableOpacity style={styles.orbCard} onPress={() => router.push('/fortune/omikuji' as never)} activeOpacity={0.85}>
+                <View style={[styles.orbIcon, { backgroundColor: '#EDE9FE' }]}>
+                  <Text style={styles.orbEmoji}>🔮</Text>
                 </View>
-                <Text style={styles.orbitalTitle}>おみくじ</Text>
-                <Text style={styles.orbitalSub}>今日の運勢</Text>
+                <Text style={styles.orbTitle}>おみくじ</Text>
+                <Text style={styles.orbSub}>今日の運勢</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.orbitalCard} onPress={() => router.push('/fortune/mitama' as never)} activeOpacity={0.8}>
-                <View style={[styles.orbitalIcon, { backgroundColor: '#F3E8FF' }]}>
-                  <Text style={styles.orbitalEmoji}>🎴</Text>
+              <TouchableOpacity style={styles.orbCard} onPress={() => router.push('/fortune/mitama' as never)} activeOpacity={0.85}>
+                <View style={[styles.orbIcon, { backgroundColor: '#F3E8FF' }]}>
+                  <Text style={styles.orbEmoji}>🎴</Text>
                 </View>
-                <Text style={styles.orbitalTitle}>み・たまカード</Text>
-                <Text style={styles.orbitalSub}>今日の一枚</Text>
+                <Text style={styles.orbTitle}>み・たまカード</Text>
+                <Text style={styles.orbSub}>今日の一枚</Text>
               </TouchableOpacity>
             </View>
 
-            {/* Center：寿枝さん写真 */}
-            <View style={styles.centerProfileWrap}>
-              <View style={styles.centerProfileRing}>
+            {/* 中央：寿枝さん */}
+            <View style={styles.centerOracle}>
+              <View style={styles.centerRing}>
                 <Image
                   source={require('../../assets/mitama/profile.jpg')}
-                  style={styles.centerProfileImage}
+                  style={styles.centerImage}
                   resizeMode="cover"
                 />
               </View>
-              <Text style={styles.centerProfileName}>其田 寿枝</Text>
-              <Text style={styles.centerProfileRole}>数秘術占い師</Text>
+              <Text style={styles.centerName}>其田 寿枝</Text>
+              <Text style={styles.centerRole}>数秘術占い師</Text>
             </View>
 
-            {/* 下段：3つの占い */}
-            <View style={styles.oracleBottomRow}>
+            {/* 下段：3つ */}
+            <View style={styles.oracleRow}>
               <TouchableOpacity
-                style={styles.orbitalCard}
+                style={styles.orbCard}
                 onPress={() => {
                   if (!canUse.negativeGod) { router.push('/subscription/plans' as never); return; }
                   router.push('/fortune/negative-god' as never);
                 }}
-                activeOpacity={0.8}
+                activeOpacity={0.85}
               >
                 {isFree && <Text style={styles.lockBadge}>🔒</Text>}
-                <View style={[styles.orbitalIcon, { backgroundColor: '#1C1C2E' }]}>
-                  <Text style={styles.orbitalEmoji}>🌑</Text>
+                <View style={[styles.orbIcon, { backgroundColor: '#1C1C2E' }]}>
+                  <Text style={styles.orbEmoji}>🌑</Text>
                 </View>
-                <Text style={styles.orbitalTitle}>ネガティブ神</Text>
-                <Text style={styles.orbitalSub}>闇の導き</Text>
+                <Text style={styles.orbTitle}>ネガティブ神</Text>
+                <Text style={styles.orbSub}>闇の導き</Text>
               </TouchableOpacity>
 
-              <TouchableOpacity style={styles.orbitalCard} onPress={() => router.push('/fortune/life-rhythm' as never)} activeOpacity={0.8}>
-                <View style={[styles.orbitalIcon, { backgroundColor: '#F0FDF4' }]}>
-                  <Text style={styles.orbitalEmoji}>🌿</Text>
+              <TouchableOpacity style={styles.orbCard} onPress={() => router.push('/fortune/life-rhythm' as never)} activeOpacity={0.85}>
+                <View style={[styles.orbIcon, { backgroundColor: '#F0FDF4' }]}>
+                  <Text style={styles.orbEmoji}>🌿</Text>
                 </View>
-                <Text style={styles.orbitalTitle}>人生リズム</Text>
-                <Text style={styles.orbitalSub}>9年の流れ</Text>
+                <Text style={styles.orbTitle}>人生リズム</Text>
+                <Text style={styles.orbSub}>9年の流れ</Text>
               </TouchableOpacity>
 
               <TouchableOpacity
-                style={styles.orbitalCard}
+                style={styles.orbCard}
                 onPress={() => {
                   if (!canUse.musubian) { router.push('/subscription/plans' as never); return; }
                   router.push('/fortune/musubian' as never);
                 }}
-                activeOpacity={0.8}
+                activeOpacity={0.85}
               >
                 {isFree && <Text style={styles.lockBadge}>🔒</Text>}
-                <View style={[styles.orbitalIcon, { backgroundColor: '#FFF7ED' }]}>
-                  <Text style={styles.orbitalEmoji}>🤝</Text>
+                <View style={[styles.orbIcon, { backgroundColor: '#FFF7ED' }]}>
+                  <Text style={styles.orbEmoji}>🤝</Text>
                 </View>
-                <Text style={styles.orbitalTitle}>むすび族</Text>
-                <Text style={styles.orbitalSub}>相性・縁</Text>
+                <Text style={styles.orbTitle}>むすび族</Text>
+                <Text style={styles.orbSub}>相性・縁</Text>
               </TouchableOpacity>
             </View>
           </View>
@@ -189,12 +186,6 @@ const styles = StyleSheet.create({
   },
   dateText: { fontSize: 14, color: "#9CA3AF" },
 
-  // Section
-  sectionLabel: {
-    fontSize: 11, color: "#9CA3AF", letterSpacing: 1.5,
-    marginBottom: 10, textTransform: "uppercase",
-  },
-
   // Oracle Layout
   oracleContainer: {
     width: '100%',
@@ -202,29 +193,23 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
     marginBottom: 8,
   },
-  oracleTopRow: {
-    flexDirection: 'row',
+  oracleRow: {
+    flexDirection: 'row' as const,
     justifyContent: 'space-around',
     width: '100%',
-    marginBottom: 16,
+    marginVertical: 8,
   },
-  oracleBottomRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-around',
-    width: '100%',
-    marginTop: 16,
-  },
-  orbitalCard: {
-    alignItems: 'center',
-    width: 90,
+  orbCard: {
+    alignItems: 'center' as const,
+    width: 88,
     position: 'relative' as const,
   },
-  orbitalIcon: {
-    width: 60,
-    height: 60,
-    borderRadius: 30,
-    alignItems: 'center',
-    justifyContent: 'center',
+  orbIcon: {
+    width: 64,
+    height: 64,
+    borderRadius: 32,
+    alignItems: 'center' as const,
+    justifyContent: 'center' as const,
     marginBottom: 6,
     shadowColor: '#4C1D95',
     shadowOffset: { width: 0, height: 2 },
@@ -232,21 +217,21 @@ const styles = StyleSheet.create({
     shadowRadius: 8,
     elevation: 3,
   },
-  orbitalEmoji: { fontSize: 26 },
-  orbitalTitle: { fontSize: 12, fontWeight: '600', color: '#374151', textAlign: 'center' },
-  orbitalSub: { fontSize: 10, color: '#9CA3AF', textAlign: 'center', marginTop: 2 },
+  orbEmoji: { fontSize: 28 },
+  orbTitle: { fontSize: 11, fontWeight: '600' as const, color: '#374151', textAlign: 'center' as const },
+  orbSub: { fontSize: 10, color: '#9CA3AF', textAlign: 'center' as const, marginTop: 1 },
   lockBadge: { fontSize: 12, position: 'absolute' as const, top: -2, right: 2 },
 
   // Center Profile
-  centerProfileWrap: {
-    alignItems: 'center',
-    marginVertical: 8,
+  centerOracle: {
+    alignItems: 'center' as const,
+    marginVertical: 4,
   },
-  centerProfileRing: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    borderWidth: 3,
+  centerRing: {
+    width: 112,
+    height: 112,
+    borderRadius: 56,
+    borderWidth: 2.5,
     borderColor: '#C4B5FD',
     padding: 3,
     shadowColor: '#4C1D95',
@@ -255,20 +240,20 @@ const styles = StyleSheet.create({
     shadowRadius: 12,
     elevation: 6,
   },
-  centerProfileImage: {
+  centerImage: {
     width: '100%',
     height: '100%',
-    borderRadius: 57,
+    borderRadius: 53,
   },
-  centerProfileName: {
-    fontSize: 15,
-    fontWeight: '700',
+  centerName: {
+    fontSize: 14,
+    fontWeight: '700' as const,
     color: '#4C1D95',
-    marginTop: 10,
+    marginTop: 8,
     letterSpacing: 1,
   },
-  centerProfileRole: {
-    fontSize: 11,
+  centerRole: {
+    fontSize: 10,
     color: '#9CA3AF',
     marginTop: 2,
   },
