@@ -80,7 +80,7 @@ export default function HomeScreen() {
             <View style={styles.centerOracle}>
               <View style={styles.centerRing}>
                 <Image
-                  source={require('../../assets/mitama/profile.jpg')}
+                  source={{ uri: 'https://musubijima.com/wp-content/uploads/2021/03/contents_header.jpg' }}
                   style={styles.centerImage}
                   resizeMode="cover"
                 />

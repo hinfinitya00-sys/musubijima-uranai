@@ -172,6 +172,9 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 40,
     alignItems: 'center',
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center',
   },
 
   /* Draw Prompt */
@@ -198,6 +201,9 @@ const styles = StyleSheet.create({
     overflow: 'hidden',
     marginTop: 24,
     marginBottom: 24,
+    maxWidth: 320,
+    width: '100%',
+    alignSelf: 'center',
     shadowColor: '#4C1D95',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -223,6 +229,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '100%',
+    maxWidth: 560,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 16,
