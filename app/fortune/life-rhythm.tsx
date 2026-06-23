@@ -150,7 +150,7 @@ export default function LifeRhythmScreen() {
             {error ? <Text style={s.errorText}>{error}</Text> : null}
             <TouchableOpacity style={s.calcButton} onPress={handleCalc} activeOpacity={0.8}>
               <LinearGradient
-                colors={['#4C1D95', '#6D28D9']}
+                colors={['#E8758A', '#C45070']}
                 style={s.calcButtonGradient}
               >
                 <Text style={s.calcButtonText}>調べる</Text>
@@ -219,20 +219,20 @@ export default function LifeRhythmScreen() {
 }
 
 const s = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: '#FFFAF9' },
   scrollContent: { padding: 20, paddingTop: 60, paddingBottom: 40 },
 
   header: { alignItems: 'center', marginBottom: 32 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#4C1D95', marginBottom: 4 },
-  subtitle: { fontSize: 11, color: '#6D28D9', letterSpacing: 6 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#3D1A1A', marginBottom: 4 },
+  subtitle: { fontSize: 11, color: '#C45070', letterSpacing: 6 },
 
   inputSection: { alignItems: 'center', marginBottom: 32 },
-  inputDesc: { fontSize: 14, color: '#374151', textAlign: 'center', lineHeight: 24, marginBottom: 24 },
+  inputDesc: { fontSize: 14, color: '#3D1A1A', textAlign: 'center', lineHeight: 24, marginBottom: 24 },
   textInput: {
     width: '80%', maxWidth: 280, height: 48,
-    borderWidth: 1, borderColor: '#D1D5DB', borderRadius: 12,
-    paddingHorizontal: 16, fontSize: 16, color: '#374151',
-    backgroundColor: '#FFFFFF', textAlign: 'center',
+    borderWidth: 1, borderColor: '#F5C0CC', borderRadius: 12,
+    paddingHorizontal: 16, fontSize: 16, color: '#3D1A1A',
+    backgroundColor: '#FFFAF9', textAlign: 'center',
   },
   errorText: { color: '#DC2626', fontSize: 12, marginTop: 8 },
   calcButton: { marginTop: 20, borderRadius: 50, overflow: 'hidden' },
@@ -242,17 +242,17 @@ const s = StyleSheet.create({
   resultSection: { alignItems: 'center' },
   announceBox: { alignItems: 'center', marginBottom: 24 },
   announceEmoji: { fontSize: 48, marginBottom: 12 },
-  announceText: { fontSize: 14, color: '#374151' },
-  announceYear: { fontSize: 24, fontWeight: 'bold', color: '#4C1D95', marginVertical: 4 },
+  announceText: { fontSize: 14, color: '#3D1A1A' },
+  announceYear: { fontSize: 24, fontWeight: 'bold', color: '#C45070', marginVertical: 4 },
 
   yearCard: {
     width: '100%', backgroundColor: '#FFFFFF', borderRadius: 16,
     padding: 20, marginBottom: 16,
-    borderWidth: 1, borderColor: '#E5E7EB',
+    borderWidth: 1, borderColor: '#F5C0CC',
   },
   yearCardHighlight: {
-    borderColor: '#6D28D9', borderWidth: 2,
-    shadowColor: '#6D28D9', shadowOffset: { width: 0, height: 4 },
+    borderColor: '#E8758A', borderWidth: 2,
+    shadowColor: '#E8758A', shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.15, shadowRadius: 12, elevation: 4,
   },
   yearIconWrap: {
@@ -260,27 +260,27 @@ const s = StyleSheet.create({
     alignItems: 'center', justifyContent: 'center', marginBottom: 12,
   },
   yearEmoji: { fontSize: 24 },
-  yearTitle: { fontSize: 18, fontWeight: 'bold', color: '#4C1D95', marginBottom: 12 },
+  yearTitle: { fontSize: 18, fontWeight: 'bold', color: '#3D1A1A', marginBottom: 12 },
 
   keywordRow: { flexDirection: 'row', flexWrap: 'wrap', gap: 6, marginBottom: 16 },
   keywordPill: {
-    backgroundColor: '#EDE9FE', borderRadius: 20,
+    backgroundColor: '#FFE0E8', borderRadius: 20,
     paddingHorizontal: 10, paddingVertical: 6,
   },
-  keywordLabel: { fontSize: 9, color: '#7C3AED', fontWeight: '600' },
-  keywordValue: { fontSize: 11, color: '#5B21B6', fontWeight: '500' },
+  keywordLabel: { fontSize: 9, color: '#C45070', fontWeight: '600' },
+  keywordValue: { fontSize: 11, color: '#3D1A1A', fontWeight: '500' },
 
-  yearBody: { fontSize: 14, color: '#374151', lineHeight: 26, marginBottom: 16 },
+  yearBody: { fontSize: 14, color: '#3D1A1A', lineHeight: 26, marginBottom: 16 },
 
   luckyRow: {
-    backgroundColor: '#F9FAFB', borderRadius: 10, padding: 12,
+    backgroundColor: '#FFF8F0', borderRadius: 10, padding: 12,
   },
-  luckyLabel: { fontSize: 11, color: '#9CA3AF', fontWeight: '600', marginBottom: 4 },
-  luckyValue: { fontSize: 13, color: '#374151' },
+  luckyLabel: { fontSize: 11, color: '#7A6A6A', fontWeight: '600', marginBottom: 4 },
+  luckyValue: { fontSize: 13, color: '#3D1A1A' },
 
   shareButton: {
     borderWidth: 1,
-    borderColor: '#6D28D9',
+    borderColor: '#E8758A',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 24,
@@ -291,23 +291,23 @@ const s = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   shareButtonText: {
-    color: '#6D28D9',
+    color: '#E8758A',
     fontSize: 14,
     fontWeight: '500',
   },
 
   showAllButton: {
     marginVertical: 16, paddingVertical: 12, paddingHorizontal: 24,
-    borderRadius: 50, borderWidth: 1, borderColor: '#6D28D9',
+    borderRadius: 50, borderWidth: 1, borderColor: '#E8758A',
   },
-  showAllText: { color: '#6D28D9', fontSize: 14, fontWeight: '600', textAlign: 'center' },
+  showAllText: { color: '#E8758A', fontSize: 14, fontWeight: '600', textAlign: 'center' },
 
   resetButton: { marginTop: 8, paddingVertical: 12 },
-  resetText: { color: '#9CA3AF', fontSize: 13, textAlign: 'center' },
+  resetText: { color: '#7A6A6A', fontSize: 13, textAlign: 'center' },
 
   footer: { marginTop: 48, alignItems: 'center' },
   footerDivider: {
-    width: 80, height: 1, backgroundColor: 'rgba(109,40,217,0.2)', marginBottom: 24,
+    width: 80, height: 1, backgroundColor: 'rgba(232,117,138,0.2)', marginBottom: 24,
   },
-  footerText: { fontSize: 13, color: '#374151', lineHeight: 24, textAlign: 'center' },
+  footerText: { fontSize: 13, color: '#3D1A1A', lineHeight: 24, textAlign: 'center' },
 });

@@ -287,7 +287,7 @@ export default function NegativeGodScreen() {
             <Text style={styles.introText}>{INTRO_TEXT}</Text>
           </View>
           <TouchableOpacity style={styles.templeButton} onPress={handleVisitTemple} activeOpacity={0.85}>
-            <LinearGradient colors={['#2D1B69', '#4C1D95', '#6D28D9']} style={styles.templeButtonGradient}>
+            <LinearGradient colors={['#E8758A', '#C45070']} style={styles.templeButtonGradient}>
               <Text style={styles.templeButtonText}>✦　心の神殿を訪れる　✦</Text>
             </LinearGradient>
           </TouchableOpacity>
@@ -312,7 +312,7 @@ export default function NegativeGodScreen() {
                       placeholder="1990"
                       value={birthYear}
                       onChange={(e: any) => setBirthYear(e.target.value)}
-                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #DDD6FE', width: '100%', color: '#1E1B4B', background: '#F8F6FF' }}
+                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
                     />
                   </View>
                   <View style={styles.webInputGroup}>
@@ -323,7 +323,7 @@ export default function NegativeGodScreen() {
                       min="1" max="12"
                       value={birthMonth}
                       onChange={(e: any) => setBirthMonth(e.target.value)}
-                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #DDD6FE', width: '100%', color: '#1E1B4B', background: '#F8F6FF' }}
+                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
                     />
                   </View>
                   <View style={styles.webInputGroup}>
@@ -334,7 +334,7 @@ export default function NegativeGodScreen() {
                       min="1" max="31"
                       value={birthDay}
                       onChange={(e: any) => setBirthDay(e.target.value)}
-                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #DDD6FE', width: '100%', color: '#1E1B4B', background: '#F8F6FF' }}
+                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
                     />
                   </View>
                 </View>
@@ -348,7 +348,7 @@ export default function NegativeGodScreen() {
             disabled={!birthYear || !birthMonth || !birthDay}
           >
             <LinearGradient
-              colors={birthYear && birthMonth && birthDay ? ['#2D1B69', '#4C1D95', '#6D28D9'] : ['#9CA3AF', '#9CA3AF']}
+              colors={birthYear && birthMonth && birthDay ? ['#E8758A', '#C45070'] : ['#D0C0C0', '#D0C0C0']}
               style={styles.divineButtonGradient}
             >
               <Text style={styles.divineButtonText}>✦　神を呼び出す　✦</Text>
@@ -399,52 +399,52 @@ export default function NegativeGodScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#F8F6FF' },
+  container: { flex: 1, backgroundColor: '#FFFAF9' },
   scrollContent: { padding: 20, paddingTop: 48, paddingBottom: 60, alignItems: 'center', maxWidth: 600, alignSelf: 'center' as any, width: '100%' },
 
   introHeader: { alignItems: 'center', marginBottom: 24 },
-  introTitle: { fontSize: 24, fontWeight: '800', color: '#2D1B69', textAlign: 'center', lineHeight: 36, letterSpacing: 1 },
-  introTitleUnderline: { width: 60, height: 2, backgroundColor: '#C4B5FD', marginTop: 12, borderRadius: 2 },
-  introCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 28, borderWidth: 1, borderColor: '#DDD6FE', shadowColor: '#4C1D95', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
+  introTitle: { fontSize: 24, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', lineHeight: 36, letterSpacing: 1 },
+  introTitleUnderline: { width: 60, height: 2, backgroundColor: '#F5C0CC', marginTop: 12, borderRadius: 2 },
+  introCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 28, borderWidth: 1, borderColor: '#F5C0CC', shadowColor: '#E8758A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
   introText: { fontSize: 14, color: '#374151', lineHeight: 26 },
 
-  templeButton: { borderRadius: 50, overflow: 'hidden', marginBottom: 20, shadowColor: '#4C1D95', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 },
+  templeButton: { borderRadius: 50, overflow: 'hidden', marginBottom: 20, shadowColor: '#E8758A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 },
   templeButtonGradient: { paddingHorizontal: 40, paddingVertical: 18, borderRadius: 50, alignItems: 'center' },
-  templeButtonText: { fontSize: 18, color: '#E8C547', fontWeight: '700', letterSpacing: 2 },
+  templeButtonText: { fontSize: 18, color: '#FFFFFF', fontWeight: '700', letterSpacing: 2 },
 
   inputHeader: { alignItems: 'center', marginBottom: 20 },
-  inputTitle: { fontSize: 18, fontWeight: '700', color: '#2D1B69', textAlign: 'center' },
+  inputTitle: { fontSize: 18, fontWeight: '700', color: '#3D1A1A', textAlign: 'center' },
   inputSubtitle: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 6 },
-  inputCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: '#DDD6FE', width: '100%' },
-  inputLabel: { fontSize: 13, color: '#6D28D9', fontWeight: '600', marginBottom: 6 },
+  inputCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: '#F5C0CC', width: '100%' },
+  inputLabel: { fontSize: 13, color: '#C45070', fontWeight: '600', marginBottom: 6 },
   nativeInputWrap: { width: '100%' },
   webInputRow: { flexDirection: 'row', gap: 12 } as any,
   webInputGroup: { flex: 1 },
 
-  divineButton: { borderRadius: 50, overflow: 'hidden', marginBottom: 20, shadowColor: '#4C1D95', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 },
+  divineButton: { borderRadius: 50, overflow: 'hidden', marginBottom: 20, shadowColor: '#E8758A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 },
   divineButtonDisabled: { opacity: 0.6 },
   divineButtonGradient: { paddingHorizontal: 40, paddingVertical: 18, borderRadius: 50, alignItems: 'center' },
-  divineButtonText: { fontSize: 18, color: '#E8C547', fontWeight: '700', letterSpacing: 2 },
+  divineButtonText: { fontSize: 18, color: '#FFFFFF', fontWeight: '700', letterSpacing: 2 },
 
-  godImageWrap: { alignItems: 'center', marginBottom: 20, backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, borderWidth: 1, borderColor: '#EDE9FE', width: '100%' },
+  godImageWrap: { alignItems: 'center', marginBottom: 20, backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, borderWidth: 1, borderColor: '#F5C0CC', width: '100%' },
   godImage: { borderRadius: 8 },
 
-  negCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#EDE9FE', width: '100%', shadowColor: '#4C1D95', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
+  negCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#F5C0CC', width: '100%', shadowColor: '#E8758A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
   negCardHeader: { marginBottom: 12 },
-  negCardTag: { fontSize: 10, color: '#6D28D9', fontWeight: '700', letterSpacing: 2, backgroundColor: '#EDE9FE', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
-  negCardName: { fontSize: 20, fontWeight: '800', color: '#2D1B69' },
+  negCardTag: { fontSize: 10, color: '#C45070', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FFE0E8', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
+  negCardName: { fontSize: 20, fontWeight: '800', color: '#3D1A1A' },
   negCardDesc: { fontSize: 14, color: '#374151', lineHeight: 26 },
 
-  guardianCard: { backgroundColor: '#FFFBEB', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#FDE68A', width: '100%', shadowColor: '#B45309', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
+  guardianCard: { backgroundColor: '#FFF8F0', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#F0E0D0', width: '100%', shadowColor: '#E8758A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
   guardianCardHeader: { marginBottom: 12 },
-  guardianCardTag: { fontSize: 10, color: '#B45309', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FEF3C7', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
-  guardianCardName: { fontSize: 20, fontWeight: '800', color: '#92400E' },
+  guardianCardTag: { fontSize: 10, color: '#C9A84C', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FFF0D0', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
+  guardianCardName: { fontSize: 20, fontWeight: '800', color: '#C9A84C' },
   guardianCardDesc: { fontSize: 14, color: '#374151', lineHeight: 26 },
 
-  handleCard: { backgroundColor: '#F0FDF4', borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: '#BBF7D0', width: '100%' },
-  handleTitle: { fontSize: 15, fontWeight: '700', color: '#065F46', textAlign: 'center', marginBottom: 12, letterSpacing: 1 },
+  handleCard: { backgroundColor: '#FFF0F3', borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: '#F5C0CC', width: '100%' },
+  handleTitle: { fontSize: 15, fontWeight: '700', color: '#C45070', textAlign: 'center', marginBottom: 12, letterSpacing: 1 },
   handleText: { fontSize: 14, color: '#374151', lineHeight: 26 },
 
-  resetButton: { borderWidth: 1, borderColor: '#C4B5FD', borderRadius: 12, paddingVertical: 14, paddingHorizontal: 32, alignItems: 'center', backgroundColor: 'transparent' },
-  resetButtonText: { color: '#6D28D9', fontSize: 15, fontWeight: '600' },
+  resetButton: { borderWidth: 1, borderColor: '#E8758A', borderRadius: 12, paddingVertical: 14, paddingHorizontal: 32, alignItems: 'center', backgroundColor: 'transparent' },
+  resetButtonText: { color: '#E8758A', fontSize: 15, fontWeight: '600' },
 });
