@@ -90,6 +90,11 @@ export default function HomeScreen() {
   const [bMonth, setBMonth] = useState('');
   const [bDay, setBDay] = useState('');
 
+  // 今年の運勢（life-rhythm）セクションの生年月日フォーム
+  const [lrYear, setLrYear] = useState('');
+  const [lrMonth, setLrMonth] = useState('');
+  const [lrDay, setLrDay] = useState('');
+
   const goMusubian = () => {
     if (!canUse.musubian) { router.push('/subscription/plans' as never); return; }
     router.push({ pathname: '/fortune/musubian', params: { year: bYear, month: bMonth, day: bDay } } as never);
@@ -201,32 +206,54 @@ export default function HomeScreen() {
               </TouchableOpacity>
             </View>
 
-            {/* ⑤ 残り3占いのアイコンメニュー */}
-            <View style={styles.iconRow}>
-              <TouchableOpacity style={styles.miniCard} activeOpacity={0.9} onPress={() => router.push('/fortune/mitama' as never)}>
-                <Image source={require('../../assets/site/logo-mitama.jpg')} style={styles.miniLogo} resizeMode="contain" />
-                <Text style={styles.miniLabel}>み・たまカード</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.miniCard}
-                activeOpacity={0.9}
-                onPress={() => { if (!canUse.negativeGod) { router.push('/subscription/plans' as never); return; } router.push('/fortune/negative-god' as never); }}
-              >
-                <View style={[styles.miniLogoWrap, !canUse.negativeGod && styles.lockedWrap]}>
-                  <Image source={require('../../assets/site/logo-negative.jpg')} style={styles.miniLogo} resizeMode="contain" />
-                  {isFree && !canUse.negativeGod && <View style={styles.lockBadge}><Text style={styles.lockText}>🔒</Text></View>}
-                </View>
-                <Text style={styles.miniLabel}>ネガティブ神</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity style={styles.miniCard} activeOpacity={0.9} onPress={() => router.push('/fortune/life-rhythm' as never)}>
-                <View style={styles.miniEmojiWrap}><Text style={styles.miniEmoji}>🌿</Text></View>
-                <Text style={styles.miniLabel}>人生リズム</Text>
+            {/* ⑤ み・たまカードセクション */}
+            <View style={styles.section}>
+              <Image source={require('../../assets/site/logo-mitama.jpg')} style={styles.logoMitama} resizeMode="contain" />
+              <Text style={styles.mitamaHeading}>なぜ同じ悩みを繰り返す？</Text>
+              <Text style={styles.sectionDesc}>心の奥にある想いやブロックに気づき、次の一歩のヒントが分かります。</Text>
+              <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={() => router.push('/fortune/mitama' as never)}>
+                <Text style={styles.pinkButtonText}>無料で引く</Text>
               </TouchableOpacity>
             </View>
 
-            {/* ⑥ CTAバナー（未課金時のみ） */}
+            {/* ⑥ 今年の運勢セクション */}
+            <ImageBackground
+              source={require('../../assets/site/frame-pink.png')}
+              style={styles.frameSection}
+              imageStyle={{ resizeMode: 'stretch', borderRadius: 20 }}
+            >
+              <View style={styles.frameInner}>
+                <Text style={styles.frameTitle}>今年の運勢</Text>
+                <Text style={styles.frameSub}>今は進む時？{'\n'}整える時？</Text>
+                <Text style={styles.frameDesc}>1年の流れや、行動のタイミングが分かります。{'\n'}*やるべきこと、さけるべきことを見極める*</Text>
+                <View style={styles.birthRow}>
+                  <TextInput style={styles.birthInput} value={lrYear} onChangeText={setLrYear} placeholder="年" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={4} />
+                  <Text style={styles.birthSep}>年</Text>
+                  <TextInput style={styles.birthInputSm} value={lrMonth} onChangeText={setLrMonth} placeholder="月" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={2} />
+                  <Text style={styles.birthSep}>月</Text>
+                  <TextInput style={styles.birthInputSm} value={lrDay} onChangeText={setLrDay} placeholder="日" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={2} />
+                  <Text style={styles.birthSep}>日</Text>
+                </View>
+                <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={() => router.push({ pathname: '/fortune/life-rhythm', params: { year: lrYear, month: lrMonth, day: lrDay } } as never)}>
+                  <Text style={styles.pinkButtonText}>運勢を占う</Text>
+                </TouchableOpacity>
+              </View>
+            </ImageBackground>
+
+            {/* ⑦ ネガティブ神セクション */}
+            <View style={styles.section}>
+              <Image source={require('../../assets/site/logo-negative.jpg')} style={styles.sectionLogo} resizeMode="contain" />
+              <Text style={styles.negDesc}>心の影やブロックを見つめ、手放し、新しい自分へ{'\n'}生まれ変わるサポートをいたします。</Text>
+              <TouchableOpacity
+                style={styles.pinkButton}
+                activeOpacity={0.9}
+                onPress={() => { if (!canUse.negativeGod) { router.push('/subscription/plans' as never); return; } router.push('/fortune/negative-god' as never); }}
+              >
+                <Text style={styles.pinkButtonText}>影を知り光へ変える{isFree && !canUse.negativeGod ? '　🔒' : ''}</Text>
+              </TouchableOpacity>
+            </View>
+
+            {/* ⑧ CTAバナー（未課金時のみ） */}
             {!subscription.isSubscribed && (
               <TouchableOpacity
                 style={styles.ctaSection}
@@ -314,6 +341,20 @@ const styles = StyleSheet.create({
   roman: { fontSize: 11, color: '#A89A8A', letterSpacing: 2, marginTop: 2 },
   subPink: { fontSize: 14, fontWeight: '700', color: '#3D1A1A', marginTop: 4 },
   sectionDesc: { fontSize: 13, color: '#6E4A4A', lineHeight: 21, textAlign: 'center', marginTop: 10 },
+
+  // ⑤ み・たまカード
+  logoMitama: { width: '100%', height: 120, marginBottom: 10 },
+  mitamaHeading: { fontSize: 18, fontWeight: '800', color: '#E8758A', textAlign: 'center' },
+
+  // ⑥ 今年の運勢（フレーム）
+  frameSection: { marginBottom: 16, borderRadius: 20, overflow: 'hidden' },
+  frameInner: { padding: 24, alignItems: 'center' },
+  frameTitle: { fontSize: 28, fontWeight: '900', color: '#C45070', letterSpacing: 2 },
+  frameSub: { fontSize: 16, color: '#E8758A', textAlign: 'center', marginTop: 4, lineHeight: 24 },
+  frameDesc: { fontSize: 13, color: '#3D1A1A', textAlign: 'center', marginTop: 10, lineHeight: 20 },
+
+  // ⑦ ネガティブ神
+  negDesc: { fontSize: 13, color: '#3D1A1A', lineHeight: 21, textAlign: 'center', marginTop: 10 },
 
   pinkButton: {
     backgroundColor: '#E8758A',
