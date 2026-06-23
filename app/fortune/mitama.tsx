@@ -14,23 +14,8 @@ import { shareResult } from '../../lib/share';
 import { usePlanGate } from '../../hooks/usePlanGate';
 import {
   MITAMA_CARDS,
-  MITAMA_OUTRO,
-  MITAMA_CREDIT,
-  MITAMA_PROFILE_IMG,
 } from '../../constants/mitama-cards';
 import type { MitamaCard } from '../../constants/mitama-cards';
-
-const PROFILE_HEADER = '其田 寿枝（そのだ ひさえ）\n1972年　神奈川県生まれ　福岡県飯塚市で育つ\n書籍　kindle電子出版\n占い本「ネコ占い」「今年の運勢」\n短編小説「コーヒーの香り」';
-
-const PROFILE_HISTORY = [
-  { year: '2001年', desc: '夫より事業継承　マサジアートギャラリー代表となる' },
-  { year: '2003年', desc: '占いカウンセリングをはじめる' },
-  { year: '2006年', desc: '自社ギャラリーにて占い講座を始める' },
-  { year: '2014年', desc: 'オリジナル専用占いカード制作' },
-  { year: '2015年', desc: 'TNC文化サークルにて占い講座開講（2020年3月まで）' },
-  { year: '2021年', desc: '想形楽合同会社　設立' },
-  { year: '2021年', desc: '洋風いなり寿司のお店「うまいなり」オープン' },
-];
 
 export default function MitamaScreen() {
   const { isFree } = usePlanGate();
@@ -110,11 +95,11 @@ export default function MitamaScreen() {
                 <Image
                   source={selectedCard.img}
                   style={styles.cardImage}
-                  resizeMode="cover"
+                  resizeMode="contain"
                 />
               </View>
 
-              {/* Card Number & Title */}
+              {/* Card Title */}
               <Text style={styles.cardTitle}>{selectedCard.title}</Text>
               <Text style={styles.cardSubtitle}>{selectedCard.subtitle}</Text>
 
@@ -172,38 +157,6 @@ export default function MitamaScreen() {
             </TouchableOpacity>
           </Animated.View>
         ) : null}
-
-        {/* Footer: Outro, Profile, Credit */}
-        <View style={styles.footerSection}>
-          <View style={styles.footerDivider} />
-          <Text style={styles.outroText}>{MITAMA_OUTRO}</Text>
-
-          <View style={styles.profileSection}>
-            <Image
-              source={MITAMA_PROFILE_IMG}
-              style={styles.profileImage}
-              resizeMode="cover"
-            />
-            <Text style={styles.profileHeading}>占い師プロフィール</Text>
-            <Text style={styles.profileText}>{PROFILE_HEADER}</Text>
-            <View style={{ width: '100%', maxWidth: 400, marginTop: 12 }}>
-              {PROFILE_HISTORY.map((item, i) => (
-                <View key={i} style={{ flexDirection: 'row', marginBottom: 8, paddingHorizontal: 8 }}>
-                  <Text style={[styles.profileText, { width: 56, flexShrink: 0, color: '#C4B5FD', fontWeight: '600' }]}>
-                    {item.year}
-                  </Text>
-                  <Text style={[styles.profileText, { flex: 1, textAlign: 'left' }]}>
-                    {item.desc}
-                  </Text>
-                </View>
-              ))}
-            </View>
-          </View>
-
-          <View style={styles.creditSection}>
-            <Text style={styles.creditText}>{MITAMA_CREDIT}</Text>
-          </View>
-        </View>
       </ScrollView>
     </ImageBackground>
   );
@@ -215,10 +168,13 @@ const styles = StyleSheet.create({
     backgroundColor: '#FFFFFF',
   },
   scrollContent: {
-    padding: 20,
-    paddingTop: 60,
+    padding: 16,
+    paddingTop: 32,
     paddingBottom: 40,
     alignItems: 'center',
+    maxWidth: 600,
+    width: '100%',
+    alignSelf: 'center',
   },
 
   /* Draw Prompt */
@@ -243,8 +199,11 @@ const styles = StyleSheet.create({
   drawButtonSimple: {
     borderRadius: 50,
     overflow: 'hidden',
-    marginTop: 48,
-    marginBottom: 48,
+    marginTop: 24,
+    marginBottom: 24,
+    maxWidth: 320,
+    width: '100%',
+    alignSelf: 'center',
     shadowColor: '#4C1D95',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
@@ -269,36 +228,34 @@ const styles = StyleSheet.create({
     width: '100%',
   },
   cardContainer: {
-    width: '92%',
+    width: '100%',
+    maxWidth: 560,
     backgroundColor: '#FFFFFF',
-    borderRadius: 24,
-    padding: 24,
+    borderRadius: 20,
+    padding: 16,
     alignItems: 'center',
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 8 },
-    shadowOpacity: 0.25,
-    shadowRadius: 16,
-    elevation: 10,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.12,
+    shadowRadius: 12,
+    elevation: 6,
   },
   cardImageWrap: {
     width: '100%',
+    aspectRatio: 1,
     alignItems: 'center',
+    justifyContent: 'center',
     marginBottom: 16,
     borderRadius: 12,
     overflow: 'hidden',
+    backgroundColor: '#F9F5FF',
   },
   cardImage: {
     width: '100%',
-    aspectRatio: 1,
-    borderRadius: 12,
-  },
-  cardNumber: {
-    fontSize: 13,
-    color: '#9CA3AF',
-    marginBottom: 4,
+    height: '100%',
   },
   cardTitle: {
-    fontSize: 24,
+    fontSize: 20,
     fontWeight: 'bold',
     color: '#1E1B4B',
     marginBottom: 4,
@@ -329,9 +286,9 @@ const styles = StyleSheet.create({
     marginBottom: 4,
   },
   metaValue: {
-    fontSize: 14,
+    fontSize: 13,
     color: '#374151',
-    lineHeight: 22,
+    lineHeight: 20,
   },
   metaDivider: {
     height: 1,
@@ -348,9 +305,9 @@ const styles = StyleSheet.create({
 
   /* Message */
   cardMessage: {
-    fontSize: 15,
+    fontSize: 14,
     color: '#374151',
-    lineHeight: 28,
+    lineHeight: 26,
     width: '100%',
   },
 
@@ -390,61 +347,5 @@ const styles = StyleSheet.create({
     color: '#C4B5FD',
     fontSize: 16,
     fontWeight: '600',
-  },
-
-  /* Footer */
-  footerSection: {
-    width: '100%',
-    marginTop: 48,
-    alignItems: 'center',
-  },
-  footerDivider: {
-    width: 80,
-    height: 1,
-    backgroundColor: 'rgba(109,40,217,0.2)',
-    marginBottom: 24,
-  },
-  outroText: {
-    fontSize: 14,
-    color: '#374151',
-    lineHeight: 24,
-    textAlign: 'center',
-    marginBottom: 32,
-  },
-  profileSection: {
-    width: '100%',
-    alignItems: 'center',
-    marginBottom: 24,
-  },
-  profileImage: {
-    width: 120,
-    height: 120,
-    borderRadius: 60,
-    marginBottom: 16,
-  },
-  profileHeading: {
-    fontSize: 16,
-    fontWeight: '700',
-    color: '#4C1D95',
-    marginBottom: 12,
-  },
-  profileText: {
-    fontSize: 13,
-    color: '#4B5563',
-    lineHeight: 22,
-    textAlign: 'center',
-  },
-  creditSection: {
-    marginTop: 16,
-    paddingTop: 16,
-    borderTopWidth: 1,
-    borderTopColor: 'rgba(196,181,253,0.2)',
-    width: '100%',
-    alignItems: 'center',
-  },
-  creditText: {
-    fontSize: 12,
-    color: '#9CA3AF',
-    textAlign: 'center',
   },
 });
