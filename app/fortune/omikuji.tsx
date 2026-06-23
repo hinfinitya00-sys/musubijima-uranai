@@ -1106,7 +1106,7 @@ export default function OmikujiScreen() {
             </View>
             <TouchableOpacity activeOpacity={0.9} onPress={() => setPhase('result')}>
               <LinearGradient
-                colors={['#2D1B69', '#6D28D9']}
+                colors={['#E8758A', '#C45070']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.drawButton}
@@ -1182,7 +1182,7 @@ export default function OmikujiScreen() {
 
             <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/subscription/plans')}>
               <LinearGradient
-                colors={['#2D1B69', '#6D28D9']}
+                colors={['#E8758A', '#C45070']}
                 start={{ x: 0, y: 0 }}
                 end={{ x: 1, y: 1 }}
                 style={styles.upsellBanner}
@@ -1208,56 +1208,56 @@ export default function OmikujiScreen() {
 }
 
 const styles = StyleSheet.create({
-  screen: { flex: 1, backgroundColor: '#F5F0FF' },
+  screen: { flex: 1, backgroundColor: '#FFFAF9' },
   scrollContent: { padding: 20, paddingTop: 36, alignItems: 'center' },
   container: { width: '100%', maxWidth: 600, alignSelf: 'center' },
 
-  introTitle: { fontSize: 32, fontWeight: '800', color: '#3B2A66', letterSpacing: 6, textAlign: 'center', marginBottom: 10 },
-  introSub: { fontSize: 14, color: '#6D28D9', textAlign: 'center', marginBottom: 24 },
-  introCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 22, marginBottom: 28, shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
-  introBody: { fontSize: 14, lineHeight: 26, color: '#4A4458', marginBottom: 12 },
+  introTitle: { fontSize: 32, fontWeight: '800', color: '#3D1A1A', letterSpacing: 6, textAlign: 'center', marginBottom: 10 },
+  introSub: { fontSize: 14, color: '#C45070', textAlign: 'center', marginBottom: 24 },
+  introCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 22, marginBottom: 28, shadowColor: '#E8758A', shadowOpacity: 0.08, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
+  introBody: { fontSize: 14, lineHeight: 26, color: '#3D1A1A', marginBottom: 12 },
   drawButton: { paddingVertical: 17, borderRadius: 999, alignItems: 'center' },
-  drawButtonText: { color: '#F2D27A', fontSize: 16, fontWeight: '800', letterSpacing: 2 },
+  drawButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 },
 
-  imageCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 16, alignItems: 'center', shadowColor: '#6D28D9', shadowOpacity: 0.1, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
+  imageCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 16, alignItems: 'center', shadowColor: '#E8758A', shadowOpacity: 0.1, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
 
   whiteCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16 },
-  cardName: { fontSize: 20, fontWeight: '800', color: '#3B2A66', textAlign: 'center', marginBottom: 14 },
+  cardName: { fontSize: 20, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginBottom: 14 },
   block: { marginTop: 12 },
-  label: { fontSize: 13, fontWeight: '700', color: '#6D28D9' },
-  value: { fontSize: 15, lineHeight: 24, color: '#3B2A66', marginTop: 4 },
+  label: { fontSize: 13, fontWeight: '700', color: '#C45070' },
+  value: { fontSize: 15, lineHeight: 24, color: '#3D1A1A', marginTop: 4 },
 
-  fortuneCard: { backgroundColor: '#FCF3D9', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F2E5B8' },
-  sectionHeaderCenter: { fontSize: 15, fontWeight: '800', color: '#9A7B1F', textAlign: 'center', marginBottom: 12 },
+  fortuneCard: { backgroundColor: '#FFF8F0', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F0E0D0' },
+  sectionHeaderCenter: { fontSize: 15, fontWeight: '800', color: '#C9A84C', textAlign: 'center', marginBottom: 12 },
   fortuneRow: { flexDirection: 'row', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F1E6C2' },
-  fortuneLabel: { width: 64, fontSize: 13, fontWeight: '700', color: '#9A7B1F' },
-  fortuneValue: { flex: 1, fontSize: 14, lineHeight: 22, color: '#4A4458' },
+  fortuneLabel: { width: 64, fontSize: 13, fontWeight: '700', color: '#C9A84C' },
+  fortuneValue: { flex: 1, fontSize: 14, lineHeight: 22, color: '#3D1A1A' },
 
-  sectionHeaderLeft: { fontSize: 15, fontWeight: '800', color: '#3B2A66', marginBottom: 12 },
-  message: { fontSize: 14, lineHeight: 28, color: '#4A4458' },
-  msgDivider: { height: 1, backgroundColor: '#EFE9FA', marginVertical: 16 },
-  questionLabel: { fontSize: 12, color: '#6D28D9', letterSpacing: 2, textAlign: 'center', marginBottom: 8 },
-  question: { fontSize: 16, fontStyle: 'italic', color: '#3B2A66', textAlign: 'center', lineHeight: 26 },
+  sectionHeaderLeft: { fontSize: 15, fontWeight: '800', color: '#3D1A1A', marginBottom: 12 },
+  message: { fontSize: 14, lineHeight: 28, color: '#3D1A1A' },
+  msgDivider: { height: 1, backgroundColor: '#F5C0CC', marginVertical: 16 },
+  questionLabel: { fontSize: 12, color: '#C45070', letterSpacing: 2, textAlign: 'center', marginBottom: 8 },
+  question: { fontSize: 16, fontStyle: 'italic', color: '#3D1A1A', textAlign: 'center', lineHeight: 26 },
 
-  musubiCard: { backgroundColor: '#E8F3E2', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#D3E8C9' },
-  musubiHeading: { fontSize: 12, color: '#4F7A3E', textAlign: 'center' },
-  musubiName: { fontSize: 22, fontWeight: '800', color: '#2F5225', textAlign: 'center', marginTop: 6 },
-  musubiMeta: { fontSize: 13, color: '#4A5544', textAlign: 'center', marginTop: 8, lineHeight: 22 },
-  greenDivider: { height: 1, backgroundColor: '#CFE5C4', marginVertical: 16 },
-  actionHeader: { fontSize: 14, fontWeight: '800', color: '#3A6030', marginBottom: 6 },
-  actionIntro: { fontSize: 13, lineHeight: 22, color: '#4A5544', marginBottom: 10 },
+  musubiCard: { backgroundColor: '#FFF0F3', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F5C0CC' },
+  musubiHeading: { fontSize: 12, color: '#C45070', textAlign: 'center' },
+  musubiName: { fontSize: 22, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginTop: 6 },
+  musubiMeta: { fontSize: 13, color: '#3D1A1A', textAlign: 'center', marginTop: 8, lineHeight: 22 },
+  greenDivider: { height: 1, backgroundColor: '#F5C0CC', marginVertical: 16 },
+  actionHeader: { fontSize: 14, fontWeight: '800', color: '#C45070', marginBottom: 6 },
+  actionIntro: { fontSize: 13, lineHeight: 22, color: '#3D1A1A', marginBottom: 10 },
   actionRow: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 6 },
-  actionCheck: { fontSize: 16, color: '#5C9E4A', marginRight: 10 },
-  actionText: { flex: 1, fontSize: 14, lineHeight: 22, color: '#3B4536' },
+  actionCheck: { fontSize: 16, color: '#E8758A', marginRight: 10 },
+  actionText: { flex: 1, fontSize: 14, lineHeight: 22, color: '#3D1A1A' },
 
   shareButton: { backgroundColor: '#000000', paddingVertical: 16, borderRadius: 14, marginTop: 24, alignItems: 'center' },
   shareButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
 
   upsellBanner: { borderRadius: 18, padding: 22, marginTop: 16, alignItems: 'center' },
-  upsellTitle: { color: '#F2D27A', fontSize: 17, fontWeight: '800', letterSpacing: 1 },
-  upsellText: { color: '#EDE4FA', fontSize: 13, lineHeight: 22, textAlign: 'center', marginTop: 10 },
-  upsellButton: { color: '#F2D27A', fontSize: 15, fontWeight: '800', marginTop: 14 },
+  upsellTitle: { color: '#FFFFFF', fontSize: 17, fontWeight: '800', letterSpacing: 1 },
+  upsellText: { color: '#FFFFFF', fontSize: 13, lineHeight: 22, textAlign: 'center', marginTop: 10 },
+  upsellButton: { color: '#FFFFFF', fontSize: 15, fontWeight: '800', marginTop: 14 },
 
-  backButton: { borderWidth: 1.5, borderColor: '#6D28D9', borderRadius: 999, paddingVertical: 14, marginTop: 16, alignItems: 'center' },
-  backButtonText: { color: '#6D28D9', fontSize: 15, fontWeight: '700' },
+  backButton: { borderWidth: 1.5, borderColor: '#E8758A', borderRadius: 999, paddingVertical: 14, marginTop: 16, alignItems: 'center' },
+  backButtonText: { color: '#C45070', fontSize: 15, fontWeight: '700' },
 });

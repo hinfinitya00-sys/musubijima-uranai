@@ -26,9 +26,9 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
         onChange={(e: any) => onChange(e.target.value)}
         style={{
           flex: 1,
-          backgroundColor: 'rgba(0,0,0,0.5)',
-          color: '#E5E7EB',
-          border: '1px solid rgba(196,181,253,0.4)',
+          backgroundColor: 'rgba(232,117,138,0.15)',
+          color: '#3D1A1A',
+          border: '1px solid rgba(232,117,138,0.4)',
           borderRadius: 8,
           padding: '10px 8px',
           fontSize: 14,
@@ -37,7 +37,7 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
         } as any}
       >
         {items.map((item) => (
-          <option key={item.value} value={item.value} style={{ background: '#0D0B1E' }}>
+          <option key={item.value} value={item.value} style={{ background: '#FFFFFF' }}>
             {item.label}
           </option>
         ))}
@@ -128,7 +128,7 @@ export default function MusubianScreen() {
   };
 
   return (
-    <LinearGradient colors={['#0D0B1E', '#1D1B4B', '#0D0B1E']} style={styles.container}>
+    <LinearGradient colors={['#FFF0F3', '#FFFAF9', '#FFF0F3']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* ヘッダー画像 */}
         <View style={styles.heroContainer}>
@@ -163,7 +163,7 @@ export default function MusubianScreen() {
               activeOpacity={0.7}
             >
               <LinearGradient
-                colors={['#7F77DD', '#6D28D9']}
+                colors={['#E8758A', '#C45070']}
                 style={styles.diagnoseButtonGradient}
               >
                 <Text style={styles.diagnoseButtonText}>相性を診断する</Text>
@@ -220,26 +220,26 @@ export default function MusubianScreen() {
 const styles = StyleSheet.create({
   container: { flex: 1 },
   scrollContent: { paddingBottom: 80 },
-  heroContainer: { width: '100%', backgroundColor: '#000' },
+  heroContainer: { width: '100%', backgroundColor: '#FFFAF9' },
   heroImage: { width: '100%', height: 200 },
   header: { alignItems: 'center', marginBottom: 32, paddingHorizontal: 20, paddingTop: 24 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#C4B5FD', marginBottom: 8 },
-  subtitle: { fontSize: 14, color: '#9CA3AF', textAlign: 'center', lineHeight: 22 },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#E8758A', marginBottom: 8 },
+  subtitle: { fontSize: 14, color: '#7A6A6A', textAlign: 'center', lineHeight: 22 },
   inputSection: { width: '100%', paddingHorizontal: 20 },
-  inputLabel: { fontSize: 16, fontWeight: '600', color: '#E5E7EB', marginBottom: 12 },
+  inputLabel: { fontSize: 16, fontWeight: '600', color: '#3D1A1A', marginBottom: 12 },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   nativePicker: {
-    flex: 1, backgroundColor: 'rgba(255,255,255,0.08)',
-    borderRadius: 8, padding: 10, borderWidth: 1, borderColor: 'rgba(196,181,253,0.3)',
+    flex: 1, backgroundColor: '#FFFFFF',
+    borderRadius: 8, padding: 10, borderWidth: 1, borderColor: '#F5C0CC',
   },
-  nativePickerText: { color: '#E5E7EB', fontSize: 14 },
+  nativePickerText: { color: '#3D1A1A', fontSize: 14 },
   diagnoseButton: { borderRadius: 16, overflow: 'hidden' },
   diagnoseButtonGradient: { paddingVertical: 18, alignItems: 'center' },
-  diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: '#fff' },
+  diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
   resultSection: { alignItems: 'center', width: '100%', paddingHorizontal: 20 },
   scoreContainer: { alignItems: 'center', marginBottom: 24 },
-  scoreLabel: { fontSize: 14, color: '#9CA3AF', marginBottom: 4 },
-  scoreValue: { fontSize: 56, fontWeight: 'bold', color: '#E8C547' },
+  scoreLabel: { fontSize: 14, color: '#7A6A6A', marginBottom: 4 },
+  scoreValue: { fontSize: 56, fontWeight: 'bold', color: '#C9A84C' },
   characterComparison: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -250,30 +250,30 @@ const styles = StyleSheet.create({
   characterBox: {
     flex: 1,
     alignItems: 'center',
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 16,
   },
   characterEmoji: { fontSize: 36, marginBottom: 8 },
-  characterName: { fontSize: 16, fontWeight: 'bold', color: '#fff', marginBottom: 4 },
-  characterLifePath: { fontSize: 12, color: '#9CA3AF' },
-  vsText: { fontSize: 24, color: '#E8C547', marginHorizontal: 12, fontWeight: 'bold' },
+  characterName: { fontSize: 16, fontWeight: 'bold', color: '#3D1A1A', marginBottom: 4 },
+  characterLifePath: { fontSize: 12, color: '#7A6A6A' },
+  vsText: { fontSize: 24, color: '#C9A84C', marginHorizontal: 12, fontWeight: 'bold' },
   messageCard: {
-    backgroundColor: 'rgba(127,119,221,0.1)',
+    backgroundColor: 'rgba(232,117,138,0.1)',
     borderRadius: 16,
     padding: 24,
     width: '100%',
     borderWidth: 1,
-    borderColor: 'rgba(127,119,221,0.3)',
+    borderColor: 'rgba(232,117,138,0.3)',
     marginBottom: 24,
   },
-  messageText: { fontSize: 15, color: '#D1D5DB', lineHeight: 26, textAlign: 'center' },
+  messageText: { fontSize: 15, color: '#3D1A1A', lineHeight: 26, textAlign: 'center' },
   retryButton: {
     paddingHorizontal: 24,
     paddingVertical: 12,
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: 'rgba(196,181,253,0.4)',
+    borderColor: 'rgba(232,117,138,0.4)',
   },
-  retryButtonText: { color: '#C4B5FD', fontSize: 14 },
+  retryButtonText: { color: '#E8758A', fontSize: 14 },
 });

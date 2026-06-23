@@ -70,7 +70,7 @@ export default function MitamaScreen() {
               activeOpacity={0.8}
             >
               <LinearGradient
-                colors={['#4C1D95', '#6D28D9', '#4C1D95']}
+                colors={['#E8758A', '#C45070', '#E8758A']}
                 style={styles.drawButtonGradient}
               >
                 <Text style={styles.drawButtonText}>✦　カードを引く　✦</Text>
@@ -149,7 +149,7 @@ export default function MitamaScreen() {
               activeOpacity={0.8}
             >
               <LinearGradient
-                colors={['rgba(127,119,221,0.3)', 'rgba(109,40,217,0.3)']}
+                colors={['rgba(232,117,138,0.2)', 'rgba(196,80,112,0.2)']}
                 style={styles.retryButtonGradient}
               >
                 <Text style={styles.retryButtonText}>もう一度引く</Text>
@@ -183,14 +183,14 @@ const styles = StyleSheet.create({
   },
   drawPromptText: {
     fontSize: 14,
-    color: '#6B7280',
+    color: '#7A6A6A',
     textAlign: 'center',
     lineHeight: 22,
   },
 
   freeLimit: {
     fontSize: 12,
-    color: '#9CA3AF',
+    color: '#7A6A6A',
     textAlign: 'center',
     marginTop: 8,
   },
@@ -204,7 +204,7 @@ const styles = StyleSheet.create({
     maxWidth: 320,
     width: '100%',
     alignSelf: 'center',
-    shadowColor: '#4C1D95',
+    shadowColor: '#E8758A',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 12,
@@ -217,7 +217,7 @@ const styles = StyleSheet.create({
   },
   drawButtonText: {
     fontSize: 18,
-    color: '#E8C547',
+    color: '#FFFFFF',
     fontWeight: '700',
     letterSpacing: 2,
   },
@@ -248,7 +248,7 @@ const styles = StyleSheet.create({
     marginBottom: 16,
     borderRadius: 12,
     overflow: 'hidden',
-    backgroundColor: '#F9F5FF',
+    backgroundColor: '#FFF0F3',
   },
   cardImage: {
     width: '100%',
@@ -257,13 +257,13 @@ const styles = StyleSheet.create({
   cardTitle: {
     fontSize: 20,
     fontWeight: 'bold',
-    color: '#1E1B4B',
+    color: '#3D1A1A',
     marginBottom: 4,
     textAlign: 'center',
   },
   cardSubtitle: {
     fontSize: 15,
-    color: '#6D28D9',
+    color: '#C45070',
     marginBottom: 16,
     textAlign: 'center',
   },
@@ -271,7 +271,7 @@ const styles = StyleSheet.create({
   /* Meta Info */
   metaSection: {
     width: '100%',
-    backgroundColor: '#F9FAFB',
+    backgroundColor: '#FFF8F0',
     borderRadius: 12,
     padding: 16,
     marginBottom: 16,
@@ -281,32 +281,32 @@ const styles = StyleSheet.create({
   },
   metaLabel: {
     fontSize: 11,
-    color: '#9CA3AF',
+    color: '#7A6A6A',
     fontWeight: '600',
     marginBottom: 4,
   },
   metaValue: {
     fontSize: 13,
-    color: '#374151',
+    color: '#3D1A1A',
     lineHeight: 20,
   },
   metaDivider: {
     height: 1,
-    backgroundColor: '#E5E7EB',
+    backgroundColor: '#F0D8DC',
   },
 
   /* Card Divider */
   cardDivider: {
     width: 60,
     height: 2,
-    backgroundColor: 'rgba(109,40,217,0.3)',
+    backgroundColor: 'rgba(232,117,138,0.3)',
     marginBottom: 16,
   },
 
   /* Message */
   cardMessage: {
     fontSize: 14,
-    color: '#374151',
+    color: '#3D1A1A',
     lineHeight: 26,
     width: '100%',
   },
@@ -314,7 +314,7 @@ const styles = StyleSheet.create({
   /* Share */
   shareButton: {
     borderWidth: 1,
-    borderColor: '#6D28D9',
+    borderColor: '#E8758A',
     borderRadius: 12,
     paddingVertical: 12,
     paddingHorizontal: 24,
@@ -325,7 +325,7 @@ const styles = StyleSheet.create({
     backgroundColor: 'transparent',
   },
   shareButtonText: {
-    color: '#6D28D9',
+    color: '#C45070',
     fontSize: 14,
     fontWeight: '500',
   },
@@ -341,10 +341,10 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: 'rgba(196,181,253,0.4)',
+    borderColor: 'rgba(232,117,138,0.4)',
   },
   retryButtonText: {
-    color: '#C4B5FD',
+    color: '#F9C0CC',
     fontSize: 16,
     fontWeight: '600',
   },
