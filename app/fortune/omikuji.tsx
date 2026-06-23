@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -8,6 +8,7 @@ import {
   Image,
   Platform,
   Dimensions,
+  Animated,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
@@ -1028,63 +1029,56 @@ const CARDS: Card[] = [
   },
 ];
 
-const INTRO_TITLE = "導カード";
-const INTRO_SUBTITLE = "今日のあなたに届く、ひとつの導き。";
 const INTRO_BODY: string[] = [
-    "導カードは、今のあなたに必要なテーマや過ごし方、心の向け方を受け取るためのカードです。",
-    "45枚のカードには、それぞれ異なる景色や意味が込められています。",
-    "「前へ進む」「受け入れる」「手放す」「信じる」「育てる」「調和する」",
-    "人生には、動く時もあれば、立ち止まる時、待つ時、整える時があります。",
-    "導カードは、良い・悪いを判断するものではありません。",
-    "今のあなたに流れている時間や心の状態を映し出し、これからの一歩を優しく照らすための導きです。",
-    "カードを引いたら、今日のテーマを受け取り、メッセージを読み、最後に結び族から届く「今日の結びアクション」をひとつ選んでみてください。",
-    "小さな行動や気づきは、やがて未来の景色を変えていきます。",
-    "あなたの今日が、少し軽く、少し温かく、少し自分らしく進んでいきますように。",
-  ];
+  "導カードは、今のあなたに必要なテーマや過ごし方、心の向け方を受け取るためのカードです。",
+  "45枚のカードには、それぞれ異なる景色や意味が込められています。",
+  "「前へ進む」「受け入れる」「手放す」「信じる」「育てる」「調和する」",
+  "人生には、動く時もあれば、立ち止まる時、待つ時、整える時があります。",
+  "導カードは、良い・悪いを判断するものではありません。",
+  "今のあなたに流れている時間や心の状態を映し出し、これからの一歩を優しく照らすための導きです。",
+  "カードを引いたら、今日のテーマを受け取り、メッセージを読み、最後に結び族から届く「今日の結びアクション」をひとつ選んでみてください。",
+  "小さな行動や気づきは、やがて未来の景色を変えていきます。",
+  "あなたの今日が、少し軽く、少し温かく、少し自分らしく進んでいきますように。",
+];
 
-// JST(UTC+9)の日付からインデックスを決定。同じ日は必ず同じカード。
 function getTodayCardIndex(): number {
   const now = new Date();
   const jst = new Date(now.getTime() + 9 * 60 * 60 * 1000);
-  const dayNumber = Math.floor(
-    Date.UTC(jst.getUTCFullYear(), jst.getUTCMonth(), jst.getUTCDate()) / 86400000
-  );
-  return ((dayNumber % CARDS.length) + CARDS.length) % CARDS.length;
+  const y = jst.getUTCFullYear();
+  const m = String(jst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(jst.getUTCDate()).padStart(2, '0');
+  const dateNum = parseInt(`${y}${m}${d}`, 10);
+  return dateNum % 45; // 0〜44
 }
 
 export default function OmikujiScreen() {
   const router = useRouter();
-  const [drawn, setDrawn] = useState(false);
+  const [phase, setPhase] = useState<'intro' | 'result'>('intro');
   const card = CARDS[getTodayCardIndex()];
 
+  const fade = useRef(new Animated.Value(0)).current;
+  const scale = useRef(new Animated.Value(0.96)).current;
+  useEffect(() => {
+    fade.setValue(0);
+    scale.setValue(0.96);
+    Animated.parallel([
+      Animated.timing(fade, { toValue: 1, duration: 420, useNativeDriver: false }),
+      Animated.timing(scale, { toValue: 1, duration: 420, useNativeDriver: false }),
+    ]).start();
+  }, [phase]);
+
   const shareToX = () => {
-    const text = `今日の導カード 🌿\n「${card.title} ${card.subtitle}」\n\nテーマ：${card.theme}\n\nあなたの今日のカードは？\nhttps://hinfinitya00-sys.github.io/musubijima-uranai/fortune/omikuji\n\n#むすび島 #導カード #今日の一枚`;
+    const text = `今日の導カード 🌿\n「${card.title}${card.subtitle ? ' ' + card.subtitle : ''}」\n\nテーマ：${card.theme}\n\nあなたの今日のカードは？\nhttps://hinfinitya00-sys.github.io/musubijima-uranai/fortune/omikuji\n\n#むすび島 #導カード #今日の一枚`;
     const url = `https://twitter.com/intent/tweet?text=${encodeURIComponent(text)}`;
     if (Platform.OS === 'web') {
       window.open(url, '_blank');
     }
   };
 
-  if (!drawn) {
-    return (
-      <ScrollView style={styles.screen} contentContainerStyle={styles.introContent}>
-        <Text style={styles.introTitle}>{INTRO_TITLE}</Text>
-        <Text style={styles.introSubtitle}>{INTRO_SUBTITLE}</Text>
-        <View style={styles.introCard}>
-          {INTRO_BODY.map((line, i) => (
-            <Text key={i} style={styles.introBody}>{line}</Text>
-          ))}
-        </View>
-        <TouchableOpacity style={styles.drawButton} activeOpacity={0.85} onPress={() => setDrawn(true)}>
-          <Text style={styles.drawButtonText}>今日のカードを引く</Text>
-        </TouchableOpacity>
-      </ScrollView>
-    );
-  }
-
-  const winW = Dimensions.get('window').width || 360;
-  const cardW = Math.min(winW - 48, 340);
-  const cardH = cardW * 1.35;
+  const winW = Dimensions.get('window').width || 375;
+  const contentW = Math.min(winW, 600);
+  const imgW = contentW - 40 - 32;
+  const imgH = imgW * 1.35;
 
   const fortunes: Array<[string, string]> = [
     ['願望', card.ganbo],
@@ -1097,138 +1091,173 @@ export default function OmikujiScreen() {
   ];
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.resultContent}>
-      <Image source={card.img} resizeMode="contain" style={{ width: cardW, height: cardH, alignSelf: 'center' }} />
+    <ScrollView style={styles.screen} contentContainerStyle={styles.scrollContent}>
+      <Animated.View style={[styles.container, { opacity: fade, transform: [{ scale }] }]}>
+        {phase === 'intro' ? (
+          <>
+            <Text style={styles.introTitle}>導カード</Text>
+            <Text style={styles.introSub}>今日のあなたに届く、ひとつの導き。</Text>
+            <View style={styles.introCard}>
+              {INTRO_BODY.map((line, i) => (
+                <Text key={i} style={styles.introBody}>
+                  {line}
+                </Text>
+              ))}
+            </View>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => setPhase('result')}>
+              <LinearGradient
+                colors={['#2D1B69', '#6D28D9']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.drawButton}
+              >
+                <Text style={styles.drawButtonText}>✦　今日のカードを引く　✦</Text>
+              </LinearGradient>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <>
+            <View style={styles.imageCard}>
+              <Image source={card.img} resizeMode="contain" style={{ width: imgW, height: imgH }} />
+            </View>
 
-      <Text style={styles.cardNum}>No.{card.num}</Text>
-      <Text style={styles.title}>{card.title}</Text>
-      {card.subtitle ? <Text style={styles.subtitle}>{card.subtitle}</Text> : null}
+            <View style={styles.whiteCard}>
+              <Text style={styles.cardName}>
+                【{card.title}{card.subtitle ? ' ' + card.subtitle : ''}】
+              </Text>
+              <View style={styles.block}>
+                <Text style={styles.label}>◆ 今日のテーマ</Text>
+                <Text style={styles.value}>{card.theme}</Text>
+              </View>
+              <View style={styles.block}>
+                <Text style={styles.label}>🌿 今日の過ごし方</Text>
+                <Text style={styles.value}>{card.howto}</Text>
+              </View>
+              <View style={styles.block}>
+                <Text style={styles.label}>◆ ラッキーカラー</Text>
+                <Text style={styles.value}>{card.lucky}</Text>
+              </View>
+            </View>
 
-      <View style={styles.themeCard}>
-        <Text style={styles.themeLabel}>今日のテーマ</Text>
-        <Text style={styles.themeValue}>{card.theme}</Text>
-        <View style={styles.divider} />
-        <Text style={styles.howtoLabel}>🌿 今日の過ごし方</Text>
-        <Text style={styles.howtoValue}>{card.howto}</Text>
-        <Text style={styles.luckyLabel}>ラッキーカラー</Text>
-        <Text style={styles.luckyValue}>{card.lucky}</Text>
-      </View>
+            <View style={styles.fortuneCard}>
+              <Text style={styles.sectionHeaderCenter}>── 今日の運勢 ──</Text>
+              {fortunes.map(([label, val]) => (
+                <View key={label} style={styles.fortuneRow}>
+                  <Text style={styles.fortuneLabel}>○{label}</Text>
+                  <Text style={styles.fortuneValue}>{val}</Text>
+                </View>
+              ))}
+            </View>
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>運勢</Text>
-        {fortunes.map(([label, val]) => (
-          <View key={label} style={styles.fortuneRow}>
-            <Text style={styles.fortuneLabel}>{label}</Text>
-            <Text style={styles.fortuneValue}>{val}</Text>
-          </View>
-        ))}
-      </View>
+            <View style={styles.whiteCard}>
+              <Text style={styles.sectionHeaderLeft}>〈 メッセージ 〉</Text>
+              <Text style={styles.message}>{card.message}</Text>
+              <View style={styles.msgDivider} />
+              <Text style={styles.questionLabel}>今日の問い</Text>
+              <Text style={styles.question}>{card.question}</Text>
+            </View>
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>メッセージ</Text>
-        <Text style={styles.message}>{card.message}</Text>
-      </View>
+            <View style={styles.musubiCard}>
+              <Text style={styles.musubiHeading}>この導きを届けた結び族</Text>
+              <Text style={styles.musubiName}>{card.musubi_name}</Text>
+              <Text style={styles.musubiMeta}>
+                属性：{card.musubi_attr}　／　結ぶ力：{card.musubi_chikara}
+              </Text>
+              <View style={styles.greenDivider} />
+              <Text style={styles.actionHeader}>🌱 今日の結びアクション</Text>
+              <Text style={styles.actionIntro}>
+                {card.musubi_name}から受け取った導きを、今日の行動にひとつ結んでみましょう。
+              </Text>
+              {card.actions.map((a, i) => (
+                <View key={i} style={styles.actionRow}>
+                  <Text style={styles.actionCheck}>□</Text>
+                  <Text style={styles.actionText}>{a}</Text>
+                </View>
+              ))}
+            </View>
 
-      <View style={styles.questionCard}>
-        <Text style={styles.questionLabel}>今日の問い</Text>
-        <Text style={styles.questionValue}>「{card.question}」</Text>
-      </View>
+            <TouchableOpacity style={styles.shareButton} activeOpacity={0.85} onPress={shareToX}>
+              <Text style={styles.shareButtonText}>𝕏  今日のカードをシェアする</Text>
+            </TouchableOpacity>
 
-      <View style={styles.musubiCard}>
-        <Text style={styles.musubiHeading}>この導きを届けた結び族</Text>
-        <Text style={styles.musubiName}>{card.musubi_name}</Text>
-        <View style={styles.musubiRow}>
-          <Text style={styles.musubiMeta}>属性：{card.musubi_attr}</Text>
-          <Text style={styles.musubiMeta}>結ぶ力：{card.musubi_chikara}</Text>
-        </View>
-      </View>
+            <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/subscription/plans')}>
+              <LinearGradient
+                colors={['#2D1B69', '#6D28D9']}
+                start={{ x: 0, y: 0 }}
+                end={{ x: 1, y: 1 }}
+                style={styles.upsellBanner}
+              >
+                <Text style={styles.upsellTitle}>✦ 他の占いも体験する ✦</Text>
+                <Text style={styles.upsellText}>
+                  ネガティブ神占い・み・たまカード・むすび族占いなど{'\n'}すべての機能が月330円で使い放題
+                </Text>
+                <Text style={styles.upsellButton}>今すぐ見てみる →</Text>
+              </LinearGradient>
+            </TouchableOpacity>
 
-      <View style={styles.card}>
-        <Text style={styles.sectionTitle}>🌱 今日の結びアクション</Text>
-        {card.actions.map((a, i) => (
-          <View key={i} style={styles.actionRow}>
-            <Text style={styles.actionCheck}>□</Text>
-            <Text style={styles.actionText}>{a}</Text>
-          </View>
-        ))}
-      </View>
+            <TouchableOpacity style={styles.backButton} activeOpacity={0.7} onPress={() => setPhase('intro')}>
+              <Text style={styles.backButtonText}>最初に戻る</Text>
+            </TouchableOpacity>
 
-      <TouchableOpacity style={styles.shareButton} activeOpacity={0.85} onPress={shareToX}>
-        <Text style={styles.shareButtonText}>𝕏  今日のカードをシェアする</Text>
-      </TouchableOpacity>
-
-      <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/subscription/plans')}>
-        <LinearGradient
-          colors={['#2D1B69', '#6D28D9']}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={styles.upsellBanner}
-        >
-          <Text style={styles.upsellTitle}>✦ 他の占いも体験する ✦</Text>
-          <Text style={styles.upsellText}>
-            ネガティブ神占い・み・たまカード・むすび族占いなど{'\n'}
-            すべての機能が月330円で使い放題
-          </Text>
-          <Text style={styles.upsellButton}>今すぐ見てみる →</Text>
-        </LinearGradient>
-      </TouchableOpacity>
-
-      <View style={{ height: 40 }} />
+            <View style={{ height: 40 }} />
+          </>
+        )}
+      </Animated.View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   screen: { flex: 1, backgroundColor: '#F5F0FF' },
-  introContent: { padding: 24, paddingTop: 48, alignItems: 'center' },
-  introTitle: { fontSize: 30, fontWeight: '800', color: '#3B2A66', letterSpacing: 4, marginBottom: 8 },
-  introSubtitle: { fontSize: 14, color: '#6D28D9', marginBottom: 24, textAlign: 'center' },
-  introCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 22, width: '100%', marginBottom: 28, shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
+  scrollContent: { padding: 20, paddingTop: 36, alignItems: 'center' },
+  container: { width: '100%', maxWidth: 600, alignSelf: 'center' },
+
+  introTitle: { fontSize: 32, fontWeight: '800', color: '#3B2A66', letterSpacing: 6, textAlign: 'center', marginBottom: 10 },
+  introSub: { fontSize: 14, color: '#6D28D9', textAlign: 'center', marginBottom: 24 },
+  introCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 22, marginBottom: 28, shadowColor: '#6D28D9', shadowOpacity: 0.08, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
   introBody: { fontSize: 14, lineHeight: 26, color: '#4A4458', marginBottom: 12 },
-  drawButton: { backgroundColor: '#3B2A66', paddingVertical: 16, paddingHorizontal: 40, borderRadius: 999, width: '100%', alignItems: 'center' },
-  drawButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '700', letterSpacing: 2 },
+  drawButton: { paddingVertical: 17, borderRadius: 999, alignItems: 'center' },
+  drawButtonText: { color: '#F2D27A', fontSize: 16, fontWeight: '800', letterSpacing: 2 },
 
-  resultContent: { padding: 20, paddingTop: 32 },
-  cardNum: { textAlign: 'center', color: '#9B8FB8', fontSize: 12, letterSpacing: 2, marginTop: 18 },
-  title: { textAlign: 'center', fontSize: 24, fontWeight: '800', color: '#3B2A66', marginTop: 4 },
-  subtitle: { textAlign: 'center', fontSize: 14, color: '#6D28D9', marginTop: 6, marginBottom: 8 },
+  imageCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 16, alignItems: 'center', shadowColor: '#6D28D9', shadowOpacity: 0.1, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
 
-  themeCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16 },
-  themeLabel: { fontSize: 11, color: '#9B8FB8', letterSpacing: 2 },
-  themeValue: { fontSize: 20, fontWeight: '800', color: '#3B2A66', marginTop: 4 },
-  divider: { height: 1, backgroundColor: '#EFE9FA', marginVertical: 14 },
-  howtoLabel: { fontSize: 13, fontWeight: '700', color: '#5C9E4A' },
-  howtoValue: { fontSize: 14, lineHeight: 24, color: '#4A4458', marginTop: 4 },
-  luckyLabel: { fontSize: 11, color: '#9B8FB8', letterSpacing: 2, marginTop: 14 },
-  luckyValue: { fontSize: 15, fontWeight: '700', color: '#3B2A66', marginTop: 2 },
+  whiteCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16 },
+  cardName: { fontSize: 20, fontWeight: '800', color: '#3B2A66', textAlign: 'center', marginBottom: 14 },
+  block: { marginTop: 12 },
+  label: { fontSize: 13, fontWeight: '700', color: '#6D28D9' },
+  value: { fontSize: 15, lineHeight: 24, color: '#3B2A66', marginTop: 4 },
 
-  card: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16 },
-  sectionTitle: { fontSize: 15, fontWeight: '800', color: '#3B2A66', marginBottom: 12 },
-  fortuneRow: { flexDirection: 'row', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F4F0FB' },
-  fortuneLabel: { width: 56, fontSize: 13, fontWeight: '700', color: '#6D28D9' },
+  fortuneCard: { backgroundColor: '#FCF3D9', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F2E5B8' },
+  sectionHeaderCenter: { fontSize: 15, fontWeight: '800', color: '#9A7B1F', textAlign: 'center', marginBottom: 12 },
+  fortuneRow: { flexDirection: 'row', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F1E6C2' },
+  fortuneLabel: { width: 64, fontSize: 13, fontWeight: '700', color: '#9A7B1F' },
   fortuneValue: { flex: 1, fontSize: 14, lineHeight: 22, color: '#4A4458' },
 
+  sectionHeaderLeft: { fontSize: 15, fontWeight: '800', color: '#3B2A66', marginBottom: 12 },
   message: { fontSize: 14, lineHeight: 28, color: '#4A4458' },
+  msgDivider: { height: 1, backgroundColor: '#EFE9FA', marginVertical: 16 },
+  questionLabel: { fontSize: 12, color: '#6D28D9', letterSpacing: 2, textAlign: 'center', marginBottom: 8 },
+  question: { fontSize: 16, fontStyle: 'italic', color: '#3B2A66', textAlign: 'center', lineHeight: 26 },
 
-  questionCard: { backgroundColor: '#EEE7FB', borderRadius: 18, padding: 20, marginTop: 16, alignItems: 'center' },
-  questionLabel: { fontSize: 12, color: '#6D28D9', letterSpacing: 2, marginBottom: 8 },
-  questionValue: { fontSize: 16, fontWeight: '700', color: '#3B2A66', textAlign: 'center', lineHeight: 26 },
-
-  musubiCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#EFE9FA' },
-  musubiHeading: { fontSize: 12, color: '#9B8FBF', textAlign: 'center' },
-  musubiName: { fontSize: 20, fontWeight: '800', color: '#3B2A66', textAlign: 'center', marginTop: 6 },
-  musubiRow: { marginTop: 10 },
-  musubiMeta: { fontSize: 13, color: '#4A4458', textAlign: 'center', lineHeight: 22 },
-
+  musubiCard: { backgroundColor: '#E8F3E2', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#D3E8C9' },
+  musubiHeading: { fontSize: 12, color: '#4F7A3E', textAlign: 'center' },
+  musubiName: { fontSize: 22, fontWeight: '800', color: '#2F5225', textAlign: 'center', marginTop: 6 },
+  musubiMeta: { fontSize: 13, color: '#4A5544', textAlign: 'center', marginTop: 8, lineHeight: 22 },
+  greenDivider: { height: 1, backgroundColor: '#CFE5C4', marginVertical: 16 },
+  actionHeader: { fontSize: 14, fontWeight: '800', color: '#3A6030', marginBottom: 6 },
+  actionIntro: { fontSize: 13, lineHeight: 22, color: '#4A5544', marginBottom: 10 },
   actionRow: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 6 },
   actionCheck: { fontSize: 16, color: '#5C9E4A', marginRight: 10 },
-  actionText: { flex: 1, fontSize: 14, lineHeight: 22, color: '#4A4458' },
+  actionText: { flex: 1, fontSize: 14, lineHeight: 22, color: '#3B4536' },
 
   shareButton: { backgroundColor: '#000000', paddingVertical: 16, borderRadius: 14, marginTop: 24, alignItems: 'center' },
   shareButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
 
   upsellBanner: { borderRadius: 18, padding: 22, marginTop: 16, alignItems: 'center' },
-  upsellTitle: { color: '#F2D27A', fontSize: 16, fontWeight: '800', letterSpacing: 1 },
-  upsellText: { color: '#E9DEF7', fontSize: 13, lineHeight: 22, textAlign: 'center', marginTop: 10 },
+  upsellTitle: { color: '#F2D27A', fontSize: 17, fontWeight: '800', letterSpacing: 1 },
+  upsellText: { color: '#EDE4FA', fontSize: 13, lineHeight: 22, textAlign: 'center', marginTop: 10 },
   upsellButton: { color: '#F2D27A', fontSize: 15, fontWeight: '800', marginTop: 14 },
+
+  backButton: { borderWidth: 1.5, borderColor: '#6D28D9', borderRadius: 999, paddingVertical: 14, marginTop: 16, alignItems: 'center' },
+  backButtonText: { color: '#6D28D9', fontSize: 15, fontWeight: '700' },
 });
