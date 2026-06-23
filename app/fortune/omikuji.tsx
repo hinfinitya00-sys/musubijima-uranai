@@ -12,6 +12,7 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type Card = {
   num: number;
@@ -1051,6 +1052,25 @@ function getTodayCardIndex(): number {
   return dateNum % 45; // 0〜44
 }
 
+// JSTの日付文字列（YYYY-MM-DD）。offsetDays で前後の日付も取得できる。
+function jstDateString(offsetDays = 0): string {
+  const base = new Date();
+  const jst = new Date(base.getTime() + (9 * 60 + offsetDays * 24 * 60) * 60 * 1000);
+  const y = jst.getUTCFullYear();
+  const m = String(jst.getUTCMonth() + 1).padStart(2, '0');
+  const d = String(jst.getUTCDate()).padStart(2, '0');
+  return `${y}-${m}-${d}`;
+}
+
+// JSTで翌日0時までの残り時間（時・分）。
+function getRemainingToMidnightJST(): { hh: number; mm: number } {
+  const base = new Date();
+  const jst = new Date(base.getTime() + 9 * 60 * 60 * 1000);
+  const secsLeft =
+    24 * 3600 - (jst.getUTCHours() * 3600 + jst.getUTCMinutes() * 60 + jst.getUTCSeconds());
+  return { hh: Math.floor(secsLeft / 3600), mm: Math.floor((secsLeft % 3600) / 60) };
+}
+
 export default function OmikujiScreen() {
   const router = useRouter();
   const [phase, setPhase] = useState<'intro' | 'result'>('intro');
@@ -1058,6 +1078,31 @@ export default function OmikujiScreen() {
 
   const fade = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.96)).current;
+
+  // カードめくり演出
+  const overlayOpacity = useRef(new Animated.Value(0)).current; // 暗転オーバーレイ
+  const flip = useRef(new Animated.Value(1)).current; // Y軸回転（0=横向き, 1=正面）
+  const particles = useRef(
+    Array.from({ length: 18 }, (_, i) => {
+      const angle = (i / 18) * Math.PI * 2;
+      const dist = 90 + (i % 3) * 45;
+      const palette = ['#E8758A', '#F9C0CC', '#C9A84C'];
+      return {
+        value: new Animated.Value(0),
+        tx: Math.cos(angle) * dist,
+        ty: Math.sin(angle) * dist,
+        color: palette[i % palette.length],
+        size: 14 + (i % 3) * 8,
+      };
+    })
+  ).current;
+
+  // ストリーク・カウントダウン
+  const [streak, setStreak] = useState<number | null>(null);
+  const [remaining, setRemaining] = useState(getRemainingToMidnightJST());
+  const streakDone = useRef(false);
+
+  // 結果画面の登場アニメーション（フェード＋スケール）
   useEffect(() => {
     fade.setValue(0);
     scale.setValue(0.96);
@@ -1066,6 +1111,72 @@ export default function OmikujiScreen() {
       Animated.timing(scale, { toValue: 1, duration: 420, useNativeDriver: false }),
     ]).start();
   }, [phase]);
+
+  // カードを引いた直後：3Dフリップで登場 → キラキラ → 暗転を戻す
+  useEffect(() => {
+    if (phase !== 'result') return;
+    flip.setValue(0);
+    particles.forEach((p) => p.value.setValue(0));
+
+    Animated.timing(overlayOpacity, { toValue: 0, duration: 320, useNativeDriver: false }).start();
+    Animated.timing(flip, { toValue: 1, duration: 620, useNativeDriver: false }).start(() => {
+      Animated.stagger(
+        22,
+        particles.map((p) =>
+          Animated.timing(p.value, { toValue: 1, duration: 760, useNativeDriver: false })
+        )
+      ).start();
+    });
+  }, [phase]);
+
+  // カウントダウン（JSTで翌日0時まで）を毎秒更新
+  useEffect(() => {
+    const id = setInterval(() => setRemaining(getRemainingToMidnightJST()), 1000);
+    return () => clearInterval(id);
+  }, []);
+
+  // 連続日数（ストリーク）の更新：結果画面を初めて表示した時に1回だけ
+  useEffect(() => {
+    if (phase !== 'result' || streakDone.current) return;
+    streakDone.current = true;
+    (async () => {
+      try {
+        const today = jstDateString(0);
+        const yesterday = jstDateString(-1);
+        const storedDate = await AsyncStorage.getItem('omikuji_streak_date');
+        const storedCountRaw = await AsyncStorage.getItem('omikuji_streak_count');
+        const storedCount = storedCountRaw ? parseInt(storedCountRaw, 10) : 0;
+
+        let next: number;
+        if (storedDate === today) {
+          // 今日すでに引いている → 何もしない
+          next = storedCount > 0 ? storedCount : 1;
+        } else if (storedDate === yesterday) {
+          // 昨日も引いていた → +1
+          next = storedCount + 1;
+        } else {
+          // 連続が途切れた → リセット
+          next = 1;
+        }
+
+        if (storedDate !== today) {
+          await AsyncStorage.setItem('omikuji_streak_count', String(next));
+          await AsyncStorage.setItem('omikuji_streak_date', today);
+        }
+        setStreak(next);
+      } catch (e) {
+        setStreak(1);
+      }
+    })();
+  }, [phase]);
+
+  // カードを引くボタン：0.3秒の暗転後に結果画面へ
+  const handleDraw = () => {
+    overlayOpacity.setValue(0);
+    Animated.timing(overlayOpacity, { toValue: 1, duration: 300, useNativeDriver: false }).start(() => {
+      setPhase('result');
+    });
+  };
 
   const shareToX = () => {
     const text = `今日の導カード 🌿\n「${card.title}${card.subtitle ? ' ' + card.subtitle : ''}」\n\nテーマ：${card.theme}\n\nあなたの今日のカードは？\nhttps://hinfinitya00-sys.github.io/musubijima-uranai/fortune/omikuji\n\n#むすび島 #導カード #今日の一枚`;
@@ -1080,6 +1191,13 @@ export default function OmikujiScreen() {
   const imgW = contentW - 40 - 32;
   const imgH = imgW * 1.35;
 
+  const flipStyle = {
+    transform: [
+      { perspective: 800 },
+      { rotateY: flip.interpolate({ inputRange: [0, 1], outputRange: ['90deg', '0deg'] }) },
+    ],
+  };
+
   const fortunes: Array<[string, string]> = [
     ['願望', card.ganbo],
     ['争事', card.arasoigoto],
@@ -1091,7 +1209,8 @@ export default function OmikujiScreen() {
   ];
 
   return (
-    <ScrollView style={styles.screen} contentContainerStyle={styles.scrollContent}>
+    <View style={{ flex: 1 }}>
+      <ScrollView style={styles.screen} contentContainerStyle={styles.scrollContent}>
       <Animated.View style={[styles.container, { opacity: fade, transform: [{ scale }] }]}>
         {phase === 'intro' ? (
           <>
@@ -1104,7 +1223,7 @@ export default function OmikujiScreen() {
                 </Text>
               ))}
             </View>
-            <TouchableOpacity activeOpacity={0.9} onPress={() => setPhase('result')}>
+            <TouchableOpacity activeOpacity={0.9} onPress={handleDraw}>
               <LinearGradient
                 colors={['#E8758A', '#C45070']}
                 start={{ x: 0, y: 0 }}
@@ -1117,9 +1236,23 @@ export default function OmikujiScreen() {
           </>
         ) : (
           <>
-            <View style={styles.imageCard}>
-              <Image source={card.img} resizeMode="contain" style={{ width: imgW, height: imgH }} />
+            <View style={styles.statusBar}>
+              <Text style={styles.countdownText}>
+                次のカードまで あと {remaining.hh}時間 {remaining.mm}分
+              </Text>
+              {streak !== null && (
+                <>
+                  <Text style={styles.streakText}>🔥 {streak}日連続中！</Text>
+                  {streak % 7 === 0 && (
+                    <Text style={styles.streakCelebrate}>🎉 {streak}日連続達成！</Text>
+                  )}
+                </>
+              )}
             </View>
+
+            <Animated.View style={[styles.imageCard, flipStyle]}>
+              <Image source={card.img} resizeMode="contain" style={{ width: imgW, height: imgH }} />
+            </Animated.View>
 
             <View style={styles.whiteCard}>
               <Text style={styles.cardName}>
@@ -1203,7 +1336,38 @@ export default function OmikujiScreen() {
           </>
         )}
       </Animated.View>
-    </ScrollView>
+      </ScrollView>
+
+      {/* カードめくり時の暗転オーバーレイ */}
+      <Animated.View
+        pointerEvents="none"
+        style={[StyleSheet.absoluteFill, styles.blackout, { opacity: overlayOpacity }]}
+      />
+
+      {/* めくれた直後のキラキラパーティクル（星型・ピンク系） */}
+      <View pointerEvents="none" style={[StyleSheet.absoluteFill, styles.particleLayer]}>
+        {particles.map((p, i) => (
+          <Animated.Text
+            key={i}
+            style={[
+              styles.particle,
+              {
+                color: p.color,
+                fontSize: p.size,
+                opacity: p.value.interpolate({ inputRange: [0, 0.15, 1], outputRange: [0, 1, 0] }),
+                transform: [
+                  { translateX: p.value.interpolate({ inputRange: [0, 1], outputRange: [0, p.tx] }) },
+                  { translateY: p.value.interpolate({ inputRange: [0, 1], outputRange: [0, p.ty] }) },
+                  { scale: p.value.interpolate({ inputRange: [0, 1], outputRange: [0.2, 1.3] }) },
+                ],
+              },
+            ]}
+          >
+            ✦
+          </Animated.Text>
+        ))}
+      </View>
+    </View>
   );
 }
 
@@ -1220,6 +1384,15 @@ const styles = StyleSheet.create({
   drawButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 },
 
   imageCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 16, alignItems: 'center', shadowColor: '#E8758A', shadowOpacity: 0.1, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
+
+  statusBar: { width: '100%', alignItems: 'center', marginBottom: 14 },
+  countdownText: { fontSize: 12, color: '#7A6A6A' },
+  streakText: { fontSize: 16, fontWeight: '800', color: '#E8758A', marginTop: 6 },
+  streakCelebrate: { fontSize: 14, fontWeight: '800', color: '#C9A84C', marginTop: 4 },
+
+  blackout: { backgroundColor: '#000000' },
+  particleLayer: { alignItems: 'center', justifyContent: 'center' },
+  particle: { position: 'absolute', fontWeight: '900', backgroundColor: 'transparent' },
 
   whiteCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16 },
   cardName: { fontSize: 20, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginBottom: 14 },
