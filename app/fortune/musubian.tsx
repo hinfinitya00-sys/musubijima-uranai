@@ -9,10 +9,14 @@ import {
   Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-
-const HEADER_IMG = 'https://musubijima.com/wp-content/uploads/2021/03/contents_header.jpg';
-import { calculateLifePathNumber, getCharacterIdByLifePath } from '@/lib/numerology';
-import { INITIAL_CHARACTERS } from '@/constants/characters';
+import { router } from 'expo-router';
+import { Colors } from '@/constants/Colors';
+import { calculateMusubiNumber } from '@/lib/numerology';
+import {
+  MUSUBIZOKU_INTRO,
+  MUSUBI_CHARACTERS,
+} from '@/constants/musubizoku';
+import type { MusubiCharacter } from '@/constants/musubizoku';
 
 const years = Array.from({ length: 91 }, (_, i) => ({ value: String(1920 + i), label: `${1920 + i}年` }));
 const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
@@ -26,9 +30,9 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
         onChange={(e: any) => onChange(e.target.value)}
         style={{
           flex: 1,
-          backgroundColor: 'rgba(232,117,138,0.15)',
-          color: '#3D1A1A',
-          border: '1px solid rgba(232,117,138,0.4)',
+          backgroundColor: Colors.sectionPink,
+          color: Colors.ink,
+          border: `1px solid ${Colors.border}`,
           borderRadius: 8,
           padding: '10px 8px',
           fontSize: 14,
@@ -37,7 +41,7 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
         } as any}
       >
         {items.map((item) => (
-          <option key={item.value} value={item.value} style={{ background: '#FFFFFF' }}>
+          <option key={item.value} value={item.value} style={{ background: Colors.surface }}>
             {item.label}
           </option>
         ))}
@@ -51,164 +55,161 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
   );
 }
 
-function getCompatibilityScore(lifePathA: number, lifePathB: number): number {
-  const highCompat: Record<number, number[]> = {
-    1: [3, 5, 7],
-    2: [4, 6, 8],
-    3: [1, 5, 9],
-    4: [2, 6, 8],
-    5: [1, 3, 7],
-    6: [2, 4, 9],
-    7: [1, 5, 7],
-    8: [2, 4, 8],
-    9: [3, 6, 9],
-    11: [2, 6, 9],
-    22: [4, 8, 11],
-    33: [6, 9, 11],
-  };
-
-  const aCompats = highCompat[lifePathA] ?? [];
-  const bCompats = highCompat[lifePathB] ?? [];
-
-  let score = 60;
-  if (aCompats.includes(lifePathB)) score += 20;
-  if (bCompats.includes(lifePathA)) score += 15;
-  if (lifePathA === lifePathB) score += 10;
-
-  return Math.min(score, 100);
+/** 数秘番号からむすび族を取得。範囲外は最も近い番号にフォールバック。 */
+function findCharacter(num: number): MusubiCharacter {
+  const exact = MUSUBI_CHARACTERS.find(c => c.num === num);
+  if (exact) return exact;
+  return MUSUBI_CHARACTERS.reduce((best, c) =>
+    Math.abs(c.num - num) < Math.abs(best.num - num) ? c : best,
+  MUSUBI_CHARACTERS[0]);
 }
 
-function getCompatibilityMessage(score: number): string {
-  if (score >= 90) return 'まさに運命の相性！お互いの魂が深く共鳴し合っています。一緒にいることで、お互いの可能性が無限に広がるでしょう。';
-  if (score >= 80) return '素晴らしい相性です！お互いを高め合い、成長させる関係。自然体でいられる心地よいつながりです。';
-  if (score >= 70) return '良い相性です。お互いの違いが刺激になり、新しい視点を与えてくれる関係です。';
-  if (score >= 60) return '穏やかな相性です。時間をかけてお互いを理解し合うことで、深い絆が生まれるでしょう。';
-  return 'チャレンジングな相性ですが、だからこそ大きな学びがあります。違いを尊重することで唯一無二の関係に。';
+function Section({ heading, body }: { heading: string; body: string }) {
+  return (
+    <View style={styles.section}>
+      <Text style={styles.sectionHeading}>{heading}</Text>
+      <Text style={styles.sectionBody}>{body}</Text>
+    </View>
+  );
 }
 
 export default function MusubianScreen() {
-  const [partnerYear, setPartnerYear] = useState('1990');
-  const [partnerMonth, setPartnerMonth] = useState('1');
-  const [partnerDay, setPartnerDay] = useState('1');
-  const [result, setResult] = useState<{
-    myLifePath: number;
-    partnerLifePath: number;
-    myCharacter: typeof INITIAL_CHARACTERS[0];
-    partnerCharacter: typeof INITIAL_CHARACTERS[0];
-    score: number;
-    message: string;
-  } | null>(null);
+  const [year, setYear] = useState('1994');
+  const [month, setMonth] = useState('1');
+  const [day, setDay] = useState('28');
+  const [result, setResult] = useState<{ num: number; character: MusubiCharacter } | null>(null);
 
   const handleDiagnose = () => {
-    const partnerDate = new Date(
-      parseInt(partnerYear),
-      parseInt(partnerMonth) - 1,
-      parseInt(partnerDay)
-    );
-    const partnerLifePath = calculateLifePathNumber(partnerDate);
-
-    const myLifePath = 3;
-    const myCharId = getCharacterIdByLifePath(myLifePath);
-    const partnerCharId = getCharacterIdByLifePath(partnerLifePath);
-
-    const myCharacter = INITIAL_CHARACTERS.find(c => c.id === myCharId) ?? INITIAL_CHARACTERS[0];
-    const partnerCharacter = INITIAL_CHARACTERS.find(c => c.id === partnerCharId) ?? INITIAL_CHARACTERS[0];
-
-    const score = getCompatibilityScore(myLifePath, partnerLifePath);
-    const message = getCompatibilityMessage(score);
-
-    setResult({ myLifePath, partnerLifePath, myCharacter, partnerCharacter, score, message });
+    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
+    const num = calculateMusubiNumber(date);
+    setResult({ num, character: findCharacter(num) });
   };
 
   const handleReset = () => {
     setResult(null);
-    setPartnerYear('1990');
-    setPartnerMonth('1');
-    setPartnerDay('1');
   };
 
   return (
-    <LinearGradient colors={['#FFF0F3', '#FFFAF9', '#FFF0F3']} style={styles.container}>
+    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
-        {/* ヘッダー画像 */}
-        <View style={styles.heroContainer}>
-          {Platform.OS === 'web' ? (
-            <img src={HEADER_IMG} alt="むすび族占い" style={{ width: '100%', display: 'block' } as any} />
-          ) : (
-            <Image source={{ uri: HEADER_IMG }} style={styles.heroImage} resizeMode="cover" />
-          )}
-        </View>
-
-        <View style={styles.header}>
-          <Text style={styles.title}>むすび族占い（相性診断）</Text>
-          <Text style={styles.subtitle}>
-            あなたと相手のむすびキャラの相性を診断します
-          </Text>
-        </View>
-
         {!result ? (
-          <View style={styles.inputSection}>
-            <Text style={styles.inputLabel}>相手の生年月日</Text>
-            <View style={styles.dateRow}>
-              <WebSelect value={partnerYear} onChange={setPartnerYear} items={years} />
-              <View style={{ width: 8 }} />
-              <WebSelect value={partnerMonth} onChange={setPartnerMonth} items={months} />
-              <View style={{ width: 8 }} />
-              <WebSelect value={partnerDay} onChange={setPartnerDay} items={days} />
+          <View style={styles.introWrap}>
+            <View style={styles.header}>
+              <Text style={styles.title}>結び族占い</Text>
+              <Text style={styles.subtitle}>あなたは、どんな結び族でしょうか。</Text>
             </View>
 
-            <TouchableOpacity
-              style={styles.diagnoseButton}
-              onPress={handleDiagnose}
-              activeOpacity={0.7}
-            >
-              <LinearGradient
-                colors={['#E8758A', '#C45070']}
-                style={styles.diagnoseButtonGradient}
-              >
-                <Text style={styles.diagnoseButtonText}>相性を診断する</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            <View style={styles.introCard}>
+              <Text style={styles.introText}>{MUSUBIZOKU_INTRO}</Text>
+            </View>
+
+            <View style={styles.inputSection}>
+              <Text style={styles.inputLabel}>生年月日</Text>
+              <View style={styles.dateRow}>
+                <WebSelect value={year} onChange={setYear} items={years} />
+                <View style={{ width: 8 }} />
+                <WebSelect value={month} onChange={setMonth} items={months} />
+                <View style={{ width: 8 }} />
+                <WebSelect value={day} onChange={setDay} items={days} />
+              </View>
+
+              <TouchableOpacity style={styles.diagnoseButton} onPress={handleDiagnose} activeOpacity={0.7}>
+                <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.diagnoseButtonGradient}>
+                  <Text style={styles.diagnoseButtonText}>鑑定する</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            </View>
           </View>
         ) : (
           <View style={styles.resultSection}>
-            <View style={styles.scoreContainer}>
-              <Text style={styles.scoreLabel}>相性スコア</Text>
-              <Text style={styles.scoreValue}>{result.score}%</Text>
+            {/* キャラクター画像 */}
+            <View style={styles.charImageWrap}>
+              <Image source={result.character.img} style={styles.charImage} resizeMode="contain" />
             </View>
 
-            <View style={styles.characterComparison}>
-              <View style={styles.characterBox}>
-                <Text style={styles.characterEmoji}>
-                  {result.myCharacter.attribute === 'fire' ? '🔥' :
-                   result.myCharacter.attribute === 'water' ? '💧' :
-                   result.myCharacter.attribute === 'wind' ? '🌿' :
-                   result.myCharacter.attribute === 'earth' ? '🌍' : '⭐'}
-                </Text>
-                <Text style={styles.characterName}>{result.myCharacter.name}</Text>
-                <Text style={styles.characterLifePath}>ライフパス {result.myLifePath}</Text>
+            {/* 名前・属性・数秘番号 */}
+            <Text style={styles.charName}>
+              {result.character.elementEmoji} {result.character.name}
+            </Text>
+            <Text style={styles.charMeta}>
+              数秘{result.character.num}の結び族 ／ {result.character.element}
+            </Text>
+
+            {/* キーワード */}
+            <View style={styles.keywordCard}>
+              <Text style={styles.keywordLabel}>キーワード</Text>
+              <Text style={styles.keywordValue}>{result.character.keywords}</Text>
+            </View>
+
+            {/* ラッキーカラー */}
+            <View style={styles.colorRow}>
+              <View style={styles.colorBox}>
+                <Text style={styles.colorBoxLabel}>ラッキーカラー</Text>
+                <Text style={styles.colorBoxValue}>{result.character.luckyColors}</Text>
               </View>
-
-              <Text style={styles.vsText}>×</Text>
-
-              <View style={styles.characterBox}>
-                <Text style={styles.characterEmoji}>
-                  {result.partnerCharacter.attribute === 'fire' ? '🔥' :
-                   result.partnerCharacter.attribute === 'water' ? '💧' :
-                   result.partnerCharacter.attribute === 'wind' ? '🌿' :
-                   result.partnerCharacter.attribute === 'earth' ? '🌍' : '⭐'}
-                </Text>
-                <Text style={styles.characterName}>{result.partnerCharacter.name}</Text>
-                <Text style={styles.characterLifePath}>ライフパス {result.partnerLifePath}</Text>
+              <View style={{ width: 10 }} />
+              <View style={styles.colorBox}>
+                <Text style={styles.colorBoxLabel}>補助カラー</Text>
+                <Text style={styles.colorBoxValue}>{result.character.subColors}</Text>
               </View>
             </View>
 
-            <View style={styles.messageCard}>
-              <Text style={styles.messageText}>{result.message}</Text>
+            {/* 各セクション（docxの順番通り） */}
+            <Section heading={result.character.introHeading} body={result.character.intro} />
+            <Section heading={result.character.giftHeading} body={result.character.gift} />
+            <Section heading={result.character.weakHeading} body={result.character.weakness} />
+            <Section heading="あなたらしい幸せの育て方" body={result.character.happiness} />
+
+            {/* 結び島からの手紙 */}
+            <View style={styles.letterCard}>
+              <Text style={styles.letterHeading}>結び島からの手紙</Text>
+              <Text style={styles.letterSigner}>{result.character.letterSigner}</Text>
+              <Text style={styles.letterBody}>{result.character.letter}</Text>
             </View>
 
-            <TouchableOpacity style={styles.retryButton} onPress={handleReset}>
-              <Text style={styles.retryButtonText}>別の人との相性を診断する</Text>
+            {/* 結び島のことば */}
+            <Text style={styles.kotobaText}>🌱 結び島のことば{'\n'}あなたの中にも、結びの種があります。</Text>
+
+            {/* 育ち3段階 */}
+            <View style={styles.growthCard}>
+              <Text style={styles.growthTitle}>{result.character.growthHeading}</Text>
+              <View style={styles.growthStage}>
+                <Text style={styles.growthStageLabel}>🌱 若木</Text>
+                <Text style={styles.growthStageBody}>{result.character.growthYoung}</Text>
+              </View>
+              <View style={styles.growthStage}>
+                <Text style={styles.growthStageLabel}>🌿 成長</Text>
+                <Text style={styles.growthStageBody}>{result.character.growthGrow}</Text>
+              </View>
+              <View style={styles.growthStage}>
+                <Text style={styles.growthStageLabel}>🍃 円熟</Text>
+                <Text style={styles.growthStageBody}>{result.character.growthMature}</Text>
+              </View>
+              <View style={styles.growthDivider} />
+              <Text style={styles.growthWordsLabel}>🍃 結びのことば</Text>
+              <Text style={styles.growthWordsBody}>{result.character.musubiWords}</Text>
+            </View>
+
+            {/* 課金誘導バナー */}
+            <TouchableOpacity
+              style={styles.upsellBanner}
+              onPress={() => router.push('/subscription/plans' as never)}
+              activeOpacity={0.85}
+            >
+              <LinearGradient colors={['#4C1D95', '#6D28D9']} style={styles.upsellGradient}>
+                <Text style={styles.upsellTitle}>✨ もっと深く、自分を知る</Text>
+                <Text style={styles.upsellText}>
+                  プランに登録すると、毎月の運勢や全機能が解放されます
+                </Text>
+                <View style={styles.upsellButton}>
+                  <Text style={styles.upsellButtonText}>プランを見る →</Text>
+                </View>
+              </LinearGradient>
+            </TouchableOpacity>
+
+            {/* 戻るボタン */}
+            <TouchableOpacity style={styles.retryButton} onPress={handleReset} activeOpacity={0.7}>
+              <Text style={styles.retryButtonText}>別の生年月日で鑑定する</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -219,61 +220,86 @@ export default function MusubianScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { paddingBottom: 80 },
-  heroContainer: { width: '100%', backgroundColor: '#FFFAF9' },
-  heroImage: { width: '100%', height: 200 },
-  header: { alignItems: 'center', marginBottom: 32, paddingHorizontal: 20, paddingTop: 24 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#E8758A', marginBottom: 8 },
-  subtitle: { fontSize: 14, color: '#7A6A6A', textAlign: 'center', lineHeight: 22 },
-  inputSection: { width: '100%', paddingHorizontal: 20 },
-  inputLabel: { fontSize: 16, fontWeight: '600', color: '#3D1A1A', marginBottom: 12 },
-  dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
-  nativePicker: {
-    flex: 1, backgroundColor: '#FFFFFF',
-    borderRadius: 8, padding: 10, borderWidth: 1, borderColor: '#F5C0CC',
+  scrollContent: { paddingBottom: 80, paddingTop: 32, paddingHorizontal: 20, maxWidth: 600, width: '100%', alignSelf: 'center' },
+
+  introWrap: { width: '100%' },
+  header: { alignItems: 'center', marginBottom: 24 },
+  title: { fontSize: 28, fontWeight: 'bold', color: Colors.primary, marginBottom: 8 },
+  subtitle: { fontSize: 14, color: Colors.muted, textAlign: 'center', lineHeight: 22 },
+
+  introCard: {
+    backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24,
+    borderWidth: 1, borderColor: Colors.border,
   },
-  nativePickerText: { color: '#3D1A1A', fontSize: 14 },
+  introText: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
+
+  inputSection: { width: '100%' },
+  inputLabel: { fontSize: 16, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
+  dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
+  nativePicker: { flex: 1, backgroundColor: Colors.surface, borderRadius: 8, padding: 10, borderWidth: 1, borderColor: Colors.border },
+  nativePickerText: { color: Colors.ink, fontSize: 14 },
   diagnoseButton: { borderRadius: 16, overflow: 'hidden' },
   diagnoseButtonGradient: { paddingVertical: 18, alignItems: 'center' },
-  diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
-  resultSection: { alignItems: 'center', width: '100%', paddingHorizontal: 20 },
-  scoreContainer: { alignItems: 'center', marginBottom: 24 },
-  scoreLabel: { fontSize: 14, color: '#7A6A6A', marginBottom: 4 },
-  scoreValue: { fontSize: 56, fontWeight: 'bold', color: '#C9A84C' },
-  characterComparison: {
-    flexDirection: 'row',
+  diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: Colors.surface },
+
+  resultSection: { alignItems: 'center', width: '100%' },
+  charImageWrap: {
+    width: '100%', maxWidth: 360, aspectRatio: 1, borderRadius: 20, overflow: 'hidden',
+    backgroundColor: Colors.surface, marginBottom: 16,
+    borderWidth: 1, borderColor: Colors.border,
+  },
+  charImage: { width: '100%', height: '100%' },
+  charName: { fontSize: 26, fontWeight: 'bold', color: Colors.ink, marginBottom: 4 },
+  charMeta: { fontSize: 14, color: Colors.primaryDark, marginBottom: 20 },
+
+  keywordCard: {
+    width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 12, padding: 16, marginBottom: 12,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginBottom: 24,
-    width: '100%',
   },
-  characterBox: {
-    flex: 1,
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    padding: 16,
+  keywordLabel: { fontSize: 11, color: Colors.primaryDark, fontWeight: '600', marginBottom: 4 },
+  keywordValue: { fontSize: 15, color: Colors.ink, fontWeight: '500', textAlign: 'center' },
+
+  colorRow: { flexDirection: 'row', width: '100%', marginBottom: 24 },
+  colorBox: { flex: 1, backgroundColor: Colors.sectionCream, borderRadius: 12, padding: 14 },
+  colorBoxLabel: { fontSize: 11, color: Colors.muted, fontWeight: '600', marginBottom: 4 },
+  colorBoxValue: { fontSize: 13, color: Colors.ink, lineHeight: 20 },
+
+  section: {
+    width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 16,
+    borderWidth: 1, borderColor: Colors.border,
   },
-  characterEmoji: { fontSize: 36, marginBottom: 8 },
-  characterName: { fontSize: 16, fontWeight: 'bold', color: '#3D1A1A', marginBottom: 4 },
-  characterLifePath: { fontSize: 12, color: '#7A6A6A' },
-  vsText: { fontSize: 24, color: '#C9A84C', marginHorizontal: 12, fontWeight: 'bold' },
-  messageCard: {
-    backgroundColor: 'rgba(232,117,138,0.1)',
-    borderRadius: 16,
-    padding: 24,
-    width: '100%',
-    borderWidth: 1,
-    borderColor: 'rgba(232,117,138,0.3)',
-    marginBottom: 24,
+  sectionHeading: { fontSize: 17, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 12 },
+  sectionBody: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
+
+  letterCard: {
+    width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 16, padding: 20, marginBottom: 16,
+    borderWidth: 1, borderColor: Colors.border,
   },
-  messageText: { fontSize: 15, color: '#3D1A1A', lineHeight: 26, textAlign: 'center' },
-  retryButton: {
-    paddingHorizontal: 24,
-    paddingVertical: 12,
-    borderRadius: 12,
-    borderWidth: 1,
-    borderColor: 'rgba(232,117,138,0.4)',
+  letterHeading: { fontSize: 17, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 8 },
+  letterSigner: { fontSize: 14, color: Colors.muted, marginBottom: 8 },
+  letterBody: { fontSize: 14, color: Colors.ink, lineHeight: 26, fontStyle: 'italic' },
+
+  kotobaText: { fontSize: 14, color: Colors.primaryDark, textAlign: 'center', lineHeight: 24, marginBottom: 16 },
+
+  growthCard: {
+    width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24,
+    borderWidth: 1, borderColor: Colors.border,
   },
-  retryButtonText: { color: '#E8758A', fontSize: 14 },
+  growthTitle: { fontSize: 16, fontWeight: 'bold', color: Colors.ink, marginBottom: 16, textAlign: 'center' },
+  growthStage: { marginBottom: 14 },
+  growthStageLabel: { fontSize: 14, fontWeight: '700', color: Colors.primary, marginBottom: 4 },
+  growthStageBody: { fontSize: 14, color: Colors.ink, lineHeight: 24 },
+  growthDivider: { height: 1, backgroundColor: Colors.border, marginVertical: 12 },
+  growthWordsLabel: { fontSize: 14, fontWeight: '700', color: Colors.accent, marginBottom: 6 },
+  growthWordsBody: { fontSize: 14, color: Colors.ink, lineHeight: 24 },
+
+  upsellBanner: { width: '100%', borderRadius: 16, overflow: 'hidden', marginBottom: 16 },
+  upsellGradient: { padding: 20, alignItems: 'center' },
+  upsellTitle: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
+  upsellText: { fontSize: 13, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
+  upsellButton: { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 50, paddingVertical: 8, paddingHorizontal: 20 },
+  upsellButtonText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
+
+  retryButton: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
+  retryButtonText: { color: Colors.primary, fontSize: 14 },
 });
