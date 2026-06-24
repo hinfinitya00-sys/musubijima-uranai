@@ -22,6 +22,8 @@ const years = Array.from({ length: 91 }, (_, i) => ({ value: String(1920 + i), l
 const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
 const days = Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}日` }));
 
+const ELEMENT_EMOJI: Record<string, string> = { 火: '🔥', 水: '💧', 風: '🍃', 土: '🌱' };
+
 function WebSelect({ value, onChange, items }: { value: string; onChange: (v: string) => void; items: { value: string; label: string }[] }) {
   if (Platform.OS === 'web') {
     return (
@@ -85,10 +87,6 @@ export default function MusubianScreen() {
     setResult({ num, character: findCharacter(num) });
   };
 
-  const handleReset = () => {
-    setResult(null);
-  };
-
   return (
     <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
@@ -113,9 +111,9 @@ export default function MusubianScreen() {
                 <WebSelect value={day} onChange={setDay} items={days} />
               </View>
 
-              <TouchableOpacity style={styles.diagnoseButton} onPress={handleDiagnose} activeOpacity={0.7}>
-                <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.diagnoseButtonGradient}>
-                  <Text style={styles.diagnoseButtonText}>鑑定する</Text>
+              <TouchableOpacity style={styles.primaryButton} onPress={handleDiagnose} activeOpacity={0.7}>
+                <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.primaryButtonGradient}>
+                  <Text style={styles.primaryButtonText}>鑑定する</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
@@ -124,12 +122,12 @@ export default function MusubianScreen() {
           <View style={styles.resultSection}>
             {/* キャラクター画像 */}
             <View style={styles.charImageWrap}>
-              <Image source={result.character.img} style={styles.charImage} resizeMode="contain" />
+              <Image source={result.character.image} style={styles.charImage} resizeMode="contain" />
             </View>
 
             {/* 名前・属性・数秘番号 */}
             <Text style={styles.charName}>
-              {result.character.elementEmoji} {result.character.name}
+              {ELEMENT_EMOJI[result.character.element] ?? '🌱'} {result.character.name}
             </Text>
             <Text style={styles.charMeta}>
               数秘{result.character.num}の結び族 ／ {result.character.element}
@@ -141,23 +139,23 @@ export default function MusubianScreen() {
               <Text style={styles.keywordValue}>{result.character.keywords}</Text>
             </View>
 
-            {/* ラッキーカラー */}
+            {/* ラッキーカラー・補助カラー */}
             <View style={styles.colorRow}>
               <View style={styles.colorBox}>
                 <Text style={styles.colorBoxLabel}>ラッキーカラー</Text>
-                <Text style={styles.colorBoxValue}>{result.character.luckyColors}</Text>
+                <Text style={styles.colorBoxValue}>{result.character.luckyColor}</Text>
               </View>
               <View style={{ width: 10 }} />
               <View style={styles.colorBox}>
                 <Text style={styles.colorBoxLabel}>補助カラー</Text>
-                <Text style={styles.colorBoxValue}>{result.character.subColors}</Text>
+                <Text style={styles.colorBoxValue}>{result.character.subColor}</Text>
               </View>
             </View>
 
-            {/* 各セクション（docxの順番通り） */}
-            <Section heading={result.character.introHeading} body={result.character.intro} />
-            <Section heading={result.character.giftHeading} body={result.character.gift} />
-            <Section heading={result.character.weakHeading} body={result.character.weakness} />
+            {/* 各セクション（docxの順番通り。見出しは名前・属性から復元） */}
+            <Section heading={`${result.character.name}ってどんな結び族？`} body={result.character.description} />
+            <Section heading={`生まれた時にもらった${result.character.element}の贈りもの`} body={result.character.gift} />
+            <Section heading={`${result.character.name}が苦手なこと`} body={result.character.weakness} />
             <Section heading="あなたらしい幸せの育て方" body={result.character.happiness} />
 
             {/* 結び島からの手紙 */}
@@ -172,22 +170,22 @@ export default function MusubianScreen() {
 
             {/* 育ち3段階 */}
             <View style={styles.growthCard}>
-              <Text style={styles.growthTitle}>{result.character.growthHeading}</Text>
+              <Text style={styles.growthTitle}>【結び族{result.character.num}の育ち】</Text>
               <View style={styles.growthStage}>
                 <Text style={styles.growthStageLabel}>🌱 若木</Text>
-                <Text style={styles.growthStageBody}>{result.character.growthYoung}</Text>
+                <Text style={styles.growthStageBody}>{result.character.growth.young}</Text>
               </View>
               <View style={styles.growthStage}>
                 <Text style={styles.growthStageLabel}>🌿 成長</Text>
-                <Text style={styles.growthStageBody}>{result.character.growthGrow}</Text>
+                <Text style={styles.growthStageBody}>{result.character.growth.middle}</Text>
               </View>
               <View style={styles.growthStage}>
                 <Text style={styles.growthStageLabel}>🍃 円熟</Text>
-                <Text style={styles.growthStageBody}>{result.character.growthMature}</Text>
+                <Text style={styles.growthStageBody}>{result.character.growth.mature}</Text>
               </View>
               <View style={styles.growthDivider} />
               <Text style={styles.growthWordsLabel}>🍃 結びのことば</Text>
-              <Text style={styles.growthWordsBody}>{result.character.musubiWords}</Text>
+              <Text style={styles.growthWordsBody}>{result.character.bindingWord}</Text>
             </View>
 
             {/* 課金誘導バナー */}
@@ -208,7 +206,7 @@ export default function MusubianScreen() {
             </TouchableOpacity>
 
             {/* 戻るボタン */}
-            <TouchableOpacity style={styles.retryButton} onPress={handleReset} activeOpacity={0.7}>
+            <TouchableOpacity style={styles.retryButton} onPress={() => setResult(null)} activeOpacity={0.7}>
               <Text style={styles.retryButtonText}>別の生年月日で鑑定する</Text>
             </TouchableOpacity>
           </View>
@@ -227,10 +225,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 28, fontWeight: 'bold', color: Colors.primary, marginBottom: 8 },
   subtitle: { fontSize: 14, color: Colors.muted, textAlign: 'center', lineHeight: 22 },
 
-  introCard: {
-    backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24,
-    borderWidth: 1, borderColor: Colors.border,
-  },
+  introCard: { backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: Colors.border },
   introText: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
 
   inputSection: { width: '100%' },
@@ -238,24 +233,17 @@ const styles = StyleSheet.create({
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   nativePicker: { flex: 1, backgroundColor: Colors.surface, borderRadius: 8, padding: 10, borderWidth: 1, borderColor: Colors.border },
   nativePickerText: { color: Colors.ink, fontSize: 14 },
-  diagnoseButton: { borderRadius: 16, overflow: 'hidden' },
-  diagnoseButtonGradient: { paddingVertical: 18, alignItems: 'center' },
-  diagnoseButtonText: { fontSize: 16, fontWeight: 'bold', color: Colors.surface },
+  primaryButton: { borderRadius: 16, overflow: 'hidden' },
+  primaryButtonGradient: { paddingVertical: 18, alignItems: 'center' },
+  primaryButtonText: { fontSize: 16, fontWeight: 'bold', color: Colors.surface },
 
   resultSection: { alignItems: 'center', width: '100%' },
-  charImageWrap: {
-    width: '100%', maxWidth: 360, aspectRatio: 1, borderRadius: 20, overflow: 'hidden',
-    backgroundColor: Colors.surface, marginBottom: 16,
-    borderWidth: 1, borderColor: Colors.border,
-  },
+  charImageWrap: { width: '100%', maxWidth: 360, aspectRatio: 1, borderRadius: 20, overflow: 'hidden', backgroundColor: Colors.surface, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   charImage: { width: '100%', height: '100%' },
   charName: { fontSize: 26, fontWeight: 'bold', color: Colors.ink, marginBottom: 4 },
   charMeta: { fontSize: 14, color: Colors.primaryDark, marginBottom: 20 },
 
-  keywordCard: {
-    width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 12, padding: 16, marginBottom: 12,
-    alignItems: 'center',
-  },
+  keywordCard: { width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 12, padding: 16, marginBottom: 12, alignItems: 'center' },
   keywordLabel: { fontSize: 11, color: Colors.primaryDark, fontWeight: '600', marginBottom: 4 },
   keywordValue: { fontSize: 15, color: Colors.ink, fontWeight: '500', textAlign: 'center' },
 
@@ -264,27 +252,18 @@ const styles = StyleSheet.create({
   colorBoxLabel: { fontSize: 11, color: Colors.muted, fontWeight: '600', marginBottom: 4 },
   colorBoxValue: { fontSize: 13, color: Colors.ink, lineHeight: 20 },
 
-  section: {
-    width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 16,
-    borderWidth: 1, borderColor: Colors.border,
-  },
+  section: { width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   sectionHeading: { fontSize: 17, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 12 },
   sectionBody: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
 
-  letterCard: {
-    width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 16, padding: 20, marginBottom: 16,
-    borderWidth: 1, borderColor: Colors.border,
-  },
+  letterCard: { width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   letterHeading: { fontSize: 17, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 8 },
   letterSigner: { fontSize: 14, color: Colors.muted, marginBottom: 8 },
   letterBody: { fontSize: 14, color: Colors.ink, lineHeight: 26, fontStyle: 'italic' },
 
   kotobaText: { fontSize: 14, color: Colors.primaryDark, textAlign: 'center', lineHeight: 24, marginBottom: 16 },
 
-  growthCard: {
-    width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24,
-    borderWidth: 1, borderColor: Colors.border,
-  },
+  growthCard: { width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: Colors.border },
   growthTitle: { fontSize: 16, fontWeight: 'bold', color: Colors.ink, marginBottom: 16, textAlign: 'center' },
   growthStage: { marginBottom: 14 },
   growthStageLabel: { fontSize: 14, fontWeight: '700', color: Colors.primary, marginBottom: 4 },

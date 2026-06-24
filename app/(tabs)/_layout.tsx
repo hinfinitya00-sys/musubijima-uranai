@@ -1,15 +1,10 @@
 import { Tabs } from "expo-router";
-import { useSafeAreaInsets } from "react-native-safe-area-context";
-import { Platform } from "react-native";
 import { useColors } from "@/hooks/use-colors";
 import { HapticTab } from "@/components/haptic-tab";
 import { IconSymbol } from "@/components/ui/icon-symbol";
 
 export default function TabLayout() {
   const colors = useColors();
-  const insets = useSafeAreaInsets();
-  const bottomPadding = Platform.OS === "web" ? 12 : Math.max(insets.bottom, 8);
-  const tabBarHeight = 56 + bottomPadding;
 
   return (
     <Tabs
@@ -18,14 +13,8 @@ export default function TabLayout() {
         tabBarInactiveTintColor: colors.muted,
         headerShown: false,
         tabBarButton: HapticTab,
-        tabBarStyle: {
-          paddingTop: 8,
-          paddingBottom: bottomPadding,
-          height: tabBarHeight,
-          backgroundColor: "#1A0A2E",
-          borderTopColor: "#4A3570",
-          borderTopWidth: 0.5,
-        },
+        // ボトムタブバーは完全非表示（トップページの導線からのみアクセスする設計）
+        tabBarStyle: { display: "none" },
         tabBarLabelStyle: {
           fontSize: 11,
           fontWeight: "600",
