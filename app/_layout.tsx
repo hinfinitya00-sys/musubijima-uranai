@@ -19,6 +19,20 @@ import type { EdgeInsets, Metrics, Rect } from "react-native-safe-area-context";
 import { trpc, createTRPCClient } from "@/lib/trpc";
 import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-runtime";
 import { AppProvider } from "@/lib/app-context";
+import * as SplashScreen from "expo-splash-screen";
+import { useFonts } from "expo-font";
+import {
+  NotoSerifJP_500Medium,
+  NotoSerifJP_700Bold,
+} from "@expo-google-fonts/noto-serif-jp";
+import {
+  NotoSansJP_300Light,
+  NotoSansJP_400Regular,
+  NotoSansJP_500Medium,
+} from "@expo-google-fonts/noto-sans-jp";
+
+// フォントのロードが終わるまでスプラッシュを保持
+SplashScreen.preventAutoHideAsync().catch(() => {});
 
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
@@ -33,6 +47,21 @@ export default function RootLayout() {
 
   const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
   const [frame, setFrame] = useState<Rect>(initialFrame);
+
+  // Noto Serif JP（見出し）/ Noto Sans JP（本文）のロード
+  const [fontsLoaded, fontError] = useFonts({
+    NotoSerifJP_500Medium,
+    NotoSerifJP_700Bold,
+    NotoSansJP_300Light,
+    NotoSansJP_400Regular,
+    NotoSansJP_500Medium,
+  });
+
+  useEffect(() => {
+    if (fontsLoaded || fontError) {
+      SplashScreen.hideAsync().catch(() => {});
+    }
+  }, [fontsLoaded, fontError]);
 
   // Initialize Manus runtime for cookie injection from parent container
   useEffect(() => {
@@ -78,6 +107,11 @@ export default function RootLayout() {
       },
     };
   }, [initialInsets, initialFrame]);
+
+  // フォント未ロード時はスプラッシュを維持（描画しない）
+  if (!fontsLoaded && !fontError) {
+    return null;
+  }
 
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>

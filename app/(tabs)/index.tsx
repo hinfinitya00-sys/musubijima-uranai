@@ -17,6 +17,9 @@ import { ScreenContainer } from "@/components/screen-container";
 import { useApp } from "@/lib/app-context";
 import { usePlanGate } from "@/hooks/usePlanGate";
 import { TrialBanner } from "@/components/TrialBanner";
+import { Colors } from "@/constants/Colors";
+import { Typography, Fonts } from "@/constants/Typography";
+import { Spacing } from "@/constants/Spacing";
 
 function useFloatAnim(duration: number, delay: number = 0) {
   const anim = useRef(new Animated.Value(0)).current;
@@ -50,40 +53,16 @@ function usePulseAnim(duration: number, delay: number = 0) {
   return anim;
 }
 
-function useSpinAnim(duration: number, reverse: boolean = false) {
-  const anim = useRef(new Animated.Value(0)).current;
-  useEffect(() => {
-    const loop = Animated.loop(
-      Animated.timing(anim, { toValue: 1, duration, useNativeDriver: true })
-    );
-    loop.start();
-    return () => loop.stop();
-  }, []);
-  const rotate = anim.interpolate({
-    inputRange: [0, 1],
-    outputRange: reverse ? ['0deg', '-360deg'] : ['0deg', '360deg'],
-  });
-  return rotate;
-}
-
 export default function HomeScreen() {
   const { state } = useApp();
   const { canUse, isFree } = usePlanGate();
   const { subscription, isLoading } = state;
 
+  // 常時ループは静かに：吹き出しの浮遊を1つ、スパークル2つ、リングの脈動のみ
   const float1 = useFloatAnim(3200, 0);
-  const float2 = useFloatAnim(3800, 400);
-  const float3 = useFloatAnim(4000, 200);
-
   const pulse1 = usePulseAnim(3000, 0);
-
-  const spin1 = useSpinAnim(26000, false);
-  const spin2 = useSpinAnim(34000, true);
-
   const sparkle1 = usePulseAnim(2000, 0);
   const sparkle2 = usePulseAnim(2500, 500);
-  const sparkle3 = usePulseAnim(2000, 1000);
-  const sparkle4 = usePulseAnim(2500, 1500);
 
   // 結び族セクションの生年月日フォーム（鑑定本体はmusubian側で再取得）
   const [bYear, setBYear] = useState('');
@@ -130,7 +109,7 @@ export default function HomeScreen() {
 
             {/* ① ヘッダー */}
             <View style={styles.header}>
-              <Text style={styles.logoText}>結び島 占い</Text>
+              <Text style={styles.logoText}>むすび島</Text>
               <Text style={styles.logoSubtext}>MUSUBIJIMA</Text>
               <Text style={styles.dateText}>{todayStr}（{weekday}）</Text>
               <Text style={styles.catchName}>占いカウンセラー　其田寿枝</Text>
@@ -140,17 +119,17 @@ export default function HomeScreen() {
             <TrialBanner />
 
             {/* ② ひさえと龍イラスト＋バブルメニュー */}
-            <View style={[styles.hisaeZone, { height: hisaeH + 24 }]}>
-              <Animated.View
+            <View style={[styles.hisaeZone, { height: hisaeH + Spacing.lg }]}>
+              <View
                 style={[
                   styles.hisaeRing,
-                  { width: ringSize, height: ringSize, borderRadius: ringSize / 2, marginLeft: -ringSize / 2, marginTop: -ringSize / 2, transform: [{ rotate: spin1 }] },
+                  { width: ringSize, height: ringSize, borderRadius: ringSize / 2, marginLeft: -ringSize / 2, marginTop: -ringSize / 2 },
                 ]}
               />
               <Animated.View
                 style={[
                   styles.hisaeRing2,
-                  { width: ringSize * 0.86, height: ringSize * 0.86, borderRadius: (ringSize * 0.86) / 2, marginLeft: -(ringSize * 0.86) / 2, marginTop: -(ringSize * 0.86) / 2, opacity: pulse1, transform: [{ rotate: spin2 }] },
+                  { width: ringSize * 0.86, height: ringSize * 0.86, borderRadius: (ringSize * 0.86) / 2, marginLeft: -(ringSize * 0.86) / 2, marginTop: -(ringSize * 0.86) / 2, opacity: pulse1 },
                 ]}
               />
               <Image
@@ -161,18 +140,16 @@ export default function HomeScreen() {
 
               <Animated.View style={[styles.sparkleGold, { top: '4%', left: '50%', marginLeft: -4, opacity: sparkle1 }]} />
               <Animated.View style={[styles.sparklePink, { bottom: '6%', left: '46%', opacity: sparkle2 }]} />
-              <Animated.View style={[styles.sparklePink, { top: '46%', left: '8%', opacity: sparkle3 }]} />
-              <Animated.View style={[styles.sparkleGold, { top: '40%', right: '8%', opacity: sparkle4 }]} />
 
               <Animated.View style={[styles.bubble, styles.bubbleTL, { transform: [{ translateY: float1 }] }]}>
                 <Text style={styles.bubbleText}>なぜ同じ悩みを{'\n'}繰り返す？</Text>
               </Animated.View>
-              <Animated.View style={[styles.bubble, styles.bubbleTR, { transform: [{ translateY: float2 }] }]}>
+              <View style={[styles.bubble, styles.bubbleTR]}>
                 <Text style={styles.bubbleText}>未来へのヒント{'\n'}生まれ持った力を知る</Text>
-              </Animated.View>
-              <Animated.View style={[styles.bubble, styles.bubbleBR, { transform: [{ translateY: float3 }] }]}>
+              </View>
+              <View style={[styles.bubble, styles.bubbleBR]}>
                 <Text style={styles.bubbleText}>今は進む時？{'\n'}整える時？</Text>
-              </Animated.View>
+              </View>
             </View>
             <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
 
@@ -180,7 +157,7 @@ export default function HomeScreen() {
             <View style={styles.section}>
               <Image source={require('../../assets/site/logo-shirube.jpg')} style={styles.sectionLogo} resizeMode="contain" />
               <Text style={styles.titleGold}>導カード</Text>
-              <Text style={styles.roman}>shirube card</Text>
+              <Text style={styles.roman}>SHIRUBE CARD</Text>
               <Text style={styles.sectionDesc}>今日の意気や心の流れ、気を付けたいこと、心が軽くなるアドバイスが受け取れます。</Text>
               <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={() => router.push('/fortune/omikuji' as never)}>
                 <Text style={styles.pinkButtonText}>無料で引く</Text>
@@ -194,11 +171,11 @@ export default function HomeScreen() {
               <Text style={styles.subPink}>生まれ持った性質と才能を知る</Text>
               <Text style={styles.sectionDesc}>生まれ持った性質や本質・性格の特徴、強味・才能 得意なことなど向いている生き方のヒントが分かります。</Text>
               <View style={styles.birthRow}>
-                <TextInput style={styles.birthInput} value={bYear} onChangeText={setBYear} placeholder="年" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={4} />
+                <TextInput style={styles.birthInput} value={bYear} onChangeText={setBYear} placeholder="年" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={4} />
                 <Text style={styles.birthSep}>年</Text>
-                <TextInput style={styles.birthInputSm} value={bMonth} onChangeText={setBMonth} placeholder="月" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={2} />
+                <TextInput style={styles.birthInputSm} value={bMonth} onChangeText={setBMonth} placeholder="月" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                 <Text style={styles.birthSep}>月</Text>
-                <TextInput style={styles.birthInputSm} value={bDay} onChangeText={setBDay} placeholder="日" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={2} />
+                <TextInput style={styles.birthInputSm} value={bDay} onChangeText={setBDay} placeholder="日" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                 <Text style={styles.birthSep}>日</Text>
               </View>
               <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={goMusubian}>
@@ -227,11 +204,11 @@ export default function HomeScreen() {
                 <Text style={styles.frameSub}>今は進む時？{'\n'}整える時？</Text>
                 <Text style={styles.frameDesc}>1年の流れや、行動のタイミングが分かります。{'\n'}*やるべきこと、さけるべきことを見極める*</Text>
                 <View style={styles.birthRow}>
-                  <TextInput style={styles.birthInput} value={lrYear} onChangeText={setLrYear} placeholder="年" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={4} />
+                  <TextInput style={styles.birthInput} value={lrYear} onChangeText={setLrYear} placeholder="年" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={4} />
                   <Text style={styles.birthSep}>年</Text>
-                  <TextInput style={styles.birthInputSm} value={lrMonth} onChangeText={setLrMonth} placeholder="月" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={2} />
+                  <TextInput style={styles.birthInputSm} value={lrMonth} onChangeText={setLrMonth} placeholder="月" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                   <Text style={styles.birthSep}>月</Text>
-                  <TextInput style={styles.birthInputSm} value={lrDay} onChangeText={setLrDay} placeholder="日" placeholderTextColor="#D6A9B2" keyboardType="number-pad" maxLength={2} />
+                  <TextInput style={styles.birthInputSm} value={lrDay} onChangeText={setLrDay} placeholder="日" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                   <Text style={styles.birthSep}>日</Text>
                 </View>
                 <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={() => router.push({ pathname: '/fortune/life-rhythm', params: { year: lrYear, month: lrMonth, day: lrDay } } as never)}>
@@ -260,7 +237,7 @@ export default function HomeScreen() {
                 onPress={() => router.push("/subscription/plans" as never)}
                 activeOpacity={0.9}
               >
-                <LinearGradient colors={['#E8758A', '#C45070']} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaGradient}>
+                <LinearGradient colors={[Colors.primary, Colors.primaryDark]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaGradient}>
                   <Text style={styles.ctaTitle}>月額330円で全機能解放</Text>
                   <Text style={styles.ctaSubtitle}>7日間無料トライアル実施中</Text>
                 </LinearGradient>
@@ -275,40 +252,40 @@ export default function HomeScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFAF9' },
-  loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: '#FFFAF9' },
-  loadingText: { fontSize: 18, color: '#E8758A', fontWeight: '700' },
-  content: { width: '100%', maxWidth: 600, alignSelf: 'center', paddingHorizontal: 16, paddingTop: 8, paddingBottom: 40 },
+  container: { flex: 1, backgroundColor: Colors.bg },
+  loadingContainer: { flex: 1, alignItems: 'center', justifyContent: 'center', backgroundColor: Colors.bg },
+  loadingText: { ...Typography.h3, color: Colors.primary },
+  content: { width: '100%', maxWidth: 600, alignSelf: 'center', paddingHorizontal: Spacing.md, paddingTop: Spacing.sm, paddingBottom: Spacing.section },
 
   // ① ヘッダー
-  header: { alignItems: 'center', marginBottom: 12, paddingTop: 8 },
-  logoText: { fontSize: 32, fontWeight: '800', color: '#E8758A', letterSpacing: 4 },
-  logoSubtext: { fontSize: 10, color: '#C9A84C', letterSpacing: 8, marginTop: 4 },
-  dateText: { fontSize: 12, color: '#B08A8F', marginTop: 8 },
-  catchName: { fontSize: 13, fontWeight: '700', color: '#3D1A1A', marginTop: 10 },
-  catchText: { fontSize: 11, color: '#6E4A4A', marginTop: 4, textAlign: 'center', lineHeight: 18 },
+  header: { alignItems: 'center', marginBottom: Spacing.lg, paddingTop: Spacing.sm },
+  logoText: { ...Typography.brand, color: Colors.primary },
+  logoSubtext: { ...Typography.brandSub, color: Colors.accent, marginTop: Spacing.xs },
+  dateText: { ...Typography.caption, color: Colors.muted, marginTop: Spacing.sm },
+  catchName: { ...Typography.label, color: Colors.ink, marginTop: Spacing.sm },
+  catchText: { ...Typography.caption, color: Colors.muted, marginTop: Spacing.xs, textAlign: 'center' },
 
   // ② ひさえゾーン
-  hisaeZone: { width: '100%', alignItems: 'center', justifyContent: 'center', position: 'relative', marginTop: 8 },
+  hisaeZone: { width: '100%', alignItems: 'center', justifyContent: 'center', position: 'relative', marginTop: Spacing.sm },
   hisaeRing: {
     position: 'absolute', top: '50%', left: '50%',
-    borderWidth: 1.5, borderColor: 'rgba(232,117,138,0.35)', borderStyle: 'dashed',
+    borderWidth: 1.5, borderColor: 'rgba(232,117,138,0.30)', borderStyle: 'dashed',
   } as any,
   hisaeRing2: {
     position: 'absolute', top: '50%', left: '50%',
-    borderWidth: 1, borderColor: 'rgba(201,168,76,0.4)', borderStyle: 'dashed',
+    borderWidth: 1, borderColor: 'rgba(201,168,76,0.35)', borderStyle: 'dashed',
   } as any,
-  sparkleGold: { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: '#C9A84C' },
-  sparklePink: { position: 'absolute', width: 7, height: 7, borderRadius: 3.5, backgroundColor: '#E8758A' },
+  sparkleGold: { position: 'absolute', width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.accent },
+  sparklePink: { position: 'absolute', width: 7, height: 7, borderRadius: 3.5, backgroundColor: Colors.primary },
 
   bubble: {
     position: 'absolute',
-    backgroundColor: '#F9C0CC',
+    backgroundColor: Colors.primaryLight,
     borderRadius: 60,
-    paddingVertical: 12,
-    paddingHorizontal: 14,
+    paddingVertical: Spacing.sm,
+    paddingHorizontal: Spacing.md,
     maxWidth: 140,
-    shadowColor: '#E8758A',
+    shadowColor: Colors.primary,
     shadowOpacity: 0.25,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
@@ -317,113 +294,79 @@ const styles = StyleSheet.create({
   bubbleTL: { top: '6%', left: -2 },
   bubbleTR: { top: 0, right: -2 },
   bubbleBR: { bottom: '8%', right: 2 },
-  bubbleText: { color: '#C45070', fontSize: 12, fontWeight: '700', textAlign: 'center', lineHeight: 17 },
-  hisaeCaption: { fontSize: 12, color: '#6E4A4A', textAlign: 'center', marginTop: 4, marginBottom: 20, lineHeight: 18 },
+  bubbleText: { ...Typography.caption, color: Colors.primaryDark, textAlign: 'center' },
+  hisaeCaption: { ...Typography.caption, color: Colors.muted, textAlign: 'center', marginTop: Spacing.sm, marginBottom: Spacing.lg },
 
   // 共通セクション
   section: {
-    backgroundColor: '#FFFFFF',
+    backgroundColor: Colors.surface,
     borderRadius: 20,
     borderWidth: 1,
-    borderColor: '#F6D7DE',
-    padding: 20,
-    marginBottom: 16,
+    borderColor: Colors.border,
+    padding: Spacing.lg,
+    marginBottom: Spacing.section,
     alignItems: 'center',
-    shadowColor: '#E8758A',
+    shadowColor: Colors.primary,
     shadowOpacity: 0.08,
     shadowRadius: 14,
     shadowOffset: { width: 0, height: 6 },
     elevation: 2,
   },
-  sectionLogo: { width: '100%', height: 150, marginBottom: 10 },
-  titleGold: { fontSize: 26, fontWeight: '800', color: '#C9A84C', letterSpacing: 2 },
-  titlePink: { fontSize: 26, fontWeight: '800', color: '#E8758A', letterSpacing: 2 },
-  roman: { fontSize: 11, color: '#A89A8A', letterSpacing: 2, marginTop: 2 },
-  subPink: { fontSize: 14, fontWeight: '700', color: '#3D1A1A', marginTop: 4 },
-  sectionDesc: { fontSize: 13, color: '#6E4A4A', lineHeight: 21, textAlign: 'center', marginTop: 10 },
+  sectionLogo: { width: '100%', height: 150, marginBottom: Spacing.sm },
+  titleGold: { ...Typography.h1, color: Colors.accent },
+  titlePink: { ...Typography.h1, color: Colors.primary },
+  roman: { ...Typography.caption, color: Colors.muted, letterSpacing: 2, marginTop: Spacing.xs },
+  subPink: { ...Typography.label, color: Colors.ink, marginTop: Spacing.xs },
+  sectionDesc: { ...Typography.body, color: Colors.muted, textAlign: 'center', marginTop: Spacing.sm },
 
   // ⑤ み・たまカード
-  logoMitama: { width: '100%', height: 120, marginBottom: 10 },
-  mitamaHeading: { fontSize: 18, fontWeight: '800', color: '#E8758A', textAlign: 'center' },
+  logoMitama: { width: '100%', height: 120, marginBottom: Spacing.sm },
+  mitamaHeading: { ...Typography.h3, color: Colors.primary, textAlign: 'center' },
 
   // ⑥ 今年の運勢（フレーム）
-  frameSection: { marginBottom: 16, borderRadius: 20, overflow: 'hidden' },
-  frameInner: { padding: 24, alignItems: 'center' },
-  frameTitle: { fontSize: 28, fontWeight: '900', color: '#C45070', letterSpacing: 2 },
-  frameSub: { fontSize: 16, color: '#E8758A', textAlign: 'center', marginTop: 4, lineHeight: 24 },
-  frameDesc: { fontSize: 13, color: '#3D1A1A', textAlign: 'center', marginTop: 10, lineHeight: 20 },
+  frameSection: { marginBottom: Spacing.section, borderRadius: 20, overflow: 'hidden' },
+  frameInner: { padding: Spacing.lg, alignItems: 'center' },
+  frameTitle: { ...Typography.h1, color: Colors.primaryDark },
+  frameSub: { ...Typography.h3, color: Colors.primary, textAlign: 'center', marginTop: Spacing.xs },
+  frameDesc: { ...Typography.body, color: Colors.ink, textAlign: 'center', marginTop: Spacing.sm },
 
   // ⑦ ネガティブ神
-  negDesc: { fontSize: 13, color: '#3D1A1A', lineHeight: 21, textAlign: 'center', marginTop: 10 },
+  negDesc: { ...Typography.body, color: Colors.ink, textAlign: 'center', marginTop: Spacing.sm },
 
   pinkButton: {
-    backgroundColor: '#E8758A',
+    backgroundColor: Colors.primary,
     borderRadius: 999,
-    paddingVertical: 13,
+    paddingVertical: 14,
     paddingHorizontal: 44,
-    marginTop: 16,
-    shadowColor: '#C45070',
+    marginTop: Spacing.md,
+    shadowColor: Colors.primaryDark,
     shadowOpacity: 0.3,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  pinkButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '800', letterSpacing: 1 },
+  pinkButtonText: { ...Typography.label, color: Colors.surface, letterSpacing: 1, textAlign: 'center' },
 
   // 生年月日フォーム
-  birthRow: { flexDirection: 'row', alignItems: 'center', marginTop: 16 },
+  birthRow: { flexDirection: 'row', alignItems: 'center', marginTop: Spacing.md },
   birthInput: {
-    width: 72, borderWidth: 1, borderColor: '#F0C4CC', borderRadius: 10,
-    paddingVertical: 8, paddingHorizontal: 8, fontSize: 15, color: '#3D1A1A',
-    textAlign: 'center', backgroundColor: '#FFF5F0',
+    width: 72, borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
+    paddingVertical: 12, paddingHorizontal: Spacing.sm, fontFamily: Fonts.sansRegular, fontSize: 16, color: Colors.ink,
+    textAlign: 'center', backgroundColor: Colors.sectionCream,
   },
   birthInputSm: {
-    width: 52, borderWidth: 1, borderColor: '#F0C4CC', borderRadius: 10,
-    paddingVertical: 8, paddingHorizontal: 8, fontSize: 15, color: '#3D1A1A',
-    textAlign: 'center', backgroundColor: '#FFF5F0',
+    width: 52, borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
+    paddingVertical: 12, paddingHorizontal: Spacing.sm, fontFamily: Fonts.sansRegular, fontSize: 16, color: Colors.ink,
+    textAlign: 'center', backgroundColor: Colors.sectionCream,
   },
-  birthSep: { fontSize: 13, color: '#6E4A4A', marginHorizontal: 5 },
+  birthSep: { ...Typography.caption, color: Colors.muted, marginHorizontal: Spacing.xs },
 
-  // ⑤ 3占いアイコン
-  iconRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 16 },
-  miniCard: {
-    flex: 1,
-    marginHorizontal: 5,
-    backgroundColor: '#FFFFFF',
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: '#F6D7DE',
-    paddingVertical: 14,
-    paddingHorizontal: 6,
-    alignItems: 'center',
-    shadowColor: '#E8758A',
-    shadowOpacity: 0.08,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 4 },
-    elevation: 2,
-  },
-  miniLogoWrap: { position: 'relative' },
-  lockedWrap: { opacity: 0.5 },
-  miniLogo: { width: 60, height: 60, borderRadius: 12 },
-  miniEmojiWrap: {
-    width: 60, height: 60, borderRadius: 12, backgroundColor: '#EAF3EC',
-    alignItems: 'center', justifyContent: 'center',
-  },
-  miniEmoji: { fontSize: 30 },
-  lockBadge: {
-    position: 'absolute', top: -4, right: -4,
-    backgroundColor: '#FFF5F0', borderRadius: 9, width: 18, height: 18,
-    alignItems: 'center', justifyContent: 'center',
-  },
-  lockText: { fontSize: 10 },
-  miniLabel: { fontSize: 11, fontWeight: '700', color: '#3D1A1A', textAlign: 'center', marginTop: 8 },
-
-  // ⑥ CTA
-  ctaSection: { borderRadius: 16, overflow: 'hidden', shadowColor: '#C45070', shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 5 }, elevation: 3 },
+  // ⑧ CTA
+  ctaSection: { borderRadius: 16, overflow: 'hidden', shadowColor: Colors.primaryDark, shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 5 }, elevation: 3 },
   ctaGradient: {
-    paddingVertical: 16, paddingHorizontal: 20,
+    paddingVertical: Spacing.md, paddingHorizontal: Spacing.lg,
     flexDirection: 'row', alignItems: 'center', justifyContent: 'space-between',
   },
-  ctaTitle: { fontSize: 15, fontWeight: '800', color: '#FFFFFF' },
-  ctaSubtitle: { fontSize: 11, color: '#FFF0D8', marginTop: 2 },
+  ctaTitle: { fontFamily: Fonts.sansMedium, fontSize: 15, color: Colors.surface },
+  ctaSubtitle: { ...Typography.caption, color: Colors.bg, marginTop: Spacing.xs },
 });
