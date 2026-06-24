@@ -20,6 +20,10 @@ import { TrialBanner } from "@/components/TrialBanner";
 import { Colors } from "@/constants/Colors";
 import { Typography, Fonts } from "@/constants/Typography";
 import { Spacing } from "@/constants/Spacing";
+import { MizuhikiKnot } from "@/components/MizuhikiKnot";
+import { MizuhikiDivider } from "@/components/MizuhikiDivider";
+import { Reveal } from "@/components/Reveal";
+import { useReducedMotion } from "@/hooks/useReducedMotion";
 
 function useFloatAnim(duration: number, delay: number = 0) {
   const anim = useRef(new Animated.Value(0)).current;
@@ -64,6 +68,34 @@ export default function HomeScreen() {
   const sparkle1 = usePulseAnim(2000, 0);
   const sparkle2 = usePulseAnim(2500, 500);
 
+  // 視差効果オフ設定の尊重
+  const reduced = useReducedMotion();
+
+  // スクロールリビール用の共有スクロール量
+  const scrollY = useRef(new Animated.Value(0)).current;
+  const winH = Dimensions.get('window').height || 800;
+
+  // ヒーロー入場シーケンス：ブランド名 → 水引が結ばれる → サブ情報
+  const heroBrand = useRef(new Animated.Value(0)).current;
+  const knotProgress = useRef(new Animated.Value(0)).current;
+  const heroSub = useRef(new Animated.Value(0)).current;
+  useEffect(() => {
+    if (reduced) {
+      heroBrand.setValue(1);
+      knotProgress.setValue(1);
+      heroSub.setValue(1);
+      return;
+    }
+    heroBrand.setValue(0);
+    knotProgress.setValue(0);
+    heroSub.setValue(0);
+    Animated.sequence([
+      Animated.timing(heroBrand, { toValue: 1, duration: 600, useNativeDriver: false }),
+      Animated.timing(knotProgress, { toValue: 1, duration: 900, useNativeDriver: false }),
+      Animated.timing(heroSub, { toValue: 1, duration: 500, useNativeDriver: false }),
+    ]).start();
+  }, [reduced]);
+
   // 結び族セクションの生年月日フォーム（鑑定本体はmusubian側で再取得）
   const [bYear, setBYear] = useState('');
   const [bMonth, setBMonth] = useState('');
@@ -104,16 +136,35 @@ export default function HomeScreen() {
       imageStyle={{ opacity: 0.12, resizeMode: 'cover' }}
     >
       <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
-        <ScrollView showsVerticalScrollIndicator={false}>
+        <Animated.ScrollView
+          showsVerticalScrollIndicator={false}
+          scrollEventThrottle={16}
+          onScroll={Animated.event([{ nativeEvent: { contentOffset: { y: scrollY } } }], { useNativeDriver: false })}
+        >
           <View style={styles.content}>
 
-            {/* ① ヘッダー */}
+            {/* ① ヘッダー（結ばれる演出） */}
             <View style={styles.header}>
-              <Text style={styles.logoText}>むすび島</Text>
-              <Text style={styles.logoSubtext}>MUSUBIJIMA</Text>
-              <Text style={styles.dateText}>{todayStr}（{weekday}）</Text>
-              <Text style={styles.catchName}>占いカウンセラー　其田寿枝</Text>
-              <Text style={styles.catchText}>あなたの「今」と「これから」をやさしく読み解く占いサイト</Text>
+              <Animated.View
+                style={{
+                  alignItems: 'center',
+                  opacity: heroBrand,
+                  transform: [{ translateY: heroBrand.interpolate({ inputRange: [0, 1], outputRange: [12, 0] }) }],
+                }}
+              >
+                <Text style={styles.logoText}>むすび島</Text>
+              </Animated.View>
+
+              <View style={styles.knotWrap}>
+                <MizuhikiKnot size={148} progress={knotProgress} />
+              </View>
+
+              <Animated.View style={{ alignItems: 'center', opacity: heroSub }}>
+                <Text style={styles.logoSubtext}>MUSUBIJIMA</Text>
+                <Text style={styles.dateText}>{todayStr}（{weekday}）</Text>
+                <Text style={styles.catchName}>占いカウンセラー　其田寿枝</Text>
+                <Text style={styles.catchText}>あなたの「今」と「これから」をやさしく読み解く占いサイト</Text>
+              </Animated.View>
             </View>
 
             <TrialBanner />
@@ -154,7 +205,8 @@ export default function HomeScreen() {
             <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
 
             {/* ③ 導カードセクション */}
-            <View style={styles.section}>
+            <MizuhikiDivider color={Colors.accent} />
+            <Reveal scrollY={scrollY} viewportH={winH} reduced={reduced} style={styles.section}>
               <Image source={require('../../assets/site/logo-shirube.jpg')} style={styles.sectionLogo} resizeMode="contain" />
               <Text style={styles.titleGold}>導カード</Text>
               <Text style={styles.roman}>SHIRUBE CARD</Text>
@@ -162,10 +214,11 @@ export default function HomeScreen() {
               <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={() => router.push('/fortune/omikuji' as never)}>
                 <Text style={styles.pinkButtonText}>無料で引く</Text>
               </TouchableOpacity>
-            </View>
+            </Reveal>
 
             {/* ④ 結び族セクション */}
-            <View style={styles.section}>
+            <MizuhikiDivider color={Colors.primary} />
+            <Reveal scrollY={scrollY} viewportH={winH} reduced={reduced} style={styles.section}>
               <Image source={require('../../assets/site/logo-musubizoku.jpg')} style={styles.sectionLogo} resizeMode="contain" />
               <Text style={styles.titlePink}>結び族</Text>
               <Text style={styles.subPink}>生まれ持った性質と才能を知る</Text>
@@ -181,19 +234,22 @@ export default function HomeScreen() {
               <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={goMusubian}>
                 <Text style={styles.pinkButtonText}>鑑定する{!canUse.musubian ? '　🔒' : ''}</Text>
               </TouchableOpacity>
-            </View>
+            </Reveal>
 
             {/* ⑤ み・たまカードセクション */}
-            <View style={styles.section}>
+            <MizuhikiDivider color={Colors.primaryDark} />
+            <Reveal scrollY={scrollY} viewportH={winH} reduced={reduced} style={styles.section}>
               <Image source={require('../../assets/site/logo-mitama.jpg')} style={styles.logoMitama} resizeMode="contain" />
               <Text style={styles.mitamaHeading}>なぜ同じ悩みを繰り返す？</Text>
               <Text style={styles.sectionDesc}>心の奥にある想いやブロックに気づき、次の一歩のヒントが分かります。</Text>
               <TouchableOpacity style={styles.pinkButton} activeOpacity={0.9} onPress={() => router.push('/fortune/mitama' as never)}>
                 <Text style={styles.pinkButtonText}>無料で引く</Text>
               </TouchableOpacity>
-            </View>
+            </Reveal>
 
             {/* ⑥ 今年の運勢セクション */}
+            <MizuhikiDivider color={Colors.primary} />
+            <Reveal scrollY={scrollY} viewportH={winH} reduced={reduced}>
             <ImageBackground
               source={require('../../assets/site/frame-pink.png')}
               style={styles.frameSection}
@@ -216,9 +272,11 @@ export default function HomeScreen() {
                 </TouchableOpacity>
               </View>
             </ImageBackground>
+            </Reveal>
 
             {/* ⑦ ネガティブ神セクション */}
-            <View style={styles.section}>
+            <MizuhikiDivider color={Colors.primaryDark} />
+            <Reveal scrollY={scrollY} viewportH={winH} reduced={reduced} style={styles.section}>
               <Image source={require('../../assets/site/logo-negative.jpg')} style={styles.sectionLogo} resizeMode="contain" />
               <Text style={styles.negDesc}>心の影やブロックを見つめ、手放し、新しい自分へ{'\n'}生まれ変わるサポートをいたします。</Text>
               <TouchableOpacity
@@ -228,24 +286,29 @@ export default function HomeScreen() {
               >
                 <Text style={styles.pinkButtonText}>影を知り光へ変える{isFree && !canUse.negativeGod ? '　🔒' : ''}</Text>
               </TouchableOpacity>
-            </View>
+            </Reveal>
 
             {/* ⑧ CTAバナー（未課金時のみ） */}
             {!subscription.isSubscribed && (
-              <TouchableOpacity
-                style={styles.ctaSection}
-                onPress={() => router.push("/subscription/plans" as never)}
-                activeOpacity={0.9}
-              >
-                <LinearGradient colors={[Colors.primary, Colors.primaryDark]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaGradient}>
-                  <Text style={styles.ctaTitle}>月額330円で全機能解放</Text>
-                  <Text style={styles.ctaSubtitle}>7日間無料トライアル実施中</Text>
-                </LinearGradient>
-              </TouchableOpacity>
+              <>
+                <MizuhikiDivider color={Colors.primary} />
+                <Reveal scrollY={scrollY} viewportH={winH} reduced={reduced}>
+                  <TouchableOpacity
+                    style={styles.ctaSection}
+                    onPress={() => router.push("/subscription/plans" as never)}
+                    activeOpacity={0.9}
+                  >
+                    <LinearGradient colors={[Colors.primary, Colors.primaryDark]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaGradient}>
+                      <Text style={styles.ctaTitle}>月額330円で全機能解放</Text>
+                      <Text style={styles.ctaSubtitle}>7日間無料トライアル実施中</Text>
+                    </LinearGradient>
+                  </TouchableOpacity>
+                </Reveal>
+              </>
             )}
 
           </View>
-        </ScrollView>
+        </Animated.ScrollView>
       </ScreenContainer>
     </ImageBackground>
   );
@@ -259,6 +322,7 @@ const styles = StyleSheet.create({
 
   // ① ヘッダー
   header: { alignItems: 'center', marginBottom: Spacing.lg, paddingTop: Spacing.sm },
+  knotWrap: { alignItems: 'center', marginTop: Spacing.sm, marginBottom: Spacing.xs },
   logoText: { ...Typography.brand, color: Colors.primary },
   logoSubtext: { ...Typography.brandSub, color: Colors.accent, marginTop: Spacing.xs },
   dateText: { ...Typography.caption, color: Colors.muted, marginTop: Spacing.sm },
@@ -304,7 +368,6 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: Colors.border,
     padding: Spacing.lg,
-    marginBottom: Spacing.section,
     alignItems: 'center',
     shadowColor: Colors.primary,
     shadowOpacity: 0.08,
@@ -324,7 +387,7 @@ const styles = StyleSheet.create({
   mitamaHeading: { ...Typography.h3, color: Colors.primary, textAlign: 'center' },
 
   // ⑥ 今年の運勢（フレーム）
-  frameSection: { marginBottom: Spacing.section, borderRadius: 20, overflow: 'hidden' },
+  frameSection: { borderRadius: 20, overflow: 'hidden' },
   frameInner: { padding: Spacing.lg, alignItems: 'center' },
   frameTitle: { ...Typography.h1, color: Colors.primaryDark },
   frameSub: { ...Typography.h3, color: Colors.primary, textAlign: 'center', marginTop: Spacing.xs },
