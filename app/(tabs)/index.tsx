@@ -471,9 +471,19 @@ export default function HomeScreen() {
               </AnimatedPressable>
             </RevealBlock>
 
-            {/* ⑧ CTAバナー（未課金時のみ） */}
+            {/* ⑧ 歌みくじ — sectionCream・中央 */}
+            <RevealBlock index={7} {...revealProps} style={[styles.card, styles.cardCenter, { backgroundColor: Colors.sectionCream }]}>
+              <Text style={styles.titlePink}>歌みくじ</Text>
+              <Text style={styles.roman}>UTA MIKUJI</Text>
+              <Text style={[styles.sectionDesc, styles.textCenter]}>今日のあなたに贈る一曲。歌詞とメロディーから、今日のメッセージを受け取れます。</Text>
+              <AnimatedPressable style={styles.pinkButton} onPress={() => router.push("/fortune/utamikuji" as never)}>
+                <Text style={styles.pinkButtonText}>今日の歌を聴く</Text>
+              </AnimatedPressable>
+            </RevealBlock>
+
+            {/* ⑨ CTAバナー（未課金時のみ） */}
             {!subscription.isSubscribed && (
-              <RevealBlock index={7} {...revealProps}>
+              <RevealBlock index={8} {...revealProps}>
                 <AnimatedPressable style={styles.ctaSection} onPress={() => router.push("/subscription/plans" as never)}>
                   <LinearGradient colors={[Colors.primary, Colors.primaryDark]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaGradient}>
                     <Text style={styles.ctaTitle}>月額330円で全機能解放</Text>
