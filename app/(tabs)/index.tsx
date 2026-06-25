@@ -21,6 +21,7 @@ import Svg, { Path, G } from "react-native-svg";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
 import { useApp } from "@/lib/app-context";
+import { supabase } from "@/lib/supabase";
 import { usePlanGate } from "@/hooks/usePlanGate";
 import { TrialBanner } from "@/components/TrialBanner";
 import { Colors } from "@/constants/Colors";
@@ -214,6 +215,45 @@ function AnimatedPressable({ onPress, style, children, hoverOpacity = 0.9 }: Ani
   );
 }
 
+/**
+ * 今日のメッセージ（其田寿枝より）。
+ * daily_messages_cms から今日（JST）の日付のメッセージを取得し、ヒーロー直下に表示。
+ * データが無い日はセクションごと非表示（null を返す）。既存レイアウトには影響しない追加要素。
+ */
+function TodayMessage() {
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    let active = true;
+    // JST（UTC+9）の今日の日付 YYYY-MM-DD
+    const jst = new Date(Date.now() + 9 * 60 * 60 * 1000);
+    const today = jst.toISOString().slice(0, 10);
+    supabase
+      .from("daily_messages_cms")
+      .select("message")
+      .eq("date", today)
+      .limit(1)
+      .then(({ data }) => {
+        if (!active) return;
+        const m = data?.[0]?.message;
+        if (typeof m === "string" && m.trim().length > 0) setMessage(m);
+      });
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  if (!message) return null;
+
+  return (
+    <View style={styles.todayCard}>
+      <Text style={styles.todayLabel}>今日のメッセージ</Text>
+      <Text style={styles.todayBody}>{message}</Text>
+      <Text style={styles.todaySigner}>― 占いカウンセラー 其田寿枝より</Text>
+    </View>
+  );
+}
+
 export default function HomeScreen() {
   const { state } = useApp();
   const { canUse, isFree } = usePlanGate();
@@ -334,6 +374,9 @@ export default function HomeScreen() {
               </View>
               <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
             </RevealBlock>
+
+            {/* 今日のメッセージ（其田寿枝より）— データがある日のみ表示 */}
+            <TodayMessage />
 
             {/* ③ 導カード — sectionPink・左寄せ／画像右 */}
             <RevealBlock index={2} {...revealProps} style={[styles.card, { backgroundColor: Colors.sectionPink }]}>
@@ -511,6 +554,41 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   cardCenter: { alignItems: "center" },
+
+  // 今日のメッセージ（追加セクション）
+  todayCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.primaryLight,
+    borderLeftWidth: 4,
+    borderLeftColor: Colors.primary,
+    padding: Spacing.lg,
+    marginBottom: Spacing.section,
+    shadowColor: Colors.primary,
+    shadowOpacity: 0.08,
+    shadowRadius: 14,
+    shadowOffset: { width: 0, height: 6 },
+    elevation: 2,
+  },
+  todayLabel: {
+    fontSize: 12,
+    fontWeight: "700",
+    letterSpacing: 1,
+    color: Colors.primary,
+    marginBottom: Spacing.sm,
+  },
+  todayBody: {
+    fontSize: 14,
+    lineHeight: 26,
+    color: Colors.ink,
+  },
+  todaySigner: {
+    fontSize: 13,
+    color: Colors.primaryDark,
+    marginTop: Spacing.md,
+    textAlign: "right",
+  },
 
   // 編集的レイアウト用
   rowLayout: { flexDirection: "row", alignItems: "center", gap: Spacing.md },
