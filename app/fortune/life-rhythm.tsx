@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { noCopy } from '@/constants/Typography';
+import { noCopy, Fonts } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -146,6 +146,10 @@ export default function LifeRhythmScreen() {
 
             <View style={styles.inputSection}>
               <Text style={styles.inputLabel}>誕生日（月・日）</Text>
+              {/* 年表示（読み取り専用） */}
+              <View style={styles.yearDisplay}>
+                <Text style={styles.yearText}>{currentYear}年</Text>
+              </View>
               <View style={styles.dateRow}>
                 <WebSelect value={month} onChange={setMonth} items={months} />
                 <View style={{ width: 8 }} />
@@ -232,6 +236,17 @@ const styles = StyleSheet.create({
   inputSection: { width: '100%' },
   inputLabel: { fontSize: 18, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
   inputNote: { fontSize: 16, color: Colors.muted, marginTop: 10 },
+  yearDisplay: {
+    alignItems: 'center',
+    marginBottom: 8,
+  },
+  yearText: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#C45070',
+    fontFamily: Fonts.serifBold,
+    letterSpacing: 2,
+  },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   nativePicker: { flex: 1, backgroundColor: Colors.surface, borderRadius: 8, padding: 10, borderWidth: 1, borderColor: Colors.border },
   nativePickerText: { color: Colors.ink, fontSize: 16 },

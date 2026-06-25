@@ -9,9 +9,11 @@ import {
   Animated,
   Image,
   ImageBackground,
+  Platform,
+  Linking,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { shareResult } from '../../lib/share';
+import { getXShareUrl, getLineShareUrl, shareToInstagram } from '../../lib/share';
 import { usePlanGate } from '../../hooks/usePlanGate';
 import {
   MITAMA_CARDS,
@@ -161,17 +163,52 @@ export default function MitamaScreen() {
               </View>
             </View>
 
-            {/* Share Button */}
-            <TouchableOpacity
-              style={styles.shareButton}
-              onPress={() => shareResult({
-                title: '今日のみ・たまカード',
-                message: `【今日引いたみ・たまカード】\n${selectedCard.title}「${selectedCard.subtitle}」\n\n言霊：${selectedCard.kotodama.slice(0, 50)}...`,
-              })}
-              activeOpacity={0.8}
-            >
-              <Text style={styles.shareButtonText}>カードをシェアする 🎴</Text>
-            </TouchableOpacity>
+            {/* Share Buttons */}
+            <View style={styles.shareRow}>
+              {/* X */}
+              <TouchableOpacity
+                style={[styles.shareIconBtn, { backgroundColor: '#000' }]}
+                onPress={() => {
+                  const msg = `【今日引いたみ・たまカード】\n${selectedCard.title}「${selectedCard.shushi}」\n\n言霊：${selectedCard.kotodama?.slice(0, 50) ?? ''}...`;
+                  const xUrl = getXShareUrl(msg);
+                  if (Platform.OS === 'web') {
+                    window.open(xUrl, '_blank');
+                  } else {
+                    Linking.openURL(xUrl);
+                  }
+                }}
+              >
+                <Text style={styles.shareIconText}>𝕏</Text>
+              </TouchableOpacity>
+
+              {/* LINE */}
+              <TouchableOpacity
+                style={[styles.shareIconBtn, { backgroundColor: '#06C755' }]}
+                onPress={() => {
+                  const msg = `【今日引いたみ・たまカード】\n${selectedCard.title}「${selectedCard.shushi}」\n\n言霊：${selectedCard.kotodama?.slice(0, 50) ?? ''}...`;
+                  const lineUrl = getLineShareUrl(msg);
+                  if (Platform.OS === 'web') {
+                    window.open(lineUrl, '_blank');
+                  } else {
+                    Linking.openURL(lineUrl);
+                  }
+                }}
+              >
+                <Text style={styles.shareIconText}>LINE</Text>
+              </TouchableOpacity>
+
+              {/* Instagram（コピー） */}
+              <TouchableOpacity
+                style={[styles.shareIconBtn, { backgroundColor: '#E1306C' }]}
+                onPress={async () => {
+                  const msg = `【今日引いたみ・たまカード】\n${selectedCard.title}「${selectedCard.shushi}」\n\n言霊：${selectedCard.kotodama?.slice(0, 50) ?? ''}...`;
+                  await shareToInstagram(msg);
+                  alert('テキストをコピーしました！Instagramに貼り付けてシェアしてください📸');
+                }}
+              >
+                <Text style={styles.shareIconText}>📸</Text>
+              </TouchableOpacity>
+            </View>
 
             {/* Reset Button */}
             <TouchableOpacity
@@ -380,6 +417,25 @@ const styles = StyleSheet.create({
     color: '#C45070',
     fontSize: 16,
     fontWeight: '500',
+  },
+  shareRow: {
+    flexDirection: 'row',
+    gap: 12,
+    justifyContent: 'center',
+    marginTop: 16,
+    marginBottom: 8,
+  },
+  shareIconBtn: {
+    width: 72,
+    height: 44,
+    borderRadius: 22,
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
+  shareIconText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontWeight: '700',
   },
 
   /* Retry */
