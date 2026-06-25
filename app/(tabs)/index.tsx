@@ -1,4 +1,5 @@
 import React, { useRef, useEffect, useState } from "react";
+import { noCopy } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -311,7 +312,7 @@ export default function HomeScreen() {
   return (
     <ImageBackground
       source={require("../../assets/site/shima.jpg")}
-      style={styles.container}
+      style={[styles.container, noCopy]}
       imageStyle={{ opacity: 0.12, resizeMode: "cover" }}
     >
       <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
@@ -579,19 +580,19 @@ const styles = StyleSheet.create({
     elevation: 2,
   },
   todayLabel: {
-    fontSize: 12,
+    fontSize: 16,
     fontWeight: "700",
     letterSpacing: 1,
     color: Colors.primary,
     marginBottom: Spacing.sm,
   },
   todayBody: {
-    fontSize: 14,
+    fontSize: 16,
     lineHeight: 26,
     color: Colors.ink,
   },
   todaySigner: {
-    fontSize: 13,
+    fontSize: 16,
     color: Colors.primaryDark,
     marginTop: Spacing.md,
     textAlign: "right",
@@ -662,12 +663,12 @@ const styles = StyleSheet.create({
   birthRow: { flexDirection: "row", alignItems: "center", marginTop: Spacing.sm },
   birthInput: {
     width: 72, minHeight: 44, borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
-    paddingVertical: 12, paddingHorizontal: Spacing.sm, fontFamily: Fonts.sansRegular, fontSize: 16, color: Colors.ink,
+    paddingVertical: 12, paddingHorizontal: Spacing.sm, fontFamily: Fonts.sansRegular, fontSize: 18, color: Colors.ink,
     textAlign: "center", backgroundColor: Colors.sectionCream,
   },
   birthInputSm: {
     width: 52, minHeight: 44, borderWidth: 1, borderColor: Colors.border, borderRadius: 10,
-    paddingVertical: 12, paddingHorizontal: Spacing.sm, fontFamily: Fonts.sansRegular, fontSize: 16, color: Colors.ink,
+    paddingVertical: 12, paddingHorizontal: Spacing.sm, fontFamily: Fonts.sansRegular, fontSize: 18, color: Colors.ink,
     textAlign: "center", backgroundColor: Colors.sectionCream,
   },
   birthSep: { ...Typography.caption, color: Colors.muted, marginHorizontal: Spacing.xs },
@@ -678,6 +679,6 @@ const styles = StyleSheet.create({
     paddingVertical: Spacing.md, paddingHorizontal: Spacing.lg,
     flexDirection: "row", alignItems: "center", justifyContent: "space-between",
   },
-  ctaTitle: { fontFamily: Fonts.sansMedium, fontSize: 15, color: Colors.surface },
+  ctaTitle: { fontFamily: Fonts.sansMedium, fontSize: 20, color: Colors.surface },
   ctaSubtitle: { ...Typography.caption, color: Colors.bg, marginTop: Spacing.xs },
 });

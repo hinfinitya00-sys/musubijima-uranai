@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { noCopy } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -75,7 +76,7 @@ export default function UtamikujiScreen() {
   };
 
   return (
-    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={styles.container}>
+    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={[styles.container, noCopy]}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         <View style={styles.header}>
           <Text style={styles.eyebrow}>今日の歌みくじ</Text>
@@ -155,6 +156,6 @@ const styles = StyleSheet.create({
     borderLeftColor: Colors.primary,
     padding: Spacing.lg,
   },
-  lyricsLabel: { fontFamily: Fonts.serifMedium, fontSize: 15, color: Colors.primaryDark, marginBottom: Spacing.md },
+  lyricsLabel: { fontFamily: Fonts.serifMedium, fontSize: 17, color: Colors.primaryDark, marginBottom: Spacing.md },
   lyricsText: { ...Typography.body, color: Colors.ink, lineHeight: 30 },
 });

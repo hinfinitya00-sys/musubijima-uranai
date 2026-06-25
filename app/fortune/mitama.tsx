@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { noCopy } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -63,7 +64,7 @@ export default function MitamaScreen() {
   return (
     <ImageBackground
       source={require('../../assets/mitama/kirie.jpg')}
-      style={styles.container}
+      style={[styles.container, noCopy]}
       imageStyle={{ opacity: 0.07, resizeMode: 'cover' }}
     >
       <ScrollView
@@ -212,14 +213,14 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   drawPromptText: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#7A6A6A',
     textAlign: 'center',
     lineHeight: 22,
   },
 
   freeLimit: {
-    fontSize: 12,
+    fontSize: 16,
     color: '#7A6A6A',
     textAlign: 'center',
     marginTop: 8,
@@ -246,7 +247,7 @@ const styles = StyleSheet.create({
     borderRadius: 50,
   },
   drawButtonText: {
-    fontSize: 18,
+    fontSize: 20,
     color: '#FFFFFF',
     fontWeight: '700',
     letterSpacing: 2,
@@ -285,14 +286,14 @@ const styles = StyleSheet.create({
     height: '100%',
   },
   cardTitle: {
-    fontSize: 20,
+    fontSize: 22,
     fontWeight: 'bold',
     color: '#3D1A1A',
     marginBottom: 4,
     textAlign: 'center',
   },
   cardSubtitle: {
-    fontSize: 15,
+    fontSize: 20,
     color: '#C45070',
     marginBottom: 16,
     textAlign: 'center',
@@ -310,13 +311,13 @@ const styles = StyleSheet.create({
     paddingVertical: 8,
   },
   metaLabel: {
-    fontSize: 11,
+    fontSize: 16,
     color: '#7A6A6A',
     fontWeight: '600',
     marginBottom: 4,
   },
   metaValue: {
-    fontSize: 13,
+    fontSize: 16,
     color: '#3D1A1A',
     lineHeight: 20,
   },
@@ -348,7 +349,7 @@ const styles = StyleSheet.create({
     borderColor: 'rgba(232,117,138,0.4)',
   },
   blockTitle: {
-    fontSize: 14,
+    fontSize: 20,
     fontWeight: '700',
     color: '#C45070',
     marginBottom: 10,
@@ -356,7 +357,7 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
   },
   blockBody: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#3D1A1A',
     lineHeight: 26,
     width: '100%',
@@ -377,7 +378,7 @@ const styles = StyleSheet.create({
   },
   shareButtonText: {
     color: '#C45070',
-    fontSize: 14,
+    fontSize: 16,
     fontWeight: '500',
   },
 
@@ -396,7 +397,7 @@ const styles = StyleSheet.create({
   },
   retryButtonText: {
     color: '#F9C0CC',
-    fontSize: 16,
+    fontSize: 18,
     fontWeight: '600',
   },
 });

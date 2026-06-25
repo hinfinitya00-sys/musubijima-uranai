@@ -1,4 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
+import { noCopy } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -36,7 +37,7 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
           border: `1px solid ${Colors.border}`,
           borderRadius: 8,
           padding: '10px 8px',
-          fontSize: 14,
+          fontSize: 16,
           cursor: 'pointer',
           outline: 'none',
         } as any}
@@ -119,7 +120,7 @@ export default function LifeRhythmScreen() {
   const luckyColorDesc = result ? result.luckyColor.split('\n').slice(1).join('\n') : '';
 
   return (
-    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={styles.container}>
+    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={[styles.container, noCopy]}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {!result ? (
           <View style={styles.introWrap}>
@@ -233,52 +234,52 @@ const styles = StyleSheet.create({
   introWrap: { width: '100%' },
   header: { alignItems: 'center', marginBottom: 24 },
   title: { fontSize: 28, fontWeight: 'bold', color: Colors.primary, marginBottom: 8 },
-  subtitle: { fontSize: 14, color: Colors.muted, textAlign: 'center', lineHeight: 22 },
+  subtitle: { fontSize: 20, color: Colors.muted, textAlign: 'center', lineHeight: 22 },
 
   introCard: { backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
-  introText: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
+  introText: { fontSize: 16, color: Colors.ink, lineHeight: 26 },
 
   seasonCard: { backgroundColor: Colors.sectionCream, borderRadius: 16, padding: 16, marginBottom: 24, borderWidth: 1, borderColor: Colors.border },
   seasonRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 6 },
-  seasonLabel: { width: 92, fontSize: 14, fontWeight: '700', color: Colors.primaryDark },
-  seasonDesc: { flex: 1, fontSize: 13, color: Colors.ink, lineHeight: 20 },
+  seasonLabel: { width: 92, fontSize: 16, fontWeight: '700', color: Colors.primaryDark },
+  seasonDesc: { flex: 1, fontSize: 16, color: Colors.ink, lineHeight: 20 },
 
   inputSection: { width: '100%' },
-  inputLabel: { fontSize: 16, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
-  inputNote: { fontSize: 12, color: Colors.muted, marginTop: 10 },
+  inputLabel: { fontSize: 18, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
+  inputNote: { fontSize: 16, color: Colors.muted, marginTop: 10 },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   nativePicker: { flex: 1, backgroundColor: Colors.surface, borderRadius: 8, padding: 10, borderWidth: 1, borderColor: Colors.border },
-  nativePickerText: { color: Colors.ink, fontSize: 14 },
+  nativePickerText: { color: Colors.ink, fontSize: 16 },
   primaryButton: { borderRadius: 16, overflow: 'hidden' },
   primaryButtonGradient: { paddingVertical: 18, alignItems: 'center' },
-  primaryButtonText: { fontSize: 16, fontWeight: 'bold', color: Colors.surface },
+  primaryButtonText: { fontSize: 18, fontWeight: 'bold', color: Colors.surface },
 
   resultSection: { alignItems: 'center', width: '100%' },
   yearImageWrap: { width: '100%', maxWidth: 420, aspectRatio: 1, borderRadius: 20, overflow: 'hidden', backgroundColor: Colors.surface, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   yearImage: { width: '100%', height: '100%' },
-  yearTitle: { fontSize: 26, fontWeight: 'bold', color: Colors.ink, marginBottom: 20, textAlign: 'center' },
+  yearTitle: { fontSize: 28, fontWeight: 'bold', color: Colors.ink, marginBottom: 20, textAlign: 'center' },
 
   fortuneCard: { width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 12, padding: 16, marginBottom: 16 },
   fortuneRow: { flexDirection: 'row', alignItems: 'center', paddingVertical: 5 },
-  fortuneLabel: { width: 64, fontSize: 13, color: Colors.primaryDark, fontWeight: '700' },
-  fortuneValue: { flex: 1, fontSize: 13, color: Colors.ink, lineHeight: 20 },
+  fortuneLabel: { width: 64, fontSize: 16, color: Colors.primaryDark, fontWeight: '700' },
+  fortuneValue: { flex: 1, fontSize: 16, color: Colors.ink, lineHeight: 20 },
 
   section: { width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
-  sectionHeading: { fontSize: 16, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 12 },
-  sectionBody: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
+  sectionHeading: { fontSize: 20, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 12 },
+  sectionBody: { fontSize: 16, color: Colors.ink, lineHeight: 26 },
 
   luckyCard: { width: '100%', backgroundColor: Colors.sectionCream, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
-  luckyLabel: { fontSize: 14, fontWeight: '700', color: Colors.accent, marginBottom: 6 },
-  luckyColors: { fontSize: 18, fontWeight: 'bold', color: Colors.ink, marginBottom: 8 },
-  luckyDesc: { fontSize: 14, color: Colors.ink, lineHeight: 24 },
+  luckyLabel: { fontSize: 16, fontWeight: '700', color: Colors.accent, marginBottom: 6 },
+  luckyColors: { fontSize: 20, fontWeight: 'bold', color: Colors.ink, marginBottom: 8 },
+  luckyDesc: { fontSize: 16, color: Colors.ink, lineHeight: 24 },
 
   upsellBanner: { width: '100%', borderRadius: 16, overflow: 'hidden', marginBottom: 16 },
   upsellGradient: { padding: 20, alignItems: 'center' },
-  upsellTitle: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
-  upsellText: { fontSize: 13, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
+  upsellTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
+  upsellText: { fontSize: 16, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
   upsellButton: { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 50, paddingVertical: 8, paddingHorizontal: 20 },
-  upsellButtonText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
+  upsellButtonText: { fontSize: 16, fontWeight: '600', color: '#FFFFFF' },
 
   retryButton: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
-  retryButtonText: { color: Colors.primary, fontSize: 14 },
+  retryButtonText: { color: Colors.primary, fontSize: 16 },
 });
