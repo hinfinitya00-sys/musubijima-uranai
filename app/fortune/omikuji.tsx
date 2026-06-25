@@ -13,6 +13,7 @@ import {
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { fetchOverlay } from '../../lib/cms';
 
 type Card = {
   num: number;
@@ -1074,7 +1075,18 @@ function getRemainingToMidnightJST(): { hh: number; mm: number } {
 export default function OmikujiScreen() {
   const router = useRouter();
   const [phase, setPhase] = useState<'intro' | 'result'>('intro');
-  const card = CARDS[getTodayCardIndex()];
+  // データ参照元のみ変更: Supabase(omikuji_cards)のテキスト列をローカルCARDSへ number で上書き。
+  // 取得失敗時はローカルCARDSのまま（安全網）。演出・ロジックには一切影響しない。
+  const [cards, setCards] = useState<Card[]>(CARDS);
+  useEffect(() => {
+    fetchOverlay('omikuji_cards', CARDS, (c) => c.num, (c, r) => ({
+      ...c,
+      title: r.name ?? c.title,
+      subtitle: r.description ?? c.subtitle,
+      message: r.message ?? c.message,
+    })).then(setCards).catch(() => {});
+  }, []);
+  const card = cards[getTodayCardIndex()];
 
   const fade = useRef(new Animated.Value(0)).current;
   const scale = useRef(new Animated.Value(0.96)).current;

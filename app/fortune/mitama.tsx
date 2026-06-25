@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import {
   View,
   Text,
@@ -16,6 +16,7 @@ import {
   MITAMA_CARDS,
 } from '../../constants/mitama-cards';
 import type { MitamaCard } from '../../constants/mitama-cards';
+import { fetchOverlay } from '../../lib/cms';
 
 export default function MitamaScreen() {
   const { isFree } = usePlanGate();
@@ -23,8 +24,21 @@ export default function MitamaScreen() {
   const [isDrawn, setIsDrawn] = useState(false);
   const scaleAnim = useRef(new Animated.Value(0)).current;
 
+  // Supabase(mitama_cards)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
+  const [cards, setCards] = useState<MitamaCard[]>(MITAMA_CARDS);
+  useEffect(() => {
+    fetchOverlay('mitama_cards', MITAMA_CARDS, (m) => m.num, (m, r) => ({
+      ...m,
+      title: r.title ?? m.title,
+      shushi: r.god_name ?? m.shushi,
+      kotodama: r.kotodama ?? m.kotodama,
+      nekomajutsu: r.neko_magic ?? m.nekomajutsu,
+      message: r.message ?? m.message,
+    })).then(setCards).catch(() => {});
+  }, []);
+
   const handleDrawCard = () => {
-    const card = MITAMA_CARDS[Math.floor(Math.random() * MITAMA_CARDS.length)];
+    const card = cards[Math.floor(Math.random() * cards.length)];
     setSelectedCard(card);
     setIsDrawn(true);
     scaleAnim.setValue(0);
