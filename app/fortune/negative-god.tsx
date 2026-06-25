@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { noCopy } from '@/constants/Typography';
 import {
   View, Text, TouchableOpacity, ScrollView, StyleSheet,
   Animated, Platform, Image, useWindowDimensions,
@@ -286,7 +287,7 @@ export default function NegativeGodScreen() {
   const imgWidth = Math.min(width - 40, 500);
 
   return (
-    <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+    <ScrollView style={[styles.container, noCopy]} contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
 
       {/* イントロフェーズ */}
       {phase === 'intro' && (
@@ -324,7 +325,7 @@ export default function NegativeGodScreen() {
                       placeholder="1990"
                       value={birthYear}
                       onChange={(e: any) => setBirthYear(e.target.value)}
-                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
+                      style={{ fontSize: 20, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
                     />
                   </View>
                   <View style={styles.webInputGroup}>
@@ -335,7 +336,7 @@ export default function NegativeGodScreen() {
                       min="1" max="12"
                       value={birthMonth}
                       onChange={(e: any) => setBirthMonth(e.target.value)}
-                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
+                      style={{ fontSize: 20, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
                     />
                   </View>
                   <View style={styles.webInputGroup}>
@@ -346,7 +347,7 @@ export default function NegativeGodScreen() {
                       min="1" max="31"
                       value={birthDay}
                       onChange={(e: any) => setBirthDay(e.target.value)}
-                      style={{ fontSize: 18, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
+                      style={{ fontSize: 20, padding: '8px 12px', borderRadius: 8, border: '1px solid #F5C0CC', width: '100%', color: '#3D1A1A', background: '#FFFAF9' }}
                     />
                   </View>
                 </View>
@@ -415,20 +416,20 @@ const styles = StyleSheet.create({
   scrollContent: { padding: 20, paddingTop: 48, paddingBottom: 60, alignItems: 'center', maxWidth: 600, alignSelf: 'center' as any, width: '100%' },
 
   introHeader: { alignItems: 'center', marginBottom: 24 },
-  introTitle: { fontSize: 24, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', lineHeight: 36, letterSpacing: 1 },
+  introTitle: { fontSize: 26, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', lineHeight: 36, letterSpacing: 1 },
   introTitleUnderline: { width: 60, height: 2, backgroundColor: '#F5C0CC', marginTop: 12, borderRadius: 2 },
   introCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 28, borderWidth: 1, borderColor: '#F5C0CC', shadowColor: '#E8758A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
-  introText: { fontSize: 14, color: '#374151', lineHeight: 26 },
+  introText: { fontSize: 16, color: '#374151', lineHeight: 26 },
 
   templeButton: { borderRadius: 50, overflow: 'hidden', marginBottom: 20, shadowColor: '#E8758A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 },
   templeButtonGradient: { paddingHorizontal: 40, paddingVertical: 18, borderRadius: 50, alignItems: 'center' },
-  templeButtonText: { fontSize: 18, color: '#FFFFFF', fontWeight: '700', letterSpacing: 2 },
+  templeButtonText: { fontSize: 20, color: '#FFFFFF', fontWeight: '700', letterSpacing: 2 },
 
   inputHeader: { alignItems: 'center', marginBottom: 20 },
-  inputTitle: { fontSize: 18, fontWeight: '700', color: '#3D1A1A', textAlign: 'center' },
-  inputSubtitle: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 6 },
+  inputTitle: { fontSize: 20, fontWeight: '700', color: '#3D1A1A', textAlign: 'center' },
+  inputSubtitle: { fontSize: 16, color: '#9CA3AF', textAlign: 'center', marginTop: 6 },
   inputCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: '#F5C0CC', width: '100%' },
-  inputLabel: { fontSize: 13, color: '#C45070', fontWeight: '600', marginBottom: 6 },
+  inputLabel: { fontSize: 16, color: '#C45070', fontWeight: '600', marginBottom: 6 },
   nativeInputWrap: { width: '100%' },
   webInputRow: { flexDirection: 'row', gap: 12 } as any,
   webInputGroup: { flex: 1 },
@@ -436,27 +437,27 @@ const styles = StyleSheet.create({
   divineButton: { borderRadius: 50, overflow: 'hidden', marginBottom: 20, shadowColor: '#E8758A', shadowOffset: { width: 0, height: 4 }, shadowOpacity: 0.3, shadowRadius: 12, elevation: 6 },
   divineButtonDisabled: { opacity: 0.6 },
   divineButtonGradient: { paddingHorizontal: 40, paddingVertical: 18, borderRadius: 50, alignItems: 'center' },
-  divineButtonText: { fontSize: 18, color: '#FFFFFF', fontWeight: '700', letterSpacing: 2 },
+  divineButtonText: { fontSize: 20, color: '#FFFFFF', fontWeight: '700', letterSpacing: 2 },
 
   godImageWrap: { alignItems: 'center', marginBottom: 20, backgroundColor: '#FFFFFF', borderRadius: 16, padding: 16, borderWidth: 1, borderColor: '#F5C0CC', width: '100%' },
   godImage: { borderRadius: 8 },
 
   negCard: { backgroundColor: '#FFFFFF', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#F5C0CC', width: '100%', shadowColor: '#E8758A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
   negCardHeader: { marginBottom: 12 },
-  negCardTag: { fontSize: 10, color: '#C45070', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FFE0E8', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
-  negCardName: { fontSize: 20, fontWeight: '800', color: '#3D1A1A' },
-  negCardDesc: { fontSize: 14, color: '#374151', lineHeight: 26 },
+  negCardTag: { fontSize: 16, color: '#C45070', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FFE0E8', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
+  negCardName: { fontSize: 22, fontWeight: '800', color: '#3D1A1A' },
+  negCardDesc: { fontSize: 16, color: '#374151', lineHeight: 26 },
 
   guardianCard: { backgroundColor: '#FFF8F0', borderRadius: 16, padding: 20, marginBottom: 12, borderWidth: 1, borderColor: '#F0E0D0', width: '100%', shadowColor: '#E8758A', shadowOffset: { width: 0, height: 2 }, shadowOpacity: 0.08, shadowRadius: 8, elevation: 3 },
   guardianCardHeader: { marginBottom: 12 },
-  guardianCardTag: { fontSize: 10, color: '#C9A84C', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FFF0D0', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
-  guardianCardName: { fontSize: 20, fontWeight: '800', color: '#C9A84C' },
-  guardianCardDesc: { fontSize: 14, color: '#374151', lineHeight: 26 },
+  guardianCardTag: { fontSize: 16, color: '#C9A84C', fontWeight: '700', letterSpacing: 2, backgroundColor: '#FFF0D0', paddingHorizontal: 10, paddingVertical: 3, borderRadius: 10, alignSelf: 'flex-start', marginBottom: 6 },
+  guardianCardName: { fontSize: 22, fontWeight: '800', color: '#C9A84C' },
+  guardianCardDesc: { fontSize: 16, color: '#374151', lineHeight: 26 },
 
   handleCard: { backgroundColor: '#FFF0F3', borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: '#F5C0CC', width: '100%' },
-  handleTitle: { fontSize: 15, fontWeight: '700', color: '#C45070', textAlign: 'center', marginBottom: 12, letterSpacing: 1 },
-  handleText: { fontSize: 14, color: '#374151', lineHeight: 26 },
+  handleTitle: { fontSize: 20, fontWeight: '700', color: '#C45070', textAlign: 'center', marginBottom: 12, letterSpacing: 1 },
+  handleText: { fontSize: 16, color: '#374151', lineHeight: 26 },
 
   resetButton: { borderWidth: 1, borderColor: '#E8758A', borderRadius: 12, paddingVertical: 14, paddingHorizontal: 32, alignItems: 'center', backgroundColor: 'transparent' },
-  resetButtonText: { color: '#E8758A', fontSize: 15, fontWeight: '600' },
+  resetButtonText: { color: '#E8758A', fontSize: 17, fontWeight: '600' },
 });

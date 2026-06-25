@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { noCopy } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -38,7 +39,7 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
           border: `1px solid ${Colors.border}`,
           borderRadius: 8,
           padding: '10px 8px',
-          fontSize: 14,
+          fontSize: 16,
           cursor: 'pointer',
           outline: 'none',
         } as any}
@@ -100,7 +101,7 @@ export default function MusubianScreen() {
   };
 
   return (
-    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={styles.container}>
+    <LinearGradient colors={[Colors.sectionPink, Colors.bg, Colors.sectionPink]} style={[styles.container, noCopy]}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {!result ? (
           <View style={styles.introWrap}>
@@ -235,62 +236,62 @@ const styles = StyleSheet.create({
   introWrap: { width: '100%' },
   header: { alignItems: 'center', marginBottom: 24 },
   title: { fontSize: 28, fontWeight: 'bold', color: Colors.primary, marginBottom: 8 },
-  subtitle: { fontSize: 14, color: Colors.muted, textAlign: 'center', lineHeight: 22 },
+  subtitle: { fontSize: 20, color: Colors.muted, textAlign: 'center', lineHeight: 22 },
 
   introCard: { backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: Colors.border },
-  introText: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
+  introText: { fontSize: 16, color: Colors.ink, lineHeight: 26 },
 
   inputSection: { width: '100%' },
-  inputLabel: { fontSize: 16, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
+  inputLabel: { fontSize: 18, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   nativePicker: { flex: 1, backgroundColor: Colors.surface, borderRadius: 8, padding: 10, borderWidth: 1, borderColor: Colors.border },
-  nativePickerText: { color: Colors.ink, fontSize: 14 },
+  nativePickerText: { color: Colors.ink, fontSize: 16 },
   primaryButton: { borderRadius: 16, overflow: 'hidden' },
   primaryButtonGradient: { paddingVertical: 18, alignItems: 'center' },
-  primaryButtonText: { fontSize: 16, fontWeight: 'bold', color: Colors.surface },
+  primaryButtonText: { fontSize: 18, fontWeight: 'bold', color: Colors.surface },
 
   resultSection: { alignItems: 'center', width: '100%' },
   charImageWrap: { width: '100%', maxWidth: 360, aspectRatio: 1, borderRadius: 20, overflow: 'hidden', backgroundColor: Colors.surface, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   charImage: { width: '100%', height: '100%' },
-  charName: { fontSize: 26, fontWeight: 'bold', color: Colors.ink, marginBottom: 4 },
-  charMeta: { fontSize: 14, color: Colors.primaryDark, marginBottom: 20 },
+  charName: { fontSize: 28, fontWeight: 'bold', color: Colors.ink, marginBottom: 4 },
+  charMeta: { fontSize: 16, color: Colors.primaryDark, marginBottom: 20 },
 
   keywordCard: { width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 12, padding: 16, marginBottom: 12, alignItems: 'center' },
-  keywordLabel: { fontSize: 11, color: Colors.primaryDark, fontWeight: '600', marginBottom: 4 },
-  keywordValue: { fontSize: 15, color: Colors.ink, fontWeight: '500', textAlign: 'center' },
+  keywordLabel: { fontSize: 16, color: Colors.primaryDark, fontWeight: '600', marginBottom: 4 },
+  keywordValue: { fontSize: 17, color: Colors.ink, fontWeight: '500', textAlign: 'center' },
 
   colorRow: { flexDirection: 'row', width: '100%', marginBottom: 24 },
   colorBox: { flex: 1, backgroundColor: Colors.sectionCream, borderRadius: 12, padding: 14 },
-  colorBoxLabel: { fontSize: 11, color: Colors.muted, fontWeight: '600', marginBottom: 4 },
-  colorBoxValue: { fontSize: 13, color: Colors.ink, lineHeight: 20 },
+  colorBoxLabel: { fontSize: 16, color: Colors.muted, fontWeight: '600', marginBottom: 4 },
+  colorBoxValue: { fontSize: 16, color: Colors.ink, lineHeight: 20 },
 
   section: { width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
-  sectionHeading: { fontSize: 17, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 12 },
-  sectionBody: { fontSize: 14, color: Colors.ink, lineHeight: 26 },
+  sectionHeading: { fontSize: 20, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 12 },
+  sectionBody: { fontSize: 16, color: Colors.ink, lineHeight: 26 },
 
   letterCard: { width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 16, padding: 20, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
-  letterHeading: { fontSize: 17, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 8 },
-  letterSigner: { fontSize: 14, color: Colors.muted, marginBottom: 8 },
-  letterBody: { fontSize: 14, color: Colors.ink, lineHeight: 26, fontStyle: 'italic' },
+  letterHeading: { fontSize: 20, fontWeight: 'bold', color: Colors.primaryDark, marginBottom: 8 },
+  letterSigner: { fontSize: 16, color: Colors.muted, marginBottom: 8 },
+  letterBody: { fontSize: 16, color: Colors.ink, lineHeight: 26, fontStyle: 'italic' },
 
-  kotobaText: { fontSize: 14, color: Colors.primaryDark, textAlign: 'center', lineHeight: 24, marginBottom: 16 },
+  kotobaText: { fontSize: 16, color: Colors.primaryDark, textAlign: 'center', lineHeight: 24, marginBottom: 16 },
 
   growthCard: { width: '100%', backgroundColor: Colors.surface, borderRadius: 16, padding: 20, marginBottom: 24, borderWidth: 1, borderColor: Colors.border },
-  growthTitle: { fontSize: 16, fontWeight: 'bold', color: Colors.ink, marginBottom: 16, textAlign: 'center' },
+  growthTitle: { fontSize: 20, fontWeight: 'bold', color: Colors.ink, marginBottom: 16, textAlign: 'center' },
   growthStage: { marginBottom: 14 },
-  growthStageLabel: { fontSize: 14, fontWeight: '700', color: Colors.primary, marginBottom: 4 },
-  growthStageBody: { fontSize: 14, color: Colors.ink, lineHeight: 24 },
+  growthStageLabel: { fontSize: 16, fontWeight: '700', color: Colors.primary, marginBottom: 4 },
+  growthStageBody: { fontSize: 16, color: Colors.ink, lineHeight: 24 },
   growthDivider: { height: 1, backgroundColor: Colors.border, marginVertical: 12 },
-  growthWordsLabel: { fontSize: 14, fontWeight: '700', color: Colors.accent, marginBottom: 6 },
-  growthWordsBody: { fontSize: 14, color: Colors.ink, lineHeight: 24 },
+  growthWordsLabel: { fontSize: 16, fontWeight: '700', color: Colors.accent, marginBottom: 6 },
+  growthWordsBody: { fontSize: 16, color: Colors.ink, lineHeight: 24 },
 
   upsellBanner: { width: '100%', borderRadius: 16, overflow: 'hidden', marginBottom: 16 },
   upsellGradient: { padding: 20, alignItems: 'center' },
-  upsellTitle: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
-  upsellText: { fontSize: 13, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
+  upsellTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
+  upsellText: { fontSize: 16, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
   upsellButton: { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 50, paddingVertical: 8, paddingHorizontal: 20 },
-  upsellButtonText: { fontSize: 14, fontWeight: '600', color: '#FFFFFF' },
+  upsellButtonText: { fontSize: 16, fontWeight: '600', color: '#FFFFFF' },
 
   retryButton: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
-  retryButtonText: { color: Colors.primary, fontSize: 14 },
+  retryButtonText: { color: Colors.primary, fontSize: 16 },
 });

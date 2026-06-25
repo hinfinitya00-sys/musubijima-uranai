@@ -1,4 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { noCopy } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -1222,7 +1223,7 @@ export default function OmikujiScreen() {
 
   return (
     <View style={{ flex: 1 }}>
-      <ScrollView style={styles.screen} contentContainerStyle={styles.scrollContent}>
+      <ScrollView style={[styles.screen, noCopy]} contentContainerStyle={styles.scrollContent}>
       <Animated.View style={[styles.container, { opacity: fade, transform: [{ scale }] }]}>
         {phase === 'intro' ? (
           <>
@@ -1389,60 +1390,60 @@ const styles = StyleSheet.create({
   container: { width: '100%', maxWidth: 600, alignSelf: 'center' },
 
   introTitle: { fontSize: 32, fontWeight: '800', color: '#3D1A1A', letterSpacing: 6, textAlign: 'center', marginBottom: 10 },
-  introSub: { fontSize: 14, color: '#C45070', textAlign: 'center', marginBottom: 24 },
+  introSub: { fontSize: 16, color: '#C45070', textAlign: 'center', marginBottom: 24 },
   introCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 22, marginBottom: 28, shadowColor: '#E8758A', shadowOpacity: 0.08, shadowRadius: 16, shadowOffset: { width: 0, height: 6 } },
-  introBody: { fontSize: 14, lineHeight: 26, color: '#3D1A1A', marginBottom: 12 },
+  introBody: { fontSize: 16, lineHeight: 26, color: '#3D1A1A', marginBottom: 12 },
   drawButton: { paddingVertical: 17, borderRadius: 999, alignItems: 'center' },
-  drawButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800', letterSpacing: 2 },
+  drawButtonText: { color: '#FFFFFF', fontSize: 18, fontWeight: '800', letterSpacing: 2 },
 
   imageCard: { backgroundColor: '#FFFFFF', borderRadius: 20, padding: 16, alignItems: 'center', shadowColor: '#E8758A', shadowOpacity: 0.1, shadowRadius: 18, shadowOffset: { width: 0, height: 8 } },
 
   statusBar: { width: '100%', alignItems: 'center', marginBottom: 14 },
-  countdownText: { fontSize: 12, color: '#7A6A6A' },
-  streakText: { fontSize: 16, fontWeight: '800', color: '#E8758A', marginTop: 6 },
-  streakCelebrate: { fontSize: 14, fontWeight: '800', color: '#C9A84C', marginTop: 4 },
+  countdownText: { fontSize: 16, color: '#7A6A6A' },
+  streakText: { fontSize: 18, fontWeight: '800', color: '#E8758A', marginTop: 6 },
+  streakCelebrate: { fontSize: 16, fontWeight: '800', color: '#C9A84C', marginTop: 4 },
 
   blackout: { backgroundColor: '#000000' },
   particleLayer: { alignItems: 'center', justifyContent: 'center' },
   particle: { position: 'absolute', fontWeight: '900', backgroundColor: 'transparent' },
 
   whiteCard: { backgroundColor: '#FFFFFF', borderRadius: 18, padding: 20, marginTop: 16 },
-  cardName: { fontSize: 20, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginBottom: 14 },
+  cardName: { fontSize: 22, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginBottom: 14 },
   block: { marginTop: 12 },
-  label: { fontSize: 13, fontWeight: '700', color: '#C45070' },
-  value: { fontSize: 15, lineHeight: 24, color: '#3D1A1A', marginTop: 4 },
+  label: { fontSize: 16, fontWeight: '700', color: '#C45070' },
+  value: { fontSize: 17, lineHeight: 24, color: '#3D1A1A', marginTop: 4 },
 
   fortuneCard: { backgroundColor: '#FFF8F0', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F0E0D0' },
-  sectionHeaderCenter: { fontSize: 15, fontWeight: '800', color: '#C9A84C', textAlign: 'center', marginBottom: 12 },
+  sectionHeaderCenter: { fontSize: 20, fontWeight: '800', color: '#C9A84C', textAlign: 'center', marginBottom: 12 },
   fortuneRow: { flexDirection: 'row', paddingVertical: 8, borderBottomWidth: 1, borderBottomColor: '#F1E6C2' },
-  fortuneLabel: { width: 64, fontSize: 13, fontWeight: '700', color: '#C9A84C' },
-  fortuneValue: { flex: 1, fontSize: 14, lineHeight: 22, color: '#3D1A1A' },
+  fortuneLabel: { width: 64, fontSize: 16, fontWeight: '700', color: '#C9A84C' },
+  fortuneValue: { flex: 1, fontSize: 16, lineHeight: 22, color: '#3D1A1A' },
 
-  sectionHeaderLeft: { fontSize: 15, fontWeight: '800', color: '#3D1A1A', marginBottom: 12 },
-  message: { fontSize: 14, lineHeight: 28, color: '#3D1A1A' },
+  sectionHeaderLeft: { fontSize: 20, fontWeight: '800', color: '#3D1A1A', marginBottom: 12 },
+  message: { fontSize: 16, lineHeight: 28, color: '#3D1A1A' },
   msgDivider: { height: 1, backgroundColor: '#F5C0CC', marginVertical: 16 },
-  questionLabel: { fontSize: 12, color: '#C45070', letterSpacing: 2, textAlign: 'center', marginBottom: 8 },
-  question: { fontSize: 16, fontStyle: 'italic', color: '#3D1A1A', textAlign: 'center', lineHeight: 26 },
+  questionLabel: { fontSize: 16, color: '#C45070', letterSpacing: 2, textAlign: 'center', marginBottom: 8 },
+  question: { fontSize: 18, fontStyle: 'italic', color: '#3D1A1A', textAlign: 'center', lineHeight: 26 },
 
   musubiCard: { backgroundColor: '#FFF0F3', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F5C0CC' },
-  musubiHeading: { fontSize: 12, color: '#C45070', textAlign: 'center' },
-  musubiName: { fontSize: 22, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginTop: 6 },
-  musubiMeta: { fontSize: 13, color: '#3D1A1A', textAlign: 'center', marginTop: 8, lineHeight: 22 },
+  musubiHeading: { fontSize: 16, color: '#C45070', textAlign: 'center' },
+  musubiName: { fontSize: 24, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', marginTop: 6 },
+  musubiMeta: { fontSize: 16, color: '#3D1A1A', textAlign: 'center', marginTop: 8, lineHeight: 22 },
   greenDivider: { height: 1, backgroundColor: '#F5C0CC', marginVertical: 16 },
-  actionHeader: { fontSize: 14, fontWeight: '800', color: '#C45070', marginBottom: 6 },
-  actionIntro: { fontSize: 13, lineHeight: 22, color: '#3D1A1A', marginBottom: 10 },
+  actionHeader: { fontSize: 20, fontWeight: '800', color: '#C45070', marginBottom: 6 },
+  actionIntro: { fontSize: 16, lineHeight: 22, color: '#3D1A1A', marginBottom: 10 },
   actionRow: { flexDirection: 'row', alignItems: 'flex-start', paddingVertical: 6 },
-  actionCheck: { fontSize: 16, color: '#E8758A', marginRight: 10 },
-  actionText: { flex: 1, fontSize: 14, lineHeight: 22, color: '#3D1A1A' },
+  actionCheck: { fontSize: 18, color: '#E8758A', marginRight: 10 },
+  actionText: { flex: 1, fontSize: 16, lineHeight: 22, color: '#3D1A1A' },
 
   shareButton: { backgroundColor: '#000000', paddingVertical: 16, borderRadius: 14, marginTop: 24, alignItems: 'center' },
-  shareButtonText: { color: '#FFFFFF', fontSize: 15, fontWeight: '700' },
+  shareButtonText: { color: '#FFFFFF', fontSize: 17, fontWeight: '700' },
 
   upsellBanner: { borderRadius: 18, padding: 22, marginTop: 16, alignItems: 'center' },
-  upsellTitle: { color: '#FFFFFF', fontSize: 17, fontWeight: '800', letterSpacing: 1 },
-  upsellText: { color: '#FFFFFF', fontSize: 13, lineHeight: 22, textAlign: 'center', marginTop: 10 },
-  upsellButton: { color: '#FFFFFF', fontSize: 15, fontWeight: '800', marginTop: 14 },
+  upsellTitle: { color: '#FFFFFF', fontSize: 20, fontWeight: '800', letterSpacing: 1 },
+  upsellText: { color: '#FFFFFF', fontSize: 16, lineHeight: 22, textAlign: 'center', marginTop: 10 },
+  upsellButton: { color: '#FFFFFF', fontSize: 17, fontWeight: '800', marginTop: 14 },
 
   backButton: { borderWidth: 1.5, borderColor: '#E8758A', borderRadius: 999, paddingVertical: 14, marginTop: 16, alignItems: 'center' },
-  backButtonText: { color: '#C45070', fontSize: 15, fontWeight: '700' },
+  backButtonText: { color: '#C45070', fontSize: 17, fontWeight: '700' },
 });
