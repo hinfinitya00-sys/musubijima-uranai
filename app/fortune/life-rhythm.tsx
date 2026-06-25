@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import {
   View,
   Text,
@@ -9,7 +9,7 @@ import {
   Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { calculateThisYearNumber } from '@/lib/numerology';
 import {
@@ -20,7 +20,6 @@ import {
 import type { YearFortune } from '@/constants/year-fortune';
 import { fetchOverlay } from '@/lib/cms';
 
-const years = Array.from({ length: 91 }, (_, i) => ({ value: String(1920 + i), label: `${1920 + i}年` }));
 const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
 const days = Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}日` }));
 
@@ -79,10 +78,13 @@ function SectionBlock({ text }: { text: string }) {
 }
 
 export default function LifeRhythmScreen() {
-  const [year, setYear] = useState('1994');
-  const [month, setMonth] = useState('1');
-  const [day, setDay] = useState('28');
-  const [result, setResult] = useState<YearFortune | null>(null);
+  // 今年の運勢は currentYear を自動使用するため、入力は「月・日」のみ。
+  // ホーム画面から month・day が渡された場合はそれを初期値にする。
+  const params = useLocalSearchParams<{ month?: string; day?: string }>();
+  const now = new Date();
+  const [month, setMonth] = useState(params.month ? String(params.month) : String(now.getMonth() + 1));
+  const [day, setDay] = useState(params.day ? String(params.day) : String(now.getDate()));
+  const [resultNum, setResultNum] = useState<number | null>(null);
 
   // Supabase(year_fortune)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
   const [fortunes, setFortunes] = useState<YearFortune[]>(YEAR_FORTUNES);
@@ -94,11 +96,23 @@ export default function LifeRhythmScreen() {
     })).then(setFortunes).catch(() => {});
   }, []);
 
-  const handleCalc = () => {
-    const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
-    const num = calculateThisYearNumber(date);
-    setResult(fortunes.find(y => y.year === num) ?? fortunes[0]);
-  };
+  // 月・日から今年の運勢番号を算出（年は currentYear を自動使用＝birthDateの年は無視される）
+  const calcNum = (m: string, d: string) =>
+    calculateThisYearNumber(new Date(2000, parseInt(m) - 1, parseInt(d)));
+
+  // ホーム画面から月・日が渡されたら自動で結果表示（入力欄の二重表示を回避）
+  const autoRan = useRef(false);
+  useEffect(() => {
+    if (!autoRan.current && params.month && params.day) {
+      autoRan.current = true;
+      setResultNum(calcNum(String(params.month), String(params.day)));
+    }
+  }, [params.month, params.day]);
+
+  const handleCalc = () => setResultNum(calcNum(month, day));
+
+  // 現在の fortunes（DB上書き反映）から結果を導出
+  const result = resultNum != null ? (fortunes.find(y => y.year === resultNum) ?? fortunes[0]) : null;
 
   // ラッキーカラー: 先頭行＝色名、残り＝説明
   const luckyColorName = result ? (result.luckyColor.split('\n')[0]) : '';
@@ -129,14 +143,13 @@ export default function LifeRhythmScreen() {
             </View>
 
             <View style={styles.inputSection}>
-              <Text style={styles.inputLabel}>生年月日</Text>
+              <Text style={styles.inputLabel}>誕生日（月・日）</Text>
               <View style={styles.dateRow}>
-                <WebSelect value={year} onChange={setYear} items={years} />
-                <View style={{ width: 8 }} />
                 <WebSelect value={month} onChange={setMonth} items={months} />
                 <View style={{ width: 8 }} />
                 <WebSelect value={day} onChange={setDay} items={days} />
               </View>
+              <Text style={styles.inputNote}>※ 今年（{now.getFullYear()}年）の運勢を占います</Text>
 
               <TouchableOpacity style={styles.primaryButton} onPress={handleCalc} activeOpacity={0.7}>
                 <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.primaryButtonGradient}>
@@ -203,8 +216,8 @@ export default function LifeRhythmScreen() {
             </TouchableOpacity>
 
             {/* 戻るボタン */}
-            <TouchableOpacity style={styles.retryButton} onPress={() => setResult(null)} activeOpacity={0.7}>
-              <Text style={styles.retryButtonText}>別の生年月日で占う</Text>
+            <TouchableOpacity style={styles.retryButton} onPress={() => setResultNum(null)} activeOpacity={0.7}>
+              <Text style={styles.retryButtonText}>別の月日で占う</Text>
             </TouchableOpacity>
           </View>
         )}
@@ -232,6 +245,7 @@ const styles = StyleSheet.create({
 
   inputSection: { width: '100%' },
   inputLabel: { fontSize: 16, fontWeight: '600', color: Colors.ink, marginBottom: 12 },
+  inputNote: { fontSize: 12, color: Colors.muted, marginTop: 10 },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
   nativePicker: { flex: 1, backgroundColor: Colors.surface, borderRadius: 8, padding: 10, borderWidth: 1, borderColor: Colors.border },
   nativePickerText: { color: Colors.ink, fontSize: 14 },

@@ -33,7 +33,10 @@ export default function MitamaScreen() {
       shushi: r.god_name ?? m.shushi,
       kotodama: r.kotodama ?? m.kotodama,
       nekomajutsu: r.neko_magic ?? m.nekomajutsu,
+      guidance: r.guidance ?? m.guidance,
+      kotodamaOpen: r.kotodama_open ?? m.kotodamaOpen,
       message: r.message ?? m.message,
+      keyQuestion: r.key_question ?? m.keyQuestion,
     })).then(setCards).catch(() => {});
   }, []);
 
@@ -138,10 +141,23 @@ export default function MitamaScreen() {
               {/* Divider */}
               <View style={styles.cardDivider} />
 
-              {/* Message - Full text, no truncation */}
-              <Text style={styles.cardMessage}>
-                {selectedCard.message}
-              </Text>
+              {/* 4セクションを枠分けで表示 */}
+              <View style={styles.block}>
+                <Text style={styles.blockTitle}>〈み・たまの導き〉</Text>
+                <Text style={styles.blockBody}>{selectedCard.guidance}</Text>
+              </View>
+              <View style={styles.block}>
+                <Text style={styles.blockTitle}>〈言霊のひらき〉</Text>
+                <Text style={styles.blockBody}>{selectedCard.kotodamaOpen}</Text>
+              </View>
+              <View style={styles.block}>
+                <Text style={styles.blockTitle}>〈み・たまからの言葉〉</Text>
+                <Text style={styles.blockBody}>{selectedCard.message}</Text>
+              </View>
+              <View style={[styles.block, styles.blockKey]}>
+                <Text style={styles.blockTitle}>〈ひらく鍵〉</Text>
+                <Text style={styles.blockBody}>{selectedCard.keyQuestion}</Text>
+              </View>
             </View>
 
             {/* Share Button */}
@@ -317,8 +333,29 @@ const styles = StyleSheet.create({
     marginBottom: 16,
   },
 
-  /* Message */
-  cardMessage: {
+  /* 4セクションの枠 */
+  block: {
+    width: '100%',
+    backgroundColor: '#FFF8F0',
+    borderRadius: 12,
+    borderWidth: 1,
+    borderColor: '#F0D8DC',
+    padding: 18,
+    marginBottom: 12,
+  },
+  blockKey: {
+    backgroundColor: '#FFF0F3',
+    borderColor: 'rgba(232,117,138,0.4)',
+  },
+  blockTitle: {
+    fontSize: 14,
+    fontWeight: '700',
+    color: '#C45070',
+    marginBottom: 10,
+    textAlign: 'center',
+    letterSpacing: 1,
+  },
+  blockBody: {
     fontSize: 14,
     color: '#3D1A1A',
     lineHeight: 26,

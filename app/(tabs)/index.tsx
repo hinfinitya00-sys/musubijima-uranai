@@ -276,8 +276,7 @@ export default function HomeScreen() {
   const [bMonth, setBMonth] = useState("");
   const [bDay, setBDay] = useState("");
 
-  // 今年の運勢（life-rhythm）セクションの生年月日フォーム
-  const [lrYear, setLrYear] = useState("");
+  // 今年の運勢（life-rhythm）セクションの誕生日フォーム（年は不要・月日のみ）
   const [lrMonth, setLrMonth] = useState("");
   const [lrDay, setLrDay] = useState("");
 
@@ -441,14 +440,12 @@ export default function HomeScreen() {
                   <Text style={styles.frameSub}>今は進む時？{"\n"}整える時？</Text>
                   <Text style={styles.frameDesc}>1年の流れや、行動のタイミングが分かります。{"\n"}*やるべきこと、さけるべきことを見極める*</Text>
                   <View style={styles.birthRow}>
-                    <TextInput style={styles.birthInput} value={lrYear} onChangeText={setLrYear} placeholder="年" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={4} />
-                    <Text style={styles.birthSep}>年</Text>
                     <TextInput style={styles.birthInputSm} value={lrMonth} onChangeText={setLrMonth} placeholder="月" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                     <Text style={styles.birthSep}>月</Text>
                     <TextInput style={styles.birthInputSm} value={lrDay} onChangeText={setLrDay} placeholder="日" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                     <Text style={styles.birthSep}>日</Text>
                   </View>
-                  <AnimatedPressable style={styles.pinkButton} onPress={() => router.push({ pathname: "/fortune/life-rhythm", params: { year: lrYear, month: lrMonth, day: lrDay } } as never)}>
+                  <AnimatedPressable style={styles.pinkButton} onPress={() => router.push({ pathname: "/fortune/life-rhythm", params: { month: lrMonth, day: lrDay } } as never)}>
                     <Text style={styles.pinkButtonText}>運勢を占う</Text>
                   </AnimatedPressable>
                 </View>
