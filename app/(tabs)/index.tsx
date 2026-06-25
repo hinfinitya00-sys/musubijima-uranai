@@ -223,6 +223,9 @@ function AnimatedPressable({ onPress, style, children, hoverOpacity = 0.9 }: Ani
  */
 function TodayMessage() {
   const [message, setMessage] = useState<string | null>(null);
+  const reduced = useReducedMotion();
+  const slide = useRef(new Animated.Value(0)).current;     // 0=上に隠れている / 1=着地
+  const bodyFade = useRef(new Animated.Value(0)).current;  // 本文フェードイン
 
   useEffect(() => {
     let active = true;
@@ -244,14 +247,38 @@ function TodayMessage() {
     };
   }, []);
 
+  // メッセージ到着時：上からスライドイン → 着地で弾む（spring）→ 本文フェードイン
+  useEffect(() => {
+    if (!message) return;
+    if (reduced) {
+      slide.setValue(1);
+      bodyFade.setValue(1);
+      return;
+    }
+    slide.setValue(0);
+    bodyFade.setValue(0);
+    Animated.sequence([
+      Animated.spring(slide, { toValue: 1, friction: 4.5, tension: 70, useNativeDriver: true }),
+      Animated.timing(bodyFade, { toValue: 1, duration: 600, useNativeDriver: true }),
+    ]).start();
+  }, [message, reduced, slide, bodyFade]);
+
+  // データが無い日は何も表示しない（従来通り）
   if (!message) return null;
 
+  const translateY = slide.interpolate({ inputRange: [0, 1], outputRange: [-72, 0] });
+  const opacity = slide.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, 1, 1], extrapolate: "clamp" });
+
   return (
-    <View style={styles.todayCard}>
-      <Text style={styles.todayLabel}>今日のメッセージ</Text>
-      <Text style={styles.todayBody}>{message}</Text>
-      <Text style={styles.todaySigner}>― 占いカウンセラー 其田寿枝より</Text>
-    </View>
+    <Animated.View style={[styles.todayBoard, { opacity, transform: [{ translateY }] }]}>
+      {/* 左端の縦ラインアクセント */}
+      <View style={styles.todayAccent} />
+      <View style={styles.todayInner}>
+        <Text style={styles.todayLabel}>📩 其田寿枝からのメッセージが届いています</Text>
+        <Animated.Text style={[styles.todayBody, { opacity: bodyFade }]}>{message}</Animated.Text>
+        <Text style={styles.todaySigner}>― 占いカウンセラー 其田寿枝より</Text>
+      </View>
+    </Animated.View>
   );
 }
 
@@ -323,6 +350,9 @@ export default function HomeScreen() {
         >
           <View style={styles.content}>
 
+            {/* 今日のメッセージ（其田寿枝より）— ホーム最上部・伝言板スタイル。データがある日のみ表示 */}
+            <TodayMessage />
+
             {/* ① ヘッダー */}
             <RevealBlock index={0} {...revealProps} style={styles.header}>
               <Text style={styles.logoText}>むすび島</Text>
@@ -374,9 +404,6 @@ export default function HomeScreen() {
               </View>
               <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
             </RevealBlock>
-
-            {/* 今日のメッセージ（其田寿枝より）— データがある日のみ表示 */}
-            <TodayMessage />
 
             {/* ③ 導カード — sectionPink・左寄せ／画像右 */}
             <RevealBlock index={2} {...revealProps} style={[styles.card, { backgroundColor: Colors.sectionPink }]}>
@@ -563,21 +590,28 @@ const styles = StyleSheet.create({
   },
   cardCenter: { alignItems: "center" },
 
-  // 今日のメッセージ（追加セクション）
-  todayCard: {
+  // 今日のメッセージ（ホーム最上部・伝言板スタイル）
+  todayBoard: {
+    flexDirection: "row",
     backgroundColor: Colors.surface,
-    borderRadius: 20,
+    borderRadius: 16,
     borderWidth: 1,
     borderColor: Colors.primaryLight,
-    borderLeftWidth: 4,
-    borderLeftColor: Colors.primary,
-    padding: Spacing.lg,
+    overflow: "hidden",
     marginBottom: Spacing.section,
     shadowColor: Colors.primary,
-    shadowOpacity: 0.08,
-    shadowRadius: 14,
-    shadowOffset: { width: 0, height: 6 },
-    elevation: 2,
+    shadowOpacity: 0.12,
+    shadowRadius: 16,
+    shadowOffset: { width: 0, height: 8 },
+    elevation: 3,
+  },
+  todayAccent: {
+    width: 5,
+    backgroundColor: "#E8758A", // 左端の縦ラインアクセント
+  },
+  todayInner: {
+    flex: 1,
+    padding: Spacing.lg,
   },
   todayLabel: {
     fontSize: 16,
