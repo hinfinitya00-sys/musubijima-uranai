@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -18,6 +18,7 @@ import {
   YEAR_FORTUNES,
 } from '@/constants/year-fortune';
 import type { YearFortune } from '@/constants/year-fortune';
+import { fetchOverlay } from '@/lib/cms';
 
 const years = Array.from({ length: 91 }, (_, i) => ({ value: String(1920 + i), label: `${1920 + i}年` }));
 const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
@@ -83,10 +84,20 @@ export default function LifeRhythmScreen() {
   const [day, setDay] = useState('28');
   const [result, setResult] = useState<YearFortune | null>(null);
 
+  // Supabase(year_fortune)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
+  const [fortunes, setFortunes] = useState<YearFortune[]>(YEAR_FORTUNES);
+  useEffect(() => {
+    fetchOverlay('year_fortune', YEAR_FORTUNES, (y) => y.year, (y, r) => ({
+      ...y,
+      theme: r.title ?? y.theme,
+      description: r.description ?? y.description,
+    })).then(setFortunes).catch(() => {});
+  }, []);
+
   const handleCalc = () => {
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const num = calculateThisYearNumber(date);
-    setResult(YEAR_FORTUNES.find(y => y.year === num) ?? YEAR_FORTUNES[0]);
+    setResult(fortunes.find(y => y.year === num) ?? fortunes[0]);
   };
 
   // ラッキーカラー: 先頭行＝色名、残り＝説明

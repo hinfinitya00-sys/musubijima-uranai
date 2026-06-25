@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
   View,
   Text,
@@ -17,6 +17,7 @@ import {
   MUSUBI_CHARACTERS,
 } from '@/constants/musubizoku';
 import type { MusubiCharacter } from '@/constants/musubizoku';
+import { fetchOverlay } from '@/lib/cms';
 
 const years = Array.from({ length: 91 }, (_, i) => ({ value: String(1920 + i), label: `${1920 + i}年` }));
 const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
@@ -58,12 +59,12 @@ function WebSelect({ value, onChange, items }: { value: string; onChange: (v: st
 }
 
 /** 数秘番号からむすび族を取得。範囲外は最も近い番号にフォールバック。 */
-function findCharacter(num: number): MusubiCharacter {
-  const exact = MUSUBI_CHARACTERS.find(c => c.num === num);
+function findCharacter(num: number, list: MusubiCharacter[]): MusubiCharacter {
+  const exact = list.find(c => c.num === num);
   if (exact) return exact;
-  return MUSUBI_CHARACTERS.reduce((best, c) =>
+  return list.reduce((best, c) =>
     Math.abs(c.num - num) < Math.abs(best.num - num) ? c : best,
-  MUSUBI_CHARACTERS[0]);
+  list[0]);
 }
 
 function Section({ heading, body }: { heading: string; body: string }) {
@@ -81,10 +82,21 @@ export default function MusubianScreen() {
   const [day, setDay] = useState('28');
   const [result, setResult] = useState<{ num: number; character: MusubiCharacter } | null>(null);
 
+  // Supabase(musubizoku)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
+  const [characters, setCharacters] = useState<MusubiCharacter[]>(MUSUBI_CHARACTERS);
+  useEffect(() => {
+    fetchOverlay('musubizoku', MUSUBI_CHARACTERS, (c) => c.num, (c, r) => ({
+      ...c,
+      name: r.name ?? c.name,
+      element: r.element ?? c.element,
+      description: r.description ?? c.description,
+    })).then(setCharacters).catch(() => {});
+  }, []);
+
   const handleDiagnose = () => {
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
     const num = calculateMusubiNumber(date);
-    setResult({ num, character: findCharacter(num) });
+    setResult({ num, character: findCharacter(num, characters) });
   };
 
   return (

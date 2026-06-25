@@ -4,6 +4,7 @@ import {
   Animated, Platform, Image, useWindowDimensions,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
+import { fetchOverlay } from '../../lib/cms';
 
 function reduceToRange(n: number, max: number): number {
   let num = Math.abs(n);
@@ -231,6 +232,17 @@ export default function NegativeGodScreen() {
   const [birthMonth, setBirthMonth] = useState('');
   const [birthDay, setBirthDay] = useState('');
   const [result, setResult] = useState<typeof NEGATIVE_GODS[0] | null>(null);
+  // データ参照元のみ変更: Supabase(negative_god)のテキスト列をローカルNEGATIVE_GODSへ number で上書き。
+  // 取得失敗時はローカルのまま（安全網）。演出・ロジックには一切影響しない。
+  const [gods, setGods] = useState<typeof NEGATIVE_GODS>(NEGATIVE_GODS);
+  useEffect(() => {
+    fetchOverlay('negative_god', NEGATIVE_GODS, (g) => g.num, (g, r) => ({
+      ...g,
+      name: r.god_name ?? g.name,
+      guardianName: r.guardian_name ?? g.guardianName,
+      negDesc: r.description ?? g.negDesc,
+    })).then(setGods).catch(() => {});
+  }, []);
   const fadeAnim = useRef(new Animated.Value(0)).current;
   const scaleAnim = useRef(new Animated.Value(0.9)).current;
 
@@ -258,7 +270,7 @@ export default function NegativeGodScreen() {
     if (!y || !m || !d || y < 1900 || y > 2099 || m < 1 || m > 12 || d < 1 || d > 31) return;
     const hour = new Date().getHours();
     const num = calcGodNumber(y, m, d, hour);
-    const god = NEGATIVE_GODS.find(g => g.num === num) || NEGATIVE_GODS[0];
+    const god = gods.find(g => g.num === num) || gods[0];
     setResult(god);
     setPhase('result');
   };
