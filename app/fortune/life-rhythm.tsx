@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { noCopy } from '@/constants/Typography';
+import { noCopy, Fonts } from '@/constants/Typography';
 import {
   View,
   Text,
@@ -244,7 +244,7 @@ const styles = StyleSheet.create({
     fontSize: 22,
     fontWeight: '700',
     color: '#C45070',
-    fontFamily: 'NotoSerifJP',
+    fontFamily: Fonts.serifBold,
     letterSpacing: 2,
   },
   dateRow: { flexDirection: 'row', alignItems: 'center', marginBottom: 24 },
