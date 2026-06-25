@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router, useLocalSearchParams } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { calculateThisYearNumber } from '@/lib/numerology';
 import {
@@ -83,6 +83,7 @@ export default function LifeRhythmScreen() {
   // ホーム画面から month・day が渡された場合はそれを初期値にする。
   const params = useLocalSearchParams<{ month?: string; day?: string }>();
   const now = new Date();
+  const currentYear = now.getFullYear(); // 毎年1/1に自動で 2027, 2028 … と更新される
   const [month, setMonth] = useState(params.month ? String(params.month) : String(now.getMonth() + 1));
   const [day, setDay] = useState(params.day ? String(params.day) : String(now.getDate()));
   const [resultNum, setResultNum] = useState<number | null>(null);
@@ -150,11 +151,11 @@ export default function LifeRhythmScreen() {
                 <View style={{ width: 8 }} />
                 <WebSelect value={day} onChange={setDay} items={days} />
               </View>
-              <Text style={styles.inputNote}>※ 今年（{now.getFullYear()}年）の運勢を占います</Text>
+              <Text style={styles.inputNote}>※ 誕生日（月・日）から、今年の運勢を占います</Text>
 
               <TouchableOpacity style={styles.primaryButton} onPress={handleCalc} activeOpacity={0.7}>
                 <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.primaryButtonGradient}>
-                  <Text style={styles.primaryButtonText}>運勢を占う</Text>
+                  <Text style={styles.primaryButtonText}>{currentYear}年の運勢を占う</Text>
                 </LinearGradient>
               </TouchableOpacity>
             </View>
@@ -166,7 +167,8 @@ export default function LifeRhythmScreen() {
               <Image source={result.image} style={styles.yearImage} resizeMode="contain" />
             </View>
 
-            {/* タイトル */}
+            {/* タイトル（今年の年号を明記） */}
+            <Text style={styles.yearLead}>あなたの{currentYear}年は</Text>
             <Text style={styles.yearTitle}>{result.year}の年 ― {result.theme}</Text>
 
             {/* 運勢指標5項目 */}
@@ -198,23 +200,6 @@ export default function LifeRhythmScreen() {
             <SectionBlock text={result.caution} />
             <SectionBlock text={result.space} />
             <SectionBlock text={result.message} />
-
-            {/* 課金誘導バナー */}
-            <TouchableOpacity
-              style={styles.upsellBanner}
-              onPress={() => router.push('/subscription/plans' as never)}
-              activeOpacity={0.85}
-            >
-              <LinearGradient colors={['#4C1D95', '#6D28D9']} style={styles.upsellGradient}>
-                <Text style={styles.upsellTitle}>✨ 9年すべての流れを知る</Text>
-                <Text style={styles.upsellText}>
-                  プランに登録すると、毎月の運勢や全機能が解放されます
-                </Text>
-                <View style={styles.upsellButton}>
-                  <Text style={styles.upsellButtonText}>プランを見る →</Text>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
 
             {/* 戻るボタン */}
             <TouchableOpacity style={styles.retryButton} onPress={() => setResultNum(null)} activeOpacity={0.7}>
@@ -257,6 +242,7 @@ const styles = StyleSheet.create({
   resultSection: { alignItems: 'center', width: '100%' },
   yearImageWrap: { width: '100%', maxWidth: 420, aspectRatio: 1, borderRadius: 20, overflow: 'hidden', backgroundColor: Colors.surface, marginBottom: 16, borderWidth: 1, borderColor: Colors.border },
   yearImage: { width: '100%', height: '100%' },
+  yearLead: { fontSize: 16, color: Colors.muted, textAlign: 'center', marginBottom: 6 },
   yearTitle: { fontSize: 28, fontWeight: 'bold', color: Colors.ink, marginBottom: 20, textAlign: 'center' },
 
   fortuneCard: { width: '100%', backgroundColor: Colors.sectionPink, borderRadius: 12, padding: 16, marginBottom: 16 },
@@ -273,12 +259,6 @@ const styles = StyleSheet.create({
   luckyColors: { fontSize: 20, fontWeight: 'bold', color: Colors.ink, marginBottom: 8 },
   luckyDesc: { fontSize: 16, color: Colors.ink, lineHeight: 24 },
 
-  upsellBanner: { width: '100%', borderRadius: 16, overflow: 'hidden', marginBottom: 16 },
-  upsellGradient: { padding: 20, alignItems: 'center' },
-  upsellTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
-  upsellText: { fontSize: 16, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
-  upsellButton: { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 50, paddingVertical: 8, paddingHorizontal: 20 },
-  upsellButtonText: { fontSize: 16, fontWeight: '600', color: '#FFFFFF' },
 
   retryButton: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
   retryButtonText: { color: Colors.primary, fontSize: 16 },
