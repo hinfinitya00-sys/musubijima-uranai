@@ -83,6 +83,9 @@ export default function MusubianScreen() {
   const [day, setDay] = useState('28');
   const params = useLocalSearchParams<{ year?: string; month?: string; day?: string }>();
   const [result, setResult] = useState<{ num: number; character: MusubiCharacter } | null>(null);
+  // SSR(静的書き出し)とクライアント初回描画を一致させ、ハイドレーション不一致を防ぐ
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   // Supabase(musubizoku)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
   const [characters, setCharacters] = useState<MusubiCharacter[]>(MUSUBI_CHARACTERS);
@@ -131,7 +134,7 @@ export default function MusubianScreen() {
               <Text style={styles.introText}>{MUSUBIZOKU_INTRO}</Text>
             </View>
 
-            {!params.year && (
+            {(!mounted || !params.year) && (
               <View style={styles.inputSection}>
                 <Text style={styles.inputLabel}>生年月日</Text>
                 <View style={styles.dateRow}>
