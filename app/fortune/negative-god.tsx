@@ -242,6 +242,8 @@ export default function NegativeGodScreen() {
       name: r.god_name ?? g.name,
       guardianName: r.guardian_name ?? g.guardianName,
       negDesc: r.description ?? g.negDesc,
+      guardianDesc: r.guardian_desc ?? g.guardianDesc,
+      handle: r.handle ?? g.handle,
     })).then(setGods).catch(() => {});
   }, []);
   const fadeAnim = useRef(new Animated.Value(0)).current;
