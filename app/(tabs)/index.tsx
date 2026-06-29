@@ -467,6 +467,8 @@ export default function HomeScreen() {
                   <Text style={styles.frameTitle}>今年の運勢</Text>
                   <Text style={styles.frameSub}>今は進む時？{"\n"}整える時？</Text>
                   <Text style={styles.frameDesc}>1年の流れや、行動のタイミングが分かります。{"\n"}*やるべきこと、さけるべきことを見極める*</Text>
+                  {/* 年表示（読み取り専用） */}
+                  <Text style={styles.frameYear}>{new Date().getFullYear()}年</Text>
                   <View style={styles.birthRow}>
                     <TextInput style={styles.birthInputSm} value={lrMonth} onChangeText={setLrMonth} placeholder="月" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
                     <Text style={styles.birthSep}>月</Text>
@@ -672,6 +674,15 @@ const styles = StyleSheet.create({
   frameTitle: { ...Typography.h1, color: Colors.primaryDark },
   frameSub: { ...Typography.h3, color: Colors.primary, textAlign: "center", marginTop: Spacing.xs },
   frameDesc: { ...Typography.body, color: Colors.ink, textAlign: "center", marginTop: Spacing.sm },
+  frameYear: {
+    fontSize: 22,
+    fontWeight: '700',
+    color: '#C45070',
+    fontFamily: Fonts.serifBold,
+    letterSpacing: 2,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
 
   // ⑦ ネガティブ神
   negAccent: { width: 40, height: 2, backgroundColor: Colors.primaryDark, opacity: 0.5, marginTop: Spacing.sm, borderRadius: 1 },

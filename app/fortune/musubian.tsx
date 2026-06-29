@@ -10,7 +10,7 @@ import {
   Image,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
-import { router } from 'expo-router';
+import { useLocalSearchParams } from 'expo-router';
 import { Colors } from '@/constants/Colors';
 import { calculateMusubiNumber } from '@/lib/numerology';
 import {
@@ -81,7 +81,11 @@ export default function MusubianScreen() {
   const [year, setYear] = useState('1994');
   const [month, setMonth] = useState('1');
   const [day, setDay] = useState('28');
+  const params = useLocalSearchParams<{ year?: string; month?: string; day?: string }>();
   const [result, setResult] = useState<{ num: number; character: MusubiCharacter } | null>(null);
+  // SSR(静的書き出し)とクライアント初回描画を一致させ、ハイドレーション不一致を防ぐ
+  const [mounted, setMounted] = useState(false);
+  useEffect(() => { setMounted(true); }, []);
 
   // Supabase(musubizoku)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
   const [characters, setCharacters] = useState<MusubiCharacter[]>(MUSUBI_CHARACTERS);
@@ -93,6 +97,22 @@ export default function MusubianScreen() {
       description: r.description ?? c.description,
     })).then(setCharacters).catch(() => {});
   }, []);
+
+  // ホームから生年月日が渡されたら自動で鑑定（characters 読込後にも反映）
+  useEffect(() => {
+    const py = params.year as string;
+    const pm = params.month as string;
+    const pd = params.day as string;
+    if (py && pm && pd) {
+      setYear(py);
+      setMonth(pm);
+      setDay(pd);
+      const dateObj = new Date(parseInt(py), parseInt(pm) - 1, parseInt(pd));
+      const num = calculateMusubiNumber(dateObj);
+      const found = findCharacter(num, characters);
+      if (found) setResult({ num, character: found });
+    }
+  }, [characters]);
 
   const handleDiagnose = () => {
     const date = new Date(parseInt(year), parseInt(month) - 1, parseInt(day));
@@ -114,22 +134,24 @@ export default function MusubianScreen() {
               <Text style={styles.introText}>{MUSUBIZOKU_INTRO}</Text>
             </View>
 
-            <View style={styles.inputSection}>
-              <Text style={styles.inputLabel}>生年月日</Text>
-              <View style={styles.dateRow}>
-                <WebSelect value={year} onChange={setYear} items={years} />
-                <View style={{ width: 8 }} />
-                <WebSelect value={month} onChange={setMonth} items={months} />
-                <View style={{ width: 8 }} />
-                <WebSelect value={day} onChange={setDay} items={days} />
-              </View>
+            {(!mounted || !params.year) && (
+              <View style={styles.inputSection}>
+                <Text style={styles.inputLabel}>生年月日</Text>
+                <View style={styles.dateRow}>
+                  <WebSelect value={year} onChange={setYear} items={years} />
+                  <View style={{ width: 8 }} />
+                  <WebSelect value={month} onChange={setMonth} items={months} />
+                  <View style={{ width: 8 }} />
+                  <WebSelect value={day} onChange={setDay} items={days} />
+                </View>
 
-              <TouchableOpacity style={styles.primaryButton} onPress={handleDiagnose} activeOpacity={0.7}>
-                <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.primaryButtonGradient}>
-                  <Text style={styles.primaryButtonText}>鑑定する</Text>
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
+                <TouchableOpacity style={styles.primaryButton} onPress={handleDiagnose} activeOpacity={0.7}>
+                  <LinearGradient colors={[Colors.primary, Colors.primaryDark]} style={styles.primaryButtonGradient}>
+                    <Text style={styles.primaryButtonText}>鑑定する</Text>
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+            )}
           </View>
         ) : (
           <View style={styles.resultSection}>
@@ -201,23 +223,6 @@ export default function MusubianScreen() {
               <Text style={styles.growthWordsBody}>{result.character.bindingWord}</Text>
             </View>
 
-            {/* 課金誘導バナー */}
-            <TouchableOpacity
-              style={styles.upsellBanner}
-              onPress={() => router.push('/subscription/plans' as never)}
-              activeOpacity={0.85}
-            >
-              <LinearGradient colors={['#4C1D95', '#6D28D9']} style={styles.upsellGradient}>
-                <Text style={styles.upsellTitle}>✨ もっと深く、自分を知る</Text>
-                <Text style={styles.upsellText}>
-                  プランに登録すると、毎月の運勢や全機能が解放されます
-                </Text>
-                <View style={styles.upsellButton}>
-                  <Text style={styles.upsellButtonText}>プランを見る →</Text>
-                </View>
-              </LinearGradient>
-            </TouchableOpacity>
-
             {/* 戻るボタン */}
             <TouchableOpacity style={styles.retryButton} onPress={() => setResult(null)} activeOpacity={0.7}>
               <Text style={styles.retryButtonText}>別の生年月日で鑑定する</Text>
@@ -284,13 +289,6 @@ const styles = StyleSheet.create({
   growthDivider: { height: 1, backgroundColor: Colors.border, marginVertical: 12 },
   growthWordsLabel: { fontSize: 16, fontWeight: '700', color: Colors.accent, marginBottom: 6 },
   growthWordsBody: { fontSize: 16, color: Colors.ink, lineHeight: 24 },
-
-  upsellBanner: { width: '100%', borderRadius: 16, overflow: 'hidden', marginBottom: 16 },
-  upsellGradient: { padding: 20, alignItems: 'center' },
-  upsellTitle: { fontSize: 20, fontWeight: 'bold', color: '#FFFFFF', marginBottom: 6 },
-  upsellText: { fontSize: 16, color: 'rgba(255,255,255,0.85)', textAlign: 'center', lineHeight: 20, marginBottom: 14 },
-  upsellButton: { backgroundColor: 'rgba(255,255,255,0.2)', borderRadius: 50, paddingVertical: 8, paddingHorizontal: 20 },
-  upsellButtonText: { fontSize: 16, fontWeight: '600', color: '#FFFFFF' },
 
   retryButton: { paddingHorizontal: 24, paddingVertical: 12, borderRadius: 12, borderWidth: 1, borderColor: Colors.border },
   retryButtonText: { color: Colors.primary, fontSize: 16 },
