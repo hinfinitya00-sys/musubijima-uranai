@@ -95,6 +95,20 @@ export default function LifeRhythmScreen() {
       ...y,
       theme: r.title ?? y.theme,
       description: r.description ?? y.description,
+      luckyColor: r.lucky_color ?? y.luckyColor,
+      yearTheme: r.year_theme ?? y.yearTheme,
+      actions: r.actions ?? y.actions,
+      signs: r.signs ?? y.signs,
+      caution: r.caution ?? y.caution,
+      space: r.space ?? y.space,
+      message: r.message ?? y.message,
+      fortune: {
+        marriage: r.fortune_marriage ?? y.fortune?.marriage,
+        health: r.fortune_health ?? y.fortune?.health,
+        money: r.fortune_money ?? y.fortune?.money,
+        meeting: r.fortune_meeting ?? y.fortune?.meeting,
+        travel: r.fortune_travel ?? y.fortune?.travel,
+      },
     })).then(setFortunes).catch(() => {});
   }, []);
 

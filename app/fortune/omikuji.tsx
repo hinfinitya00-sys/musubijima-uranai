@@ -1082,9 +1082,24 @@ export default function OmikujiScreen() {
   useEffect(() => {
     fetchOverlay('omikuji_cards', CARDS, (c) => c.num, (c, r) => ({
       ...c,
-      title: r.name ?? c.title,
-      subtitle: r.description ?? c.subtitle,
-      message: r.message ?? c.message,
+      title:         r.name           ?? c.title,
+      subtitle:      r.description    ?? c.subtitle,
+      message:       r.message        ?? c.message,
+      theme:         r.theme          ?? c.theme,
+      howto:         r.howto          ?? c.howto,
+      lucky:         r.lucky          ?? c.lucky,
+      ganbo:         r.ganbo          ?? c.ganbo,
+      arasoigoto:    r.arasoigoto     ?? c.arasoigoto,
+      shigoto:       r.shigoto        ?? c.shigoto,
+      gakumon:       r.gakumon        ?? c.gakumon,
+      renai:         r.renai          ?? c.renai,
+      kenkou:        r.kenkou         ?? c.kenkou,
+      ryokou:        r.ryokou         ?? c.ryokou,
+      question:      r.question       ?? c.question,
+      musubi_name:   r.musubi_name    ?? c.musubi_name,
+      musubi_attr:   r.musubi_attr    ?? c.musubi_attr,
+      musubi_chikara: r.musubi_chikara ?? c.musubi_chikara,
+      actions:       r.actions ? r.actions.split('\n') : c.actions,
     })).then(setCards).catch(() => {});
   }, []);
   const card = cards[getTodayCardIndex()];
