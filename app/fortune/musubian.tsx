@@ -95,6 +95,20 @@ export default function MusubianScreen() {
       name: r.name ?? c.name,
       element: r.element ?? c.element,
       description: r.description ?? c.description,
+      keywords: r.keywords ?? c.keywords,
+      luckyColor: r.lucky_color ?? c.luckyColor,
+      subColor: r.sub_color ?? c.subColor,
+      gift: r.gift ?? c.gift,
+      weakness: r.weakness ?? c.weakness,
+      happiness: r.happiness ?? c.happiness,
+      letter: r.letter ?? c.letter,
+      letterSigner: r.letter_signer ?? c.letterSigner,
+      bindingWord: r.binding_word ?? c.bindingWord,
+      growth: {
+        young: r.growth_young ?? c.growth?.young,
+        middle: r.growth_middle ?? c.growth?.middle,
+        mature: r.growth_mature ?? c.growth?.mature,
+      },
     })).then(setCharacters).catch(() => {});
   }, []);
 
