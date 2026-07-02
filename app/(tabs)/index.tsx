@@ -223,9 +223,7 @@ function AnimatedPressable({ onPress, style, children, hoverOpacity = 0.9 }: Ani
  */
 function TodayMessage() {
   const [message, setMessage] = useState<string | null>(null);
-  const reduced = useReducedMotion();
-  const slide = useRef(new Animated.Value(0)).current;     // 0=上に隠れている / 1=着地
-  const bodyFade = useRef(new Animated.Value(0)).current;  // 本文フェードイン
+  const tickerAnim = useRef(new Animated.Value(0)).current; // テロップの横スクロール
 
   useEffect(() => {
     let active = true;
@@ -247,38 +245,34 @@ function TodayMessage() {
     };
   }, []);
 
-  // メッセージ到着時：上からスライドイン → 着地で弾む（spring）→ 本文フェードイン
+  // メッセージ到着時：テロップをループ再生
   useEffect(() => {
     if (!message) return;
-    if (reduced) {
-      slide.setValue(1);
-      bodyFade.setValue(1);
-      return;
-    }
-    slide.setValue(0);
-    bodyFade.setValue(0);
-    Animated.sequence([
-      Animated.spring(slide, { toValue: 1, friction: 4.5, tension: 70, useNativeDriver: true }),
-      Animated.timing(bodyFade, { toValue: 1, duration: 600, useNativeDriver: true }),
-    ]).start();
-  }, [message, reduced, slide, bodyFade]);
+    // 画面幅+テキスト幅分スクロール（簡易：右端から流し始めて左へ流す）
+    tickerAnim.setValue(400);
+    Animated.loop(
+      Animated.timing(tickerAnim, {
+        toValue: -800,
+        duration: 18000,
+        useNativeDriver: true,
+      })
+    ).start();
+  }, [message, tickerAnim]);
 
   // データが無い日は何も表示しない（従来通り）
   if (!message) return null;
 
-  const translateY = slide.interpolate({ inputRange: [0, 1], outputRange: [-72, 0] });
-  const opacity = slide.interpolate({ inputRange: [0, 0.4, 1], outputRange: [0, 1, 1], extrapolate: "clamp" });
-
   return (
-    <Animated.View style={[styles.todayBoard, { opacity, transform: [{ translateY }] }]}>
-      {/* 左端の縦ラインアクセント */}
-      <View style={styles.todayAccent} />
-      <View style={styles.todayInner}>
-        <Text style={styles.todayLabel}>📩 其田寿枝からのメッセージが届いています</Text>
-        <Animated.Text style={[styles.todayBody, { opacity: bodyFade }]}>{message}</Animated.Text>
-        <Text style={styles.todaySigner}>― 占いカウンセラー 其田寿枝より</Text>
+    <View style={styles.tickerBar}>
+      <View style={styles.tickerLabel}>
+        <Text style={styles.tickerLabelText}>今日のおくりもの</Text>
       </View>
-    </Animated.View>
+      <View style={styles.tickerTrack}>
+        <Animated.Text style={[styles.tickerText, { transform: [{ translateX: tickerAnim }] }]}>
+          {message}{'　　　　　'}{message}
+        </Animated.Text>
+      </View>
+    </View>
   );
 }
 
@@ -593,45 +587,41 @@ const styles = StyleSheet.create({
   cardCenter: { alignItems: "center" },
 
   // 今日のメッセージ（ホーム最上部・伝言板スタイル）
-  todayBoard: {
-    flexDirection: "row",
-    backgroundColor: Colors.surface,
-    borderRadius: 16,
-    borderWidth: 1,
-    borderColor: Colors.primaryLight,
-    overflow: "hidden",
-    marginBottom: Spacing.section,
-    shadowColor: Colors.primary,
-    shadowOpacity: 0.12,
-    shadowRadius: 16,
-    shadowOffset: { width: 0, height: 8 },
-    elevation: 3,
+  tickerBar: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    backgroundColor: '#E8758A',
+    height: 40,
+    overflow: 'hidden',
+    width: '100%',
   },
-  todayAccent: {
-    width: 5,
-    backgroundColor: "#E8758A", // 左端の縦ラインアクセント
+  tickerLabel: {
+    backgroundColor: '#C45070',
+    paddingHorizontal: 12,
+    paddingVertical: 4,
+    height: '100%',
+    justifyContent: 'center',
+    minWidth: 110,
   },
-  todayInner: {
-    flex: 1,
-    padding: Spacing.lg,
-  },
-  todayLabel: {
-    fontSize: 16,
-    fontWeight: "700",
+  tickerLabelText: {
+    color: '#FFFFFF',
+    fontSize: 12,
+    fontWeight: '700',
+    fontFamily: Fonts.serifBold,
     letterSpacing: 1,
-    color: Colors.primary,
-    marginBottom: Spacing.sm,
   },
-  todayBody: {
-    fontSize: 16,
-    lineHeight: 26,
-    color: Colors.ink,
+  tickerTrack: {
+    flex: 1,
+    overflow: 'hidden',
+    height: '100%',
+    justifyContent: 'center',
   },
-  todaySigner: {
-    fontSize: 16,
-    color: Colors.primaryDark,
-    marginTop: Spacing.md,
-    textAlign: "right",
+  tickerText: {
+    color: '#FFFFFF',
+    fontSize: 14,
+    fontFamily: Fonts.sansRegular,
+    whiteSpace: 'nowrap',
+    paddingLeft: 16,
   },
 
   // 編集的レイアウト用
