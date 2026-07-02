@@ -274,7 +274,8 @@ function TodayMessage() {
       {/* 左端の縦ラインアクセント */}
       <View style={styles.todayAccent} />
       <View style={styles.todayInner}>
-        <Text style={styles.todayLabel}>📩 其田寿枝からのメッセージが届いています</Text>
+        <Text style={styles.todayLabel}>🎁 今日の贈り物が届いています</Text>
+        <Text style={styles.todayUpdateText}>毎日7時更新</Text>
         <Animated.Text style={[styles.todayBody, { opacity: bodyFade }]}>{message}</Animated.Text>
         <Text style={styles.todaySigner}>― 占いカウンセラー 其田寿枝より</Text>
       </View>
@@ -621,6 +622,12 @@ const styles = StyleSheet.create({
     letterSpacing: 1,
     color: Colors.primary,
     marginBottom: Spacing.sm,
+  },
+  todayUpdateText: {
+    fontSize: 11,
+    color: '#7A6A6A',
+    textAlign: 'center',
+    marginTop: 2,
   },
   todayBody: {
     fontSize: 16,
