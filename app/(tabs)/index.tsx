@@ -395,24 +395,24 @@ export default function HomeScreen() {
                 {/* 左列 */}
                 <View style={styles.bubbleCol}>
                   <TouchableOpacity onPress={() => router.push('/fortune/omikuji' as never)}>
-                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float1 }] }]}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float1 }], zIndex: 1 }]}>
                       <Text style={styles.bubbleText}>今日を軽やかに{"\n"}歩むための言葉</Text>
                     </Animated.View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => router.push('/fortune/negative-god' as never)}>
-                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float3 }] }]}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float3 }], zIndex: 1 }]}>
                       <Text style={styles.bubbleText}>心の影</Text>
                     </Animated.View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => router.push('/fortune/utamikuji' as never)}>
-                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float5 }] }]}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float5 }], zIndex: 1 }]}>
                       <Text style={styles.bubbleText}>音楽とともに</Text>
                     </Animated.View>
                   </TouchableOpacity>
                 </View>
 
                 {/* 中央：ひさえ画像 */}
-                <View style={styles.hisaeCenterCol}>
+                <View style={[styles.hisaeCenterCol, { zIndex: 0 }]}>
                   <Image
                     source={require('../../assets/site/hisae.png')}
                     style={{ width: hisaeW, height: hisaeH }}
@@ -423,17 +423,17 @@ export default function HomeScreen() {
                 {/* 右列 */}
                 <View style={styles.bubbleCol}>
                   <TouchableOpacity onPress={() => router.push('/fortune/life-rhythm' as never)}>
-                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float2 }] }]}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float2 }], zIndex: 1 }]}>
                       <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
                     </Animated.View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => router.push('/fortune/musubian' as never)}>
-                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float4 }] }]}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float4 }], zIndex: 1 }]}>
                       <Text style={styles.bubbleText}>自分らしい{"\n"}活かし方</Text>
                     </Animated.View>
                   </TouchableOpacity>
                   <TouchableOpacity onPress={() => router.push('/fortune/mitama' as never)}>
-                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float6 }] }]}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float6 }], zIndex: 1 }]}>
                       <Text style={styles.bubbleText}>本当の願いに{"\n"}気づく</Text>
                     </Animated.View>
                   </TouchableOpacity>
@@ -594,7 +594,7 @@ const styles = StyleSheet.create({
   knotWrap: { alignItems: "center", marginTop: Spacing.sm, marginBottom: Spacing.xs },
   hisaeRow: {
     flexDirection: 'row',
-    alignItems: 'center',
+    alignItems: 'stretch',
     width: '100%',
     paddingHorizontal: 0,
     marginTop: Spacing.sm,
@@ -602,9 +602,10 @@ const styles = StyleSheet.create({
   bubbleCol: {
     flex: 1.2,
     alignItems: 'center',
-    justifyContent: 'center',
-    gap: 20,
-    paddingVertical: 8,
+    justifyContent: 'space-around',
+    gap: 16,
+    paddingVertical: 24,
+    zIndex: 1,
   },
   hisaeCenterCol: {
     alignItems: 'center',
