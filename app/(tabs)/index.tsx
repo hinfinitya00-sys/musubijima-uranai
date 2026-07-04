@@ -249,16 +249,28 @@ function TodayMessage() {
   // メッセージ到着時：テロップをループ再生
   useEffect(() => {
     if (!message) return;
-    const screenWidth = Dimensions.get('window').width;
-    tickerAnim.setValue(screenWidth);
-    Animated.loop(
-      Animated.timing(tickerAnim, {
-        toValue: -screenWidth * 2,
-        duration: 35000,
-        useNativeDriver: true,
-      })
-    ).start();
-    return () => tickerAnim.stopAnimation();
+
+    // アニメをリセット
+    tickerAnim.stopAnimation();
+    tickerAnim.setValue(0);
+
+    // 少し遅延してからループ開始（レンダー完了待ち）
+    const timer = setTimeout(() => {
+      Animated.loop(
+        Animated.sequence([
+          Animated.timing(tickerAnim, {
+            toValue: 1,
+            duration: 30000,
+            useNativeDriver: true,
+          }),
+        ])
+      ).start();
+    }, 300);
+
+    return () => {
+      clearTimeout(timer);
+      tickerAnim.stopAnimation();
+    };
   }, [message, tickerAnim]);
 
   // データが無い日は何も表示しない（従来通り）
@@ -272,7 +284,12 @@ function TodayMessage() {
           <Text style={styles.tickerUpdateText}>毎日7時更新</Text>
         </View>
         <View style={styles.tickerTrack}>
-          <Animated.Text style={[styles.tickerText, { transform: [{ translateX: tickerAnim }] }]}>
+          <Animated.Text style={[styles.tickerText, { transform: [{
+            translateX: tickerAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [300, -1200],
+            })
+          }] }]}>
             {message}{'　　　　　'}{message}
           </Animated.Text>
         </View>
@@ -379,7 +396,7 @@ export default function HomeScreen() {
                 <MizuhikiMark />
               </View>
 
-              <View style={[styles.hisaeZone, { height: hisaeH + Spacing.lg }]}>
+              <View style={[styles.hisaeZone, { height: hisaeH + 160 }]}>
                 <View
                   style={[
                     styles.hisaeRing,
@@ -586,7 +603,7 @@ const styles = StyleSheet.create({
 
   // ② 水引＋ひさえゾーン
   knotWrap: { alignItems: "center", marginTop: Spacing.sm, marginBottom: Spacing.xs },
-  hisaeZone: { width: "100%", alignItems: "center", justifyContent: "center", position: "relative", marginTop: Spacing.sm },
+  hisaeZone: { width: "100%", alignItems: "center", justifyContent: "center", position: "relative", marginTop: Spacing.sm, overflow: 'visible' },
   hisaeRing: {
     position: "absolute", top: "50%", left: "50%",
     borderWidth: 1.5, borderColor: "rgba(232,117,138,0.30)", borderStyle: "dashed",
@@ -604,19 +621,20 @@ const styles = StyleSheet.create({
     borderRadius: 60,
     paddingVertical: Spacing.sm,
     paddingHorizontal: Spacing.md,
-    maxWidth: 140,
+    maxWidth: 120,
+    minWidth: 90,
     shadowColor: Colors.primary,
     shadowOpacity: 0.25,
     shadowRadius: 8,
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  bubbleTL: { top: '8%', left: -8 },
-  bubbleTR: { top: '5%', right: -8 },
-  bubbleML: { top: '42%', left: -12 },
-  bubbleMR: { top: '38%', right: -12 },
-  bubbleBL: { bottom: '10%', left: -8 },
-  bubbleBR: { bottom: '8%', right: -8 },
+  bubbleTL: { top: 20, left: 0 },
+  bubbleTR: { top: 20, right: 0 },
+  bubbleML: { top: '40%', left: 0 },
+  bubbleMR: { top: '40%', right: 0 },
+  bubbleBL: { bottom: 20, left: 0 },
+  bubbleBR: { bottom: 20, right: 0 },
   bubbleText: { ...Typography.caption, color: Colors.primaryDark, textAlign: "center" },
   hisaeCaption: { ...Typography.caption, color: Colors.muted, textAlign: "center", marginTop: Spacing.sm, marginBottom: Spacing.lg },
 
