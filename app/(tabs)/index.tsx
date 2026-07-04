@@ -284,7 +284,12 @@ function TodayMessage() {
           <Text style={styles.tickerUpdateText}>毎日7時更新</Text>
         </View>
         <View style={styles.tickerTrack}>
-          <Animated.Text style={[styles.tickerText, { transform: [{ translateX: tickerAnim }] }]}>
+          <Animated.Text style={[styles.tickerText, { transform: [{
+            translateX: tickerAnim.interpolate({
+              inputRange: [0, 1],
+              outputRange: [300, -1200],
+            })
+          }] }]}>
             {message}{'　　　　　'}{message}
           </Animated.Text>
         </View>
