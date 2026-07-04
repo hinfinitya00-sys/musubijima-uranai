@@ -312,9 +312,6 @@ export default function HomeScreen() {
   const float4 = useFloatAnim(3000, 600, !reduced);
   const float5 = useFloatAnim(2600, 100, !reduced);
   const float6 = useFloatAnim(3300, 300, !reduced);
-  const pulse1 = usePulseAnim(3000, 0, !reduced);
-  const sparkle1 = usePulseAnim(2000, 0, !reduced);
-  const sparkle2 = usePulseAnim(2500, 500, !reduced);
 
   // スクロールリビール用の共有スクロール量
   const scrollY = useRef(new Animated.Value(0)).current;
@@ -353,7 +350,6 @@ export default function HomeScreen() {
   const winW = Math.min(Dimensions.get("window").width || 375, 600);
   const hisaeW = winW * 0.55;
   const hisaeH = hisaeW * 1.4;
-  const ringSize = hisaeW * 1.02;
 
   const revealProps = { scrollY, winH, reduced };
 
@@ -396,65 +392,53 @@ export default function HomeScreen() {
                 <MizuhikiMark />
               </View>
 
-              <View style={[styles.hisaeZone, { height: hisaeH + 120 }]}>
-                <View
-                  style={[
-                    styles.hisaeRing,
-                    { width: ringSize, height: ringSize, borderRadius: ringSize / 2, marginLeft: -ringSize / 2, marginTop: -ringSize / 2 },
-                  ]}
-                />
-                <Animated.View
-                  style={[
-                    styles.hisaeRing2,
-                    { width: ringSize * 0.86, height: ringSize * 0.86, borderRadius: (ringSize * 0.86) / 2, marginLeft: -(ringSize * 0.86) / 2, marginTop: -(ringSize * 0.86) / 2, opacity: pulse1 },
-                  ]}
-                />
-                <Image
-                  source={require("../../assets/site/hisae.png")}
-                  style={{ width: hisaeW, height: hisaeH }}
-                  resizeMode="contain"
-                />
-
-                <Animated.View style={[styles.sparkleGold, { top: "4%", left: "50%", marginLeft: -4, opacity: sparkle1 }]} />
-                <Animated.View style={[styles.sparklePink, { bottom: "6%", left: "46%", opacity: sparkle2 }]} />
-
+              <View style={styles.hisaeRow}>
                 {/* 左列 */}
-                <TouchableOpacity onPress={() => router.push('/fortune/omikuji' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleTL, { transform: [{ translateY: float1 }] }]}>
-                    <Text style={styles.bubbleText}>今日を軽やかに{"\n"}歩むための言葉</Text>
-                  </Animated.View>
-                </TouchableOpacity>
+                <View style={styles.bubbleCol}>
+                  <TouchableOpacity onPress={() => router.push('/fortune/omikuji' as never)}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float1 }] }]}>
+                      <Text style={styles.bubbleText}>今日を軽やかに{"\n"}歩むための言葉</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => router.push('/fortune/negative-god' as never)}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float3 }] }]}>
+                      <Text style={styles.bubbleText}>心の影</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => router.push('/fortune/utamikuji' as never)}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float5 }] }]}>
+                      <Text style={styles.bubbleText}>音楽とともに</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                </View>
 
-                <TouchableOpacity onPress={() => router.push('/fortune/negative-god' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleML, { transform: [{ translateY: float3 }] }]}>
-                    <Text style={styles.bubbleText}>心の影</Text>
-                  </Animated.View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => router.push('/fortune/utamikuji' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleBL, { transform: [{ translateY: float5 }] }]}>
-                    <Text style={styles.bubbleText}>音楽とともに</Text>
-                  </Animated.View>
-                </TouchableOpacity>
+                {/* 中央：ひさえ画像 */}
+                <View style={styles.hisaeCenterCol}>
+                  <Image
+                    source={require('../../assets/site/hisae.png')}
+                    style={{ width: hisaeW, height: hisaeH }}
+                    resizeMode="contain"
+                  />
+                </View>
 
                 {/* 右列 */}
-                <TouchableOpacity onPress={() => router.push('/fortune/life-rhythm' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleTR, { transform: [{ translateY: float2 }] }]}>
-                    <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
-                  </Animated.View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => router.push('/fortune/musubian' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleMR, { transform: [{ translateY: float4 }] }]}>
-                    <Text style={styles.bubbleText}>自分らしい{"\n"}活かし方</Text>
-                  </Animated.View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => router.push('/fortune/mitama' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleBR, { transform: [{ translateY: float6 }] }]}>
-                    <Text style={styles.bubbleText}>本当の願いに{"\n"}気づく</Text>
-                  </Animated.View>
-                </TouchableOpacity>
+                <View style={styles.bubbleCol}>
+                  <TouchableOpacity onPress={() => router.push('/fortune/life-rhythm' as never)}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float2 }] }]}>
+                      <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => router.push('/fortune/musubian' as never)}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float4 }] }]}>
+                      <Text style={styles.bubbleText}>自分らしい{"\n"}活かし方</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                  <TouchableOpacity onPress={() => router.push('/fortune/mitama' as never)}>
+                    <Animated.View style={[styles.bubble, { transform: [{ translateY: float6 }] }]}>
+                      <Text style={styles.bubbleText}>本当の願いに{"\n"}気づく</Text>
+                    </Animated.View>
+                  </TouchableOpacity>
+                </View>
               </View>
               <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
             </RevealBlock>
@@ -605,41 +589,41 @@ const styles = StyleSheet.create({
 
   // ② 水引＋ひさえゾーン
   knotWrap: { alignItems: "center", marginTop: Spacing.sm, marginBottom: Spacing.xs },
-  hisaeZone: { width: "100%", alignItems: "center", justifyContent: "center", position: "relative", marginTop: Spacing.sm, overflow: 'visible' },
-  hisaeRing: {
-    position: "absolute", top: "50%", left: "50%",
-    borderWidth: 1.5, borderColor: "rgba(232,117,138,0.30)", borderStyle: "dashed",
-  } as any,
-  hisaeRing2: {
-    position: "absolute", top: "50%", left: "50%",
-    borderWidth: 1, borderColor: "rgba(201,168,76,0.35)", borderStyle: "dashed",
-  } as any,
-  sparkleGold: { position: "absolute", width: 8, height: 8, borderRadius: 4, backgroundColor: Colors.accent },
-  sparklePink: { position: "absolute", width: 7, height: 7, borderRadius: 3.5, backgroundColor: Colors.primary },
-
+  hisaeRow: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    width: '100%',
+    paddingHorizontal: 4,
+    marginTop: Spacing.sm,
+  },
+  bubbleCol: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-around',
+    gap: 12,
+    paddingVertical: 16,
+  },
+  hisaeCenterCol: {
+    alignItems: 'center',
+    justifyContent: 'center',
+  },
   bubble: {
-    position: "absolute",
     backgroundColor: 'rgba(249, 192, 204, 0.9)',
     borderRadius: 50,
-    paddingVertical: 8,
-    paddingHorizontal: 10,
+    paddingVertical: 10,
+    paddingHorizontal: 8,
     width: 88,
+    alignItems: 'center',
     shadowColor: Colors.primary,
     shadowOpacity: 0.2,
     shadowRadius: 6,
     shadowOffset: { width: 0, height: 3 },
     elevation: 3,
   },
-  bubbleTL: { top: 10, left: 8 },
-  bubbleML: { top: '38%', left: 4 },
-  bubbleBL: { bottom: 60, left: 8 },
-  bubbleTR: { top: 10, right: 8 },
-  bubbleMR: { top: '38%', right: 4 },
-  bubbleBR: { bottom: 60, right: 8 },
   bubbleText: {
     fontSize: 11,
     color: Colors.primaryDark,
-    textAlign: "center",
+    textAlign: 'center',
     lineHeight: 16,
   },
   hisaeCaption: { ...Typography.caption, color: Colors.muted, textAlign: "center", marginTop: Spacing.sm, marginBottom: Spacing.lg },
