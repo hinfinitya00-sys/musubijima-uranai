@@ -290,6 +290,11 @@ export default function HomeScreen() {
 
   // 控えめな常時アニメ（reduced時は停止）
   const float1 = useFloatAnim(3200, 0, !reduced);
+  const float2 = useFloatAnim(2800, 400, !reduced);
+  const float3 = useFloatAnim(3500, 200, !reduced);
+  const float4 = useFloatAnim(3000, 600, !reduced);
+  const float5 = useFloatAnim(2600, 100, !reduced);
+  const float6 = useFloatAnim(3300, 300, !reduced);
   const pulse1 = usePulseAnim(3000, 0, !reduced);
   const sparkle1 = usePulseAnim(2000, 0, !reduced);
   const sparkle2 = usePulseAnim(2500, 500, !reduced);
@@ -396,15 +401,41 @@ export default function HomeScreen() {
                 <Animated.View style={[styles.sparkleGold, { top: "4%", left: "50%", marginLeft: -4, opacity: sparkle1 }]} />
                 <Animated.View style={[styles.sparklePink, { bottom: "6%", left: "46%", opacity: sparkle2 }]} />
 
-                <Animated.View style={[styles.bubble, styles.bubbleTL, { transform: [{ translateY: float1 }] }]}>
-                  <Text style={styles.bubbleText}>なぜ同じ悩みを{"\n"}繰り返す？</Text>
-                </Animated.View>
-                <View style={[styles.bubble, styles.bubbleTR]}>
-                  <Text style={styles.bubbleText}>未来へのヒント{"\n"}生まれ持った力を知る</Text>
-                </View>
-                <View style={[styles.bubble, styles.bubbleBR]}>
-                  <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
-                </View>
+                <TouchableOpacity onPress={() => router.push('/fortune/omikuji' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleTL, { transform: [{ translateY: float1 }] }]}>
+                    <Text style={styles.bubbleText}>今日を軽やかに{"\n"}歩むための言葉</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('/fortune/life-rhythm' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleTR, { transform: [{ translateY: float2 }] }]}>
+                    <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('/fortune/negative-god' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleML, { transform: [{ translateY: float3 }] }]}>
+                    <Text style={styles.bubbleText}>心の影</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('/fortune/musubian' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleMR, { transform: [{ translateY: float4 }] }]}>
+                    <Text style={styles.bubbleText}>自分らしい{"\n"}活かし方</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('/fortune/mitama' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleBL, { transform: [{ translateY: float5 }] }]}>
+                    <Text style={styles.bubbleText}>本当の願いに{"\n"}気づく</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('/fortune/utamikuji' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleBR, { transform: [{ translateY: float6 }] }]}>
+                    <Text style={styles.bubbleText}>音楽とともに</Text>
+                  </Animated.View>
+                </TouchableOpacity>
               </View>
               <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
             </RevealBlock>
@@ -580,9 +611,12 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 4 },
     elevation: 3,
   },
-  bubbleTL: { top: "6%", left: -2 },
-  bubbleTR: { top: 0, right: -2 },
-  bubbleBR: { bottom: "8%", right: 2 },
+  bubbleTL: { top: '8%', left: -8 },
+  bubbleTR: { top: '5%', right: -8 },
+  bubbleML: { top: '42%', left: -12 },
+  bubbleMR: { top: '38%', right: -12 },
+  bubbleBL: { bottom: '10%', left: -8 },
+  bubbleBR: { bottom: '8%', right: -8 },
   bubbleText: { ...Typography.caption, color: Colors.primaryDark, textAlign: "center" },
   hisaeCaption: { ...Typography.caption, color: Colors.muted, textAlign: "center", marginTop: Spacing.sm, marginBottom: Spacing.lg },
 
