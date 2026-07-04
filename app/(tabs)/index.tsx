@@ -248,31 +248,35 @@ function TodayMessage() {
   // メッセージ到着時：テロップをループ再生
   useEffect(() => {
     if (!message) return;
-    // 画面幅+テキスト幅分スクロール（簡易：右端から流し始めて左へ流す）
-    tickerAnim.setValue(400);
+    const screenWidth = Dimensions.get('window').width;
+    tickerAnim.setValue(screenWidth);
     Animated.loop(
       Animated.timing(tickerAnim, {
-        toValue: -800,
-        duration: 18000,
+        toValue: -screenWidth * 2,
+        duration: 20000,
         useNativeDriver: true,
       })
     ).start();
+    return () => tickerAnim.stopAnimation();
   }, [message, tickerAnim]);
 
   // データが無い日は何も表示しない（従来通り）
   if (!message) return null;
 
   return (
-    <View style={styles.tickerBar}>
-      <View style={styles.tickerLabel}>
-        <Text style={styles.tickerLabelText}>今日のおくりもの</Text>
+    <>
+      <View style={styles.tickerBar}>
+        <View style={styles.tickerLabel}>
+          <Text style={styles.tickerLabelText}>今日のおくりもの</Text>
+        </View>
+        <View style={styles.tickerTrack}>
+          <Animated.Text style={[styles.tickerText, { transform: [{ translateX: tickerAnim }] }]}>
+            {message}{'　　　　　'}{message}
+          </Animated.Text>
+        </View>
       </View>
-      <View style={styles.tickerTrack}>
-        <Animated.Text style={[styles.tickerText, { transform: [{ translateX: tickerAnim }] }]}>
-          {message}{'　　　　　'}{message}
-        </Animated.Text>
-      </View>
-    </View>
+      <Text style={styles.tickerUpdateText}>毎日7時更新</Text>
+    </>
   );
 }
 
@@ -622,6 +626,14 @@ const styles = StyleSheet.create({
     fontFamily: Fonts.sansRegular,
     whiteSpace: 'nowrap',
     paddingLeft: 16,
+  },
+  tickerUpdateText: {
+    fontSize: 10,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    backgroundColor: '#C45070',
+    paddingVertical: 2,
+    width: '100%',
   },
 
   // 編集的レイアウト用
