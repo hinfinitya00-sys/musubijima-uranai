@@ -344,8 +344,8 @@ export default function HomeScreen() {
   const weekday = weekdays[today.getDay()];
 
   const winW = Math.min(Dimensions.get("window").width || 375, 600);
-  const hisaeW = winW * 0.50;
-  const hisaeH = hisaeW * 1.2;
+  const hisaeW = winW * 0.44;
+  const hisaeH = hisaeW * 1.15;
 
   const revealProps = { scrollY, winH, reduced };
 
@@ -596,11 +596,11 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     alignItems: 'center',
     width: '100%',
-    paddingHorizontal: 4,
+    paddingHorizontal: 0,
     marginTop: Spacing.sm,
   },
   bubbleCol: {
-    flex: 1,
+    flex: 1.2,
     alignItems: 'center',
     justifyContent: 'center',
     gap: 20,
@@ -610,6 +610,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
     flex: 0,
+    maxWidth: '50%',
   },
   bubble: {
     backgroundColor: 'rgba(249, 192, 204, 0.95)',
