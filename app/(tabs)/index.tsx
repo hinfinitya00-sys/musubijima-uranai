@@ -396,7 +396,7 @@ export default function HomeScreen() {
                 <MizuhikiMark />
               </View>
 
-              <View style={[styles.hisaeZone, { height: hisaeH + 160 }]}>
+              <View style={[styles.hisaeZone, { height: hisaeH + 120 }]}>
                 <View
                   style={[
                     styles.hisaeRing,
@@ -418,21 +418,29 @@ export default function HomeScreen() {
                 <Animated.View style={[styles.sparkleGold, { top: "4%", left: "50%", marginLeft: -4, opacity: sparkle1 }]} />
                 <Animated.View style={[styles.sparklePink, { bottom: "6%", left: "46%", opacity: sparkle2 }]} />
 
+                {/* 左列 */}
                 <TouchableOpacity onPress={() => router.push('/fortune/omikuji' as never)}>
                   <Animated.View style={[styles.bubble, styles.bubbleTL, { transform: [{ translateY: float1 }] }]}>
                     <Text style={styles.bubbleText}>今日を軽やかに{"\n"}歩むための言葉</Text>
                   </Animated.View>
                 </TouchableOpacity>
 
-                <TouchableOpacity onPress={() => router.push('/fortune/life-rhythm' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleTR, { transform: [{ translateY: float2 }] }]}>
-                    <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
-                  </Animated.View>
-                </TouchableOpacity>
-
                 <TouchableOpacity onPress={() => router.push('/fortune/negative-god' as never)}>
                   <Animated.View style={[styles.bubble, styles.bubbleML, { transform: [{ translateY: float3 }] }]}>
                     <Text style={styles.bubbleText}>心の影</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                <TouchableOpacity onPress={() => router.push('/fortune/utamikuji' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleBL, { transform: [{ translateY: float5 }] }]}>
+                    <Text style={styles.bubbleText}>音楽とともに</Text>
+                  </Animated.View>
+                </TouchableOpacity>
+
+                {/* 右列 */}
+                <TouchableOpacity onPress={() => router.push('/fortune/life-rhythm' as never)}>
+                  <Animated.View style={[styles.bubble, styles.bubbleTR, { transform: [{ translateY: float2 }] }]}>
+                    <Text style={styles.bubbleText}>今は進む時？{"\n"}整える時？</Text>
                   </Animated.View>
                 </TouchableOpacity>
 
@@ -443,14 +451,8 @@ export default function HomeScreen() {
                 </TouchableOpacity>
 
                 <TouchableOpacity onPress={() => router.push('/fortune/mitama' as never)}>
-                  <Animated.View style={[styles.bubble, styles.bubbleBL, { transform: [{ translateY: float5 }] }]}>
-                    <Text style={styles.bubbleText}>本当の願いに{"\n"}気づく</Text>
-                  </Animated.View>
-                </TouchableOpacity>
-
-                <TouchableOpacity onPress={() => router.push('/fortune/utamikuji' as never)}>
                   <Animated.View style={[styles.bubble, styles.bubbleBR, { transform: [{ translateY: float6 }] }]}>
-                    <Text style={styles.bubbleText}>音楽とともに</Text>
+                    <Text style={styles.bubbleText}>本当の願いに{"\n"}気づく</Text>
                   </Animated.View>
                 </TouchableOpacity>
               </View>
@@ -617,25 +619,29 @@ const styles = StyleSheet.create({
 
   bubble: {
     position: "absolute",
-    backgroundColor: Colors.primaryLight,
-    borderRadius: 60,
-    paddingVertical: Spacing.sm,
-    paddingHorizontal: Spacing.md,
-    maxWidth: 120,
-    minWidth: 90,
+    backgroundColor: 'rgba(249, 192, 204, 0.9)',
+    borderRadius: 50,
+    paddingVertical: 8,
+    paddingHorizontal: 10,
+    width: 88,
     shadowColor: Colors.primary,
-    shadowOpacity: 0.25,
-    shadowRadius: 8,
-    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.2,
+    shadowRadius: 6,
+    shadowOffset: { width: 0, height: 3 },
     elevation: 3,
   },
-  bubbleTL: { top: 20, left: 0 },
-  bubbleTR: { top: 20, right: 0 },
-  bubbleML: { top: '40%', left: 0 },
-  bubbleMR: { top: '40%', right: 0 },
-  bubbleBL: { bottom: 20, left: 0 },
-  bubbleBR: { bottom: 20, right: 0 },
-  bubbleText: { ...Typography.caption, color: Colors.primaryDark, textAlign: "center" },
+  bubbleTL: { top: 10, left: 8 },
+  bubbleML: { top: '38%', left: 4 },
+  bubbleBL: { bottom: 60, left: 8 },
+  bubbleTR: { top: 10, right: 8 },
+  bubbleMR: { top: '38%', right: 4 },
+  bubbleBR: { bottom: 60, right: 8 },
+  bubbleText: {
+    fontSize: 11,
+    color: Colors.primaryDark,
+    textAlign: "center",
+    lineHeight: 16,
+  },
   hisaeCaption: { ...Typography.caption, color: Colors.muted, textAlign: "center", marginTop: Spacing.sm, marginBottom: Spacing.lg },
 
   // 共通カード（背景色はセクションごとに指定）
