@@ -4,6 +4,7 @@ import {
   View,
   Text,
   Pressable,
+  TouchableOpacity,
   StyleSheet,
   ImageBackground,
   Image,
@@ -351,6 +352,11 @@ export default function HomeScreen() {
             {/* 今日のメッセージ（其田寿枝より）— ホーム最上部・伝言板スタイル。データがある日のみ表示 */}
             <TodayMessage />
 
+            {/* はじめての方へ */}
+            <TouchableOpacity style={styles.hajimeteBtn} onPress={() => router.push('/hajimete' as never)}>
+              <Text style={styles.hajimeteBtnText}>✦ はじめての方へ</Text>
+            </TouchableOpacity>
+
             {/* ① ヘッダー */}
             <RevealBlock index={0} {...revealProps} style={styles.header}>
               <Text style={styles.logoText}>むすび島</Text>
@@ -521,6 +527,11 @@ export default function HomeScreen() {
               </RevealBlock>
             )}
 
+            {/* プロフィール */}
+            <TouchableOpacity style={styles.profileBtn} onPress={() => router.push('/profile' as never)}>
+              <Text style={styles.profileBtnText}>占いカウンセラー 其田寿枝について</Text>
+            </TouchableOpacity>
+
           </View>
         </Animated.ScrollView>
       </ScreenContainer>
@@ -634,6 +645,37 @@ const styles = StyleSheet.create({
     backgroundColor: '#C45070',
     paddingVertical: 2,
     width: '100%',
+  },
+
+  hajimeteBtn: {
+    backgroundColor: '#FFF0F3',
+    borderRadius: 20,
+    paddingVertical: 8,
+    paddingHorizontal: 20,
+    alignSelf: 'center',
+    marginTop: 8,
+    marginBottom: 4,
+    borderWidth: 1,
+    borderColor: '#E8758A',
+  },
+  hajimeteBtnText: {
+    fontSize: 13,
+    color: '#E8758A',
+    fontWeight: '700',
+  },
+  profileBtn: {
+    backgroundColor: '#FFF8F0',
+    borderRadius: 16,
+    padding: 16,
+    alignItems: 'center',
+    marginTop: 8,
+    borderWidth: 1,
+    borderColor: '#C9A84C',
+  },
+  profileBtnText: {
+    fontSize: 14,
+    color: '#C9A84C',
+    fontWeight: '700',
   },
 
   // 編集的レイアウト用
