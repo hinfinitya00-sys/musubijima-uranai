@@ -303,14 +303,14 @@ export default function NegativeGodScreen() {
             <Text style={styles.introTitle}>ネガティブ神と{'\n'}エジプト守護神占い</Text>
             <View style={styles.introTitleUnderline} />
           </View>
-          <View style={styles.introCard}>
-            <Text style={styles.introText}>{INTRO_TEXT}</Text>
-          </View>
           <TouchableOpacity style={styles.templeButton} onPress={handleVisitTemple} activeOpacity={0.85}>
             <LinearGradient colors={['#E8758A', '#C45070']} style={styles.templeButtonGradient}>
               <Text style={styles.templeButtonText}>✦　心の神殿を訪れる　✦</Text>
             </LinearGradient>
           </TouchableOpacity>
+          <View style={styles.introCard}>
+            <Text style={styles.introText}>{INTRO_TEXT}</Text>
+          </View>
         </Animated.View>
       )}
 
