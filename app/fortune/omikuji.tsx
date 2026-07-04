@@ -1242,13 +1242,6 @@ export default function OmikujiScreen() {
           <>
             <Text style={styles.introTitle}>導カード</Text>
             <Text style={styles.introSub}>今日のあなたに届く、ひとつの導き。</Text>
-            <View style={styles.introCard}>
-              {INTRO_BODY.map((line, i) => (
-                <Text key={i} style={styles.introBody}>
-                  {line}
-                </Text>
-              ))}
-            </View>
             <TouchableOpacity activeOpacity={0.9} onPress={handleDraw}>
               <LinearGradient
                 colors={['#E8758A', '#C45070']}
@@ -1259,6 +1252,13 @@ export default function OmikujiScreen() {
                 <Text style={styles.drawButtonText}>✦　今日のカードを引く　✦</Text>
               </LinearGradient>
             </TouchableOpacity>
+            <View style={styles.introCard}>
+              {INTRO_BODY.map((line, i) => (
+                <Text key={i} style={styles.introBody}>
+                  {line}
+                </Text>
+              ))}
+            </View>
           </>
         ) : (
           <>
