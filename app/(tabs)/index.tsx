@@ -254,7 +254,7 @@ function TodayMessage() {
     Animated.loop(
       Animated.timing(tickerAnim, {
         toValue: -screenWidth * 2,
-        duration: 20000,
+        duration: 35000,
         useNativeDriver: true,
       })
     ).start();
@@ -265,10 +265,11 @@ function TodayMessage() {
   if (!message) return null;
 
   return (
-    <>
+    <View style={styles.tickerWrapper}>
       <View style={styles.tickerBar}>
         <View style={styles.tickerLabel}>
           <Text style={styles.tickerLabelText}>今日のおくりもの</Text>
+          <Text style={styles.tickerUpdateText}>毎日7時更新</Text>
         </View>
         <View style={styles.tickerTrack}>
           <Animated.Text style={[styles.tickerText, { transform: [{ translateX: tickerAnim }] }]}>
@@ -276,8 +277,7 @@ function TodayMessage() {
           </Animated.Text>
         </View>
       </View>
-      <Text style={styles.tickerUpdateText}>毎日7時更新</Text>
-    </>
+    </View>
   );
 }
 
@@ -636,6 +636,10 @@ const styles = StyleSheet.create({
   cardCenter: { alignItems: "center" },
 
   // 今日のメッセージ（ホーム最上部・伝言板スタイル）
+  tickerWrapper: {
+    width: '100%',
+    marginBottom: 8,
+  },
   tickerBar: {
     flexDirection: 'row',
     alignItems: 'center',
@@ -647,9 +651,10 @@ const styles = StyleSheet.create({
   tickerLabel: {
     backgroundColor: '#C45070',
     paddingHorizontal: 12,
-    paddingVertical: 4,
+    paddingVertical: 6,
     height: '100%',
     justifyContent: 'center',
+    alignItems: 'center',
     minWidth: 110,
   },
   tickerLabelText: {
@@ -673,12 +678,10 @@ const styles = StyleSheet.create({
     paddingLeft: 16,
   },
   tickerUpdateText: {
-    fontSize: 10,
-    color: '#FFFFFF',
+    fontSize: 9,
+    color: 'rgba(255,255,255,0.8)',
     textAlign: 'center',
-    backgroundColor: '#C45070',
-    paddingVertical: 2,
-    width: '100%',
+    marginTop: 2,
   },
 
   hajimeteBtn: {
