@@ -322,10 +322,6 @@ export default function HomeScreen() {
   const [bMonth, setBMonth] = useState("");
   const [bDay, setBDay] = useState("");
 
-  // 今年の運勢（life-rhythm）セクションの誕生日フォーム（年は不要・月日のみ）
-  const [lrMonth, setLrMonth] = useState("");
-  const [lrDay, setLrDay] = useState("");
-
   const goMusubian = () => {
     if (!canUse.musubian) {
       router.push("/subscription/plans" as never);
@@ -377,8 +373,11 @@ export default function HomeScreen() {
 
             {/* ① ヘッダー */}
             <RevealBlock index={0} {...revealProps} style={styles.header}>
-              <Text style={styles.logoText}>むすび島</Text>
-              <Text style={styles.logoSubtext}>MUSUBIJIMA</Text>
+              <Image
+                source={require('../../assets/site/musubijima-logo-text.jpg')}
+                style={styles.logoImage}
+                resizeMode="contain"
+              />
               <Text style={styles.dateText}>{todayStr}（{weekday}）</Text>
               <Text style={styles.catchName}>占いカウンセラー　其田寿枝</Text>
               <Text style={styles.catchText}>あなたの「今」と「これから」をやさしく読み解く占いサイト</Text>
@@ -460,7 +459,7 @@ export default function HomeScreen() {
 
             {/* ④ 結び族 — sectionCream・中央／フォーム強調 */}
             <RevealBlock index={3} {...revealProps} style={[styles.card, styles.cardCenter, { backgroundColor: Colors.sectionCream }]}>
-              <Image source={require("../../assets/site/logo-musubizoku.jpg")} style={styles.sectionLogo} resizeMode="contain" />
+              <Image source={require("../../assets/site/musubizoku-logo.jpg")} style={styles.sectionLogo} resizeMode="contain" />
               <Text style={styles.titlePink}>結び族</Text>
               <Text style={styles.subPink}>生まれ持った性質と才能を知る</Text>
               <Text style={[styles.sectionDesc, styles.textCenter]}>生まれ持った性質や本質・性格の特徴、強味・才能 得意なことなど向いている生き方のヒントが分かります。</Text>
@@ -502,18 +501,17 @@ export default function HomeScreen() {
                 imageStyle={{ resizeMode: "stretch", borderRadius: 20 }}
               >
                 <View style={styles.frameInner}>
+                  <Image
+                    source={require('../../assets/site/year-fortune-logo.jpg')}
+                    style={styles.sectionLogoLarge}
+                    resizeMode="contain"
+                  />
                   <Text style={styles.frameTitle}>今年の運勢</Text>
                   <Text style={styles.frameSub}>今は進む時？{"\n"}整える時？</Text>
                   <Text style={styles.frameDesc}>1年の流れや、行動のタイミングが分かります。{"\n"}*やるべきこと、さけるべきことを見極める*</Text>
                   {/* 年表示（読み取り専用） */}
                   <Text style={styles.frameYear}>{new Date().getFullYear()}年</Text>
-                  <View style={styles.birthRow}>
-                    <TextInput style={styles.birthInputSm} value={lrMonth} onChangeText={setLrMonth} placeholder="月" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
-                    <Text style={styles.birthSep}>月</Text>
-                    <TextInput style={styles.birthInputSm} value={lrDay} onChangeText={setLrDay} placeholder="日" placeholderTextColor={Colors.primaryLight} keyboardType="number-pad" maxLength={2} />
-                    <Text style={styles.birthSep}>日</Text>
-                  </View>
-                  <AnimatedPressable style={styles.pinkButton} onPress={() => router.push({ pathname: "/fortune/life-rhythm", params: { month: lrMonth, day: lrDay } } as never)}>
+                  <AnimatedPressable style={styles.pinkButton} onPress={() => router.push('/fortune/life-rhythm' as never)}>
                     <Text style={styles.pinkButtonText}>運勢を占う</Text>
                   </AnimatedPressable>
                 </View>
@@ -581,6 +579,11 @@ const styles = StyleSheet.create({
 
   // ① ヘッダー
   header: { alignItems: "center", marginBottom: Spacing.md, paddingTop: Spacing.sm },
+  logoImage: {
+    width: 240,
+    height: 80,
+    marginBottom: Spacing.xs,
+  },
   logoText: { ...Typography.brand, color: Colors.primary },
   logoSubtext: { ...Typography.brandSub, color: Colors.accent, marginTop: Spacing.xs },
   dateText: { ...Typography.caption, color: Colors.muted, marginTop: Spacing.sm },
@@ -738,6 +741,12 @@ const styles = StyleSheet.create({
   btnRight: { alignSelf: "flex-end" },
 
   sectionLogo: { width: "100%", height: 150, marginBottom: Spacing.sm },
+  sectionLogoLarge: {
+    width: 200,
+    height: 70,
+    marginBottom: 8,
+    alignSelf: 'center',
+  },
   titleGold: { ...Typography.h1, color: Colors.accent },
   titlePink: { ...Typography.h1, color: Colors.primary },
   roman: { ...Typography.caption, color: Colors.muted, letterSpacing: 2, marginTop: Spacing.xs },
