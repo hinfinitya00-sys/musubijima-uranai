@@ -144,10 +144,6 @@ export default function MusubianScreen() {
               <Text style={styles.subtitle}>あなたは、どんな結び族でしょうか。</Text>
             </View>
 
-            <View style={styles.introCard}>
-              <Text style={styles.introText}>{MUSUBIZOKU_INTRO}</Text>
-            </View>
-
             {(!mounted || !params.year) && (
               <View style={styles.inputSection}>
                 <Text style={styles.inputLabel}>生年月日</Text>
@@ -166,6 +162,10 @@ export default function MusubianScreen() {
                 </TouchableOpacity>
               </View>
             )}
+
+            <View style={styles.introCard}>
+              <Text style={styles.introText}>{MUSUBIZOKU_INTRO}</Text>
+            </View>
           </View>
         ) : (
           <View style={styles.resultSection}>

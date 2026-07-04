@@ -15,6 +15,20 @@ import { Spacing } from '@/constants/Spacing';
 import { fetchOverlay } from '@/lib/cms';
 import { UTAMIKUJI, type Utamikuji } from '@/constants/utamikuji';
 
+const UTAMIKUJI_INTRO = `歌みくじは、今のあなたに必要なメッセージを、オリジナル楽曲で届ける結び島だけのおみくじです。
+言葉だけでは届かない想いも、音楽には心をやさしく包み込み、背中を押す力があります。
+その日の気持ちに寄り添い、今のあなたに必要な一曲との出会いをお届けします。
+
+このページでわかること
+🎵 今日の歌みくじ … 今のあなたに必要な一曲をお届けします。
+💌 歌に込められたメッセージ … 歌詞に込めた想いや、今日のあなたへのメッセージをお伝えします。
+🌱 今日の過ごし方 … 歌の世界観から、今日を心地よく過ごすためのヒントをご紹介します。
+🎧 心のお守りソング … 落ち込んだ時や迷った時、何度でも聴きたくなる一曲です。
+
+音楽は、心に寄り添うもう一つの言葉。
+あなたに必要な歌との出会いが、今日という一日をやさしく結んでくれますように。
+🌱 あなたの中にも、結びの種があります。`;
+
 // 音声アセット（assets/utamikuji/1.mp3〜9.mp3）。require は静的パスのみ可。
 const AUDIO: Record<number, number> = {
   1: require('../../assets/utamikuji/1.mp3'),
@@ -97,6 +111,11 @@ export default function UtamikujiScreen() {
           <Text style={styles.playLabel}>{playing ? '停止' : '再生'}</Text>
         </View>
 
+        {/* 歌みくじとは */}
+        <View style={styles.introCard}>
+          <Text style={styles.introText}>{UTAMIKUJI_INTRO}</Text>
+        </View>
+
         {/* 歌詞 */}
         <View style={styles.lyricsCard}>
           <Text style={styles.lyricsLabel}>歌詞</Text>
@@ -147,6 +166,15 @@ const styles = StyleSheet.create({
   playIcon: { color: Colors.surface, fontSize: 30, marginLeft: 2 },
   playLabel: { ...Typography.label, color: Colors.primaryDark, marginTop: Spacing.sm },
 
+  introCard: {
+    backgroundColor: Colors.surface,
+    borderRadius: 20,
+    borderWidth: 1,
+    borderColor: Colors.border,
+    padding: Spacing.lg,
+    marginBottom: Spacing.lg,
+  },
+  introText: { ...Typography.body, color: Colors.ink, lineHeight: 28 },
   lyricsCard: {
     backgroundColor: Colors.surface,
     borderRadius: 20,
