@@ -11,7 +11,7 @@ export default function ProfileScreen() {
         <Text style={styles.backText}>← ホームへ戻る</Text>
       </TouchableOpacity>
 
-      <Image source={require('../../assets/profile/hisae.jpg')} style={styles.photo} resizeMode="cover" />
+      <Image source={require('../../assets/profile/hisae.jpg')} style={styles.photo} resizeMode="contain" />
 
       <Text style={styles.name}>其田 寿枝（そのだ ひさえ）</Text>
       <Text style={styles.title}>占いカウンセラー｜結び島 主宰</Text>
@@ -41,7 +41,7 @@ const styles = StyleSheet.create({
   content: { padding: 20, paddingBottom: 60 },
   backBtn: { marginBottom: 24 },
   backText: { fontSize: 14, color: '#E8758A' },
-  photo: { width: '100%', height: 280, borderRadius: 16, marginBottom: 20 },
+  photo: { width: '100%', aspectRatio: 0.75, borderRadius: 16, marginBottom: 20, maxHeight: 500 },
   name: { fontSize: 26, fontWeight: '700', color: '#3D1A1A', fontFamily: 'NotoSerifJP_700Bold', textAlign: 'center', marginBottom: 4 },
   title: { fontSize: 14, color: '#7A6A6A', textAlign: 'center', marginBottom: 8 },
   tagline: { fontSize: 18, color: '#E8758A', fontFamily: 'NotoSerifJP_700Bold', textAlign: 'center', marginBottom: 24 },
