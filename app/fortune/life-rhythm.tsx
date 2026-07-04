@@ -144,20 +144,6 @@ export default function LifeRhythmScreen() {
               <Text style={styles.subtitle}>9年サイクルで、今いる季節を読み解きます</Text>
             </View>
 
-            <View style={styles.introCard}>
-              <Text style={styles.introText}>{LIFE_RHYTHM_INTRO}</Text>
-            </View>
-
-            {/* 四季の対応表 */}
-            <View style={styles.seasonCard}>
-              {LIFE_RHYTHM_SEASONS.map((s) => (
-                <View key={s.label} style={styles.seasonRow}>
-                  <Text style={styles.seasonLabel}>{s.label}（{s.range}）</Text>
-                  <Text style={styles.seasonDesc}>{s.desc}</Text>
-                </View>
-              ))}
-            </View>
-
             <View style={styles.inputSection}>
               <Text style={styles.inputLabel}>誕生日（月・日）</Text>
               {/* 年表示（読み取り専用） */}
@@ -176,6 +162,20 @@ export default function LifeRhythmScreen() {
                   <Text style={styles.primaryButtonText}>{currentYear}年の運勢を占う</Text>
                 </LinearGradient>
               </TouchableOpacity>
+            </View>
+
+            <View style={styles.introCard}>
+              <Text style={styles.introText}>{LIFE_RHYTHM_INTRO}</Text>
+            </View>
+
+            {/* 四季の対応表 */}
+            <View style={styles.seasonCard}>
+              {LIFE_RHYTHM_SEASONS.map((s) => (
+                <View key={s.label} style={styles.seasonRow}>
+                  <Text style={styles.seasonLabel}>{s.label}（{s.range}）</Text>
+                  <Text style={styles.seasonDesc}>{s.desc}</Text>
+                </View>
+              ))}
             </View>
           </View>
         ) : (

@@ -21,6 +21,23 @@ import {
 import type { MitamaCard } from '../../constants/mitama-cards';
 import { fetchOverlay } from '../../lib/cms';
 
+const MITAMA_INTRO = `み・たまカードは、今の悩みや迷いの奥にある「本当の自分の声」に気づくためのカードです。
+私たちは日々の生活の中で、知らず知らずのうちに心を我慢させたり、本当の気持ちにふたをしてしまうことがあります。
+み・たまカードは、今の出来事だけを見るのではなく、心の奥にある想いや魂からのメッセージに耳を傾け、自分自身と結び直す時間を届けます。
+
+このページでわかること
+🕊 み・たまの導き … 今のあなたに必要なテーマや、魂が伝えたいメッセージを読み解きます。
+🌸 言霊のひらき … 言葉に込められた意味を紐解き、今のあなたに必要な気づきをお伝えします。
+💌 み・たまからの言葉 … あなたの心に寄り添い、一歩前へ進むためのメッセージを届けます。
+🔑 ひらく鍵 … 気づきを日々の暮らしに活かすための考え方や行動のヒントをお伝えします。
+
+無料ではカードの一部をご覧いただけます。
+会員登録すると、カードの詳しい意味やメッセージ、心をひらくための鍵まで、すべて読むことができます。
+
+答えは、外にあるのではなく、あなたの中にあります。
+み・たまカードが、あなた自身と結び直す、やさしい時間となりますように。
+🌱 あなたの中にも、結びの種があります。`;
+
 export default function MitamaScreen() {
   const { isFree } = usePlanGate();
   const [selectedCard, setSelectedCard] = useState<MitamaCard | null>(null);
@@ -96,6 +113,10 @@ export default function MitamaScreen() {
                 <Text style={styles.drawButtonText}>✦　カードを引く　✦</Text>
               </LinearGradient>
             </TouchableOpacity>
+
+            <View style={styles.introCard}>
+              <Text style={styles.introText}>{MITAMA_INTRO}</Text>
+            </View>
           </>
         ) : selectedCard ? (
           /* Result Display */
@@ -243,6 +264,22 @@ const styles = StyleSheet.create({
     maxWidth: 600,
     width: '100%',
     alignSelf: 'center',
+  },
+
+  /* Intro */
+  introCard: {
+    marginTop: 28,
+    padding: 20,
+    borderRadius: 16,
+    backgroundColor: 'rgba(255, 255, 255, 0.72)',
+    borderWidth: 1,
+    borderColor: 'rgba(196, 80, 112, 0.25)',
+    width: '100%',
+  },
+  introText: {
+    fontSize: 15,
+    lineHeight: 26,
+    color: '#5A4A4A',
   },
 
   /* Draw Prompt */
