@@ -506,8 +506,6 @@ export default function HomeScreen() {
                     style={styles.sectionLogoLarge}
                     resizeMode="contain"
                   />
-                  <Text style={styles.frameTitle}>今年の運勢</Text>
-                  <Text style={styles.frameSub}>今は進む時？{"\n"}整える時？</Text>
                   <Text style={styles.frameDesc}>1年の流れや、行動のタイミングが分かります。{"\n"}*やるべきこと、さけるべきことを見極める*</Text>
                   {/* 年表示（読み取り専用） */}
                   <Text style={styles.frameYear}>{new Date().getFullYear()}年</Text>
