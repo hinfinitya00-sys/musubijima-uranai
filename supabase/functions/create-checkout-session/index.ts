@@ -48,12 +48,13 @@ Deno.serve(async (req) => {
 
     const session = await stripe.checkout.sessions.create({
       customer: customerId,
-      payment_method_types: ['card'],
+      payment_method_types: ['card', 'link'],
       line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       success_url: 'https://hinfinitya00-sys.github.io/musubijima-uranai/subscription/success',
       cancel_url: 'https://hinfinitya00-sys.github.io/musubijima-uranai/subscription/plans',
       locale: 'ja',
+      payment_method_collection: 'if_required',
     });
 
     return new Response(
