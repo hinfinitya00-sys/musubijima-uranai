@@ -387,10 +387,6 @@ export default function HomeScreen() {
 
             {/* ② 水引モチーフ＋ひさえと龍イラスト＋バブルメニュー */}
             <RevealBlock index={1} {...revealProps}>
-              <View style={styles.knotWrap}>
-                <MizuhikiMark />
-              </View>
-
               <View style={styles.hisaeRow}>
                 {/* 左列 */}
                 <View style={styles.bubbleCol}>
@@ -439,22 +435,17 @@ export default function HomeScreen() {
                   </TouchableOpacity>
                 </View>
               </View>
-              <Text style={styles.hisaeCaption}>5つの占いで今の流れ・性質・未来のヒントを受け取れます。</Text>
             </RevealBlock>
 
-            {/* ③ 導カード — sectionPink・左寄せ／画像右 */}
+            {/* ③ 導カード — sectionPink・左寄せ／画像上 */}
             <RevealBlock index={2} {...revealProps} style={[styles.card, { backgroundColor: Colors.sectionPink }]}>
-              <View style={styles.rowLayout}>
-                <View style={styles.colLeft}>
-                  <Text style={styles.titleGold}>導カード</Text>
-                  <Text style={styles.roman}>SHIRUBE CARD</Text>
-                  <Text style={[styles.sectionDesc, styles.textLeft]}>今日の意気や心の流れ、気を付けたいこと、心が軽くなるアドバイスが受け取れます。</Text>
-                  <AnimatedPressable style={[styles.pinkButton, styles.btnLeft]} onPress={() => router.push("/fortune/omikuji" as never)}>
-                    <Text style={styles.pinkButtonText}>無料で引く</Text>
-                  </AnimatedPressable>
-                </View>
-                <Image source={require("../../assets/site/logo-shirube.jpg")} style={styles.sideImage} resizeMode="contain" />
-              </View>
+              <Image source={require("../../assets/site/logo-shirube.jpg")} style={styles.sideImage} resizeMode="contain" />
+              <Text style={styles.titleGold}>導カード</Text>
+              <Text style={styles.roman}>SHIRUBE CARD</Text>
+              <Text style={[styles.sectionDesc, styles.textLeft]}>今日の意気や心の流れ、気を付けたいこと、心が軽くなるアドバイスが受け取れます。</Text>
+              <AnimatedPressable style={[styles.pinkButton, styles.btnLeft]} onPress={() => router.push("/fortune/omikuji" as never)}>
+                <Text style={styles.pinkButtonText}>無料で引く</Text>
+              </AnimatedPressable>
             </RevealBlock>
 
             {/* ④ 結び族 — sectionCream・中央／フォーム強調 */}
