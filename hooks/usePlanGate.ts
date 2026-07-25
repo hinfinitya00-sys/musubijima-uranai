@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabase';
 
-const DEBUG_UNLOCK_ALL = true; // 開発確認用・本番リリース前にfalseに戻す
+const DEBUG_UNLOCK_ALL = false;
 
 export function usePlanGate() {
   const [plan, setPlan] = useState<string>('free');

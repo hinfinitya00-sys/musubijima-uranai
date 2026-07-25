@@ -26,12 +26,6 @@ Deno.serve(async (req) => {
     Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
   );
 
-  // priceIdからplan_typeを判定
-  const PRICE_TO_PLAN: Record<string, string> = {
-    [Deno.env.get('STRIPE_PRICE_LIGHT')!]: 'light',
-    [Deno.env.get('STRIPE_PRICE_STANDARD')!]: 'standard',
-  };
-
   switch (event.type) {
     case 'checkout.session.completed': {
       const session = event.data.object as Stripe.Checkout.Session;
@@ -39,13 +33,11 @@ Deno.serve(async (req) => {
       const subscription = await stripe.subscriptions.retrieve(
         session.subscription as string
       );
-      const priceId = subscription.items.data[0].price.id;
-      const planType = PRICE_TO_PLAN[priceId] ?? 'free';
 
       await supabase
         .from('profiles')
         .update({
-          plan_type: planType,
+          plan_type: 'standard',
           stripe_subscription_id: subscription.id,
           updated_at: new Date().toISOString(),
         })
