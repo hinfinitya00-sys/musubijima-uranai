@@ -126,7 +126,7 @@ export default function LoginScreen() {
           onPress={handleMagicLink}
           disabled={isLoading}
         >
-          <LinearGradient colors={['#4C1D95', '#6D28D9']} style={styles.buttonGradient}>
+          <LinearGradient colors={['#E8758A', '#C45070']} style={styles.buttonGradient}>
             <Text style={styles.buttonText}>
               {isLoading ? '送信中...' : 'ログインリンクを送信'}
             </Text>
@@ -163,46 +163,46 @@ export default function LoginScreen() {
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: '#FFFFFF' },
+  container: { flex: 1, backgroundColor: '#FFFAF9' },
   content: { flex: 1, padding: 24, justifyContent: 'center' },
-  title: { fontSize: 32, fontWeight: 'bold', color: '#4C1D95', textAlign: 'center', marginBottom: 4 },
-  subtitle: { fontSize: 16, color: '#6B7280', textAlign: 'center', marginBottom: 40 },
+  title: { fontSize: 32, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 4 },
+  subtitle: { fontSize: 16, color: '#7A6A6A', textAlign: 'center', marginBottom: 40 },
   inputGroup: { marginBottom: 16 },
-  label: { fontSize: 14, color: '#374151', marginBottom: 8 },
+  label: { fontSize: 14, color: '#3D1A1A', marginBottom: 8 },
   input: {
     backgroundColor: '#FFFFFF',
     borderRadius: 12,
     padding: 14,
     fontSize: 16,
-    color: '#374151',
+    color: '#3D1A1A',
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: '#F9C0CC',
   },
   button: { marginTop: 8, borderRadius: 12, overflow: 'hidden' },
   buttonDisabled: { opacity: 0.6 },
   buttonGradient: { paddingVertical: 16, alignItems: 'center' },
   buttonText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
-  magicLinkHint: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 12 },
+  magicLinkHint: { fontSize: 12, color: '#7A6A6A', textAlign: 'center', marginTop: 12 },
   dividerRow: { flexDirection: 'row', alignItems: 'center', marginVertical: 28 },
-  dividerLine: { flex: 1, height: 1, backgroundColor: '#E5E7EB' },
-  dividerText: { marginHorizontal: 16, fontSize: 13, color: '#9CA3AF' },
+  dividerLine: { flex: 1, height: 1, backgroundColor: '#F9C0CC' },
+  dividerText: { marginHorizontal: 16, fontSize: 13, color: '#7A6A6A' },
   googleButton: {
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
     backgroundColor: '#FFFFFF',
     borderWidth: 1,
-    borderColor: '#D1D5DB',
+    borderColor: '#F9C0CC',
     borderRadius: 12,
     paddingVertical: 14,
   },
   googleIcon: {
     fontSize: 18, fontWeight: 'bold', color: '#4285F4', marginRight: 10,
   },
-  googleText: { fontSize: 15, fontWeight: '600', color: '#374151' },
-  linkText: { color: '#6D28D9', textAlign: 'center', marginTop: 20, fontSize: 14 },
-  skipText: { color: '#9CA3AF', textAlign: 'center', marginTop: 24, fontSize: 13 },
+  googleText: { fontSize: 15, fontWeight: '600', color: '#3D1A1A' },
+  linkText: { color: '#C45070', textAlign: 'center', marginTop: 20, fontSize: 14 },
+  skipText: { color: '#7A6A6A', textAlign: 'center', marginTop: 24, fontSize: 13 },
   sentIcon: { fontSize: 48, textAlign: 'center', marginBottom: 16 },
-  sentTitle: { fontSize: 20, fontWeight: 'bold', color: '#4C1D95', textAlign: 'center', marginBottom: 12 },
-  sentDesc: { fontSize: 14, color: '#6B7280', textAlign: 'center', lineHeight: 24, marginBottom: 24 },
+  sentTitle: { fontSize: 20, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 12 },
+  sentDesc: { fontSize: 14, color: '#7A6A6A', textAlign: 'center', lineHeight: 24, marginBottom: 24 },
 });
