@@ -15,6 +15,7 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { fetchOverlay } from '../../lib/cms';
+import { usePlanGate } from '../../hooks/usePlanGate';
 
 type Card = {
   num: number;
@@ -1073,6 +1074,7 @@ function getRemainingToMidnightJST(): { hh: number; mm: number } {
 
 export default function OmikujiScreen() {
   const router = useRouter();
+  const { isFree } = usePlanGate();
   const [phase, setPhase] = useState<'intro' | 'result'>('intro');
   // データ参照元のみ変更: Supabase(omikuji_cards)のテキスト列をローカルCARDSへ number で上書き。
   // 取得失敗時はローカルCARDSのまま（安全網）。演出・ロジックには一切影響しない。
@@ -1233,6 +1235,9 @@ export default function OmikujiScreen() {
     ['健康', card.kenkou],
     ['旅行', card.ryokou],
   ];
+  const messageLines = card.message.split('\n');
+  const messagePreview = messageLines.slice(0, 2).join('\n');
+  const messageLocked = messageLines.slice(2).join('\n');
 
   return (
     <View style={{ flex: 1 }}>
@@ -1310,49 +1315,94 @@ export default function OmikujiScreen() {
 
             <View style={styles.whiteCard}>
               <Text style={styles.sectionHeaderLeft}>〈 メッセージ 〉</Text>
-              <Text style={styles.message}>{card.message}</Text>
-              <View style={styles.msgDivider} />
-              <Text style={styles.questionLabel}>今日の問い</Text>
-              <Text style={styles.question}>{card.question}</Text>
+              {isFree ? (
+                <>
+                  <Text style={styles.message}>{messagePreview}</Text>
+                  <View style={styles.paywallPreview}>
+                    <View pointerEvents="none" style={styles.paywallBlurredContent}>
+                      <Text style={styles.message}>{messageLocked}</Text>
+                      <View style={styles.msgDivider} />
+                      <Text style={styles.questionLabel}>今日の問い</Text>
+                      <Text style={styles.question}>{card.question}</Text>
+                      <View style={styles.paywallDummyLines}>
+                        <View style={[styles.paywallDummyLine, { width: '92%' }]} />
+                        <View style={[styles.paywallDummyLine, { width: '78%' }]} />
+                        <View style={[styles.paywallDummyLine, { width: '86%' }]} />
+                      </View>
+                    </View>
+                    <LinearGradient
+                      colors={['rgba(255,250,249,0.18)', 'rgba(255,250,249,0.94)', '#FFFAF9']}
+                      style={styles.paywallFade}
+                      pointerEvents="none"
+                    />
+                    <View style={styles.paywallPrompt}>
+                      <Text style={styles.paywallLock}>🔒</Text>
+                      <Text style={styles.paywallTitle}>この続きは会員限定です</Text>
+                      <Text style={styles.paywallDescription}>
+                        今日の問い・結び族からの導き・{`\n`}具体的な結びアクションまで読めます
+                      </Text>
+                      <TouchableOpacity
+                        style={styles.paywallButton}
+                        activeOpacity={0.85}
+                        onPress={() => router.push('/subscription/plans')}
+                      >
+                        <Text style={styles.paywallButtonText}>月額330円ですべて読む</Text>
+                      </TouchableOpacity>
+                      <Text style={styles.paywallNote}>いつでも解約できます</Text>
+                    </View>
+                  </View>
+                </>
+              ) : (
+                <>
+                  <Text style={styles.message}>{card.message}</Text>
+                  <View style={styles.msgDivider} />
+                  <Text style={styles.questionLabel}>今日の問い</Text>
+                  <Text style={styles.question}>{card.question}</Text>
+                </>
+              )}
             </View>
 
-            <View style={styles.musubiCard}>
-              <Text style={styles.musubiHeading}>この導きを届けた結び族</Text>
-              <Text style={styles.musubiName}>{card.musubi_name}</Text>
-              <Text style={styles.musubiMeta}>
-                属性：{card.musubi_attr}　／　結ぶ力：{card.musubi_chikara}
-              </Text>
-              <View style={styles.greenDivider} />
-              <Text style={styles.actionHeader}>🌱 今日の結びアクション</Text>
-              <Text style={styles.actionIntro}>
-                {card.musubi_name}から受け取った導きを、今日の行動にひとつ結んでみましょう。
-              </Text>
-              {card.actions.map((a, i) => (
-                <View key={i} style={styles.actionRow}>
-                  <Text style={styles.actionCheck}>□</Text>
-                  <Text style={styles.actionText}>{a}</Text>
-                </View>
-              ))}
-            </View>
+            {!isFree && (
+              <View style={styles.musubiCard}>
+                <Text style={styles.musubiHeading}>この導きを届けた結び族</Text>
+                <Text style={styles.musubiName}>{card.musubi_name}</Text>
+                <Text style={styles.musubiMeta}>
+                  属性：{card.musubi_attr}　／　結ぶ力：{card.musubi_chikara}
+                </Text>
+                <View style={styles.greenDivider} />
+                <Text style={styles.actionHeader}>🌱 今日の結びアクション</Text>
+                <Text style={styles.actionIntro}>
+                  {card.musubi_name}から受け取った導きを、今日の行動にひとつ結んでみましょう。
+                </Text>
+                {card.actions.map((a, i) => (
+                  <View key={i} style={styles.actionRow}>
+                    <Text style={styles.actionCheck}>□</Text>
+                    <Text style={styles.actionText}>{a}</Text>
+                  </View>
+                ))}
+              </View>
+            )}
 
             <TouchableOpacity style={styles.shareButton} activeOpacity={0.85} onPress={shareToX}>
               <Text style={styles.shareButtonText}>𝕏  今日のカードをシェアする</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/subscription/plans')}>
-              <LinearGradient
-                colors={['#E8758A', '#C45070']}
-                start={{ x: 0, y: 0 }}
-                end={{ x: 1, y: 1 }}
-                style={styles.upsellBanner}
-              >
-                <Text style={styles.upsellTitle}>✦ 他の占いも体験する ✦</Text>
-                <Text style={styles.upsellText}>
-                  ネガティブ神占い・み・たまカード・むすび族占いなど{'\n'}すべての機能が月330円で使い放題
-                </Text>
-                <Text style={styles.upsellButton}>今すぐ見てみる →</Text>
-              </LinearGradient>
-            </TouchableOpacity>
+            {!isFree && (
+              <TouchableOpacity activeOpacity={0.9} onPress={() => router.push('/subscription/plans')}>
+                <LinearGradient
+                  colors={['#E8758A', '#C45070']}
+                  start={{ x: 0, y: 0 }}
+                  end={{ x: 1, y: 1 }}
+                  style={styles.upsellBanner}
+                >
+                  <Text style={styles.upsellTitle}>✦ 他の占いも体験する ✦</Text>
+                  <Text style={styles.upsellText}>
+                    ネガティブ神占い・み・たまカード・むすび族占いなど{'\n'}すべての機能が月330円で使い放題
+                  </Text>
+                  <Text style={styles.upsellButton}>今すぐ見てみる →</Text>
+                </LinearGradient>
+              </TouchableOpacity>
+            )}
 
             <TouchableOpacity style={styles.backButton} activeOpacity={0.7} onPress={() => setPhase('intro')}>
               <Text style={styles.backButtonText}>最初に戻る</Text>
@@ -1437,6 +1487,37 @@ const styles = StyleSheet.create({
   msgDivider: { height: 1, backgroundColor: '#F5C0CC', marginVertical: 16 },
   questionLabel: { fontSize: 16, color: '#C45070', letterSpacing: 2, textAlign: 'center', marginBottom: 8 },
   question: { fontSize: 18, fontStyle: 'italic', color: '#3D1A1A', textAlign: 'center', lineHeight: 26 },
+  paywallPreview: { position: 'relative', minHeight: 390, marginTop: 4, overflow: 'hidden' },
+  paywallBlurredContent: Platform.select({
+    web: { opacity: 0.34, filter: 'blur(5px)' } as any,
+    default: { opacity: 0.16 },
+  }),
+  paywallFade: { ...StyleSheet.absoluteFillObject },
+  paywallPrompt: {
+    position: 'absolute',
+    left: 12,
+    right: 12,
+    bottom: 18,
+    alignItems: 'center',
+    backgroundColor: 'rgba(255,255,255,0.96)',
+    borderRadius: 18,
+    borderWidth: 1,
+    borderColor: '#F9C0CC',
+    paddingVertical: 20,
+    paddingHorizontal: 18,
+    shadowColor: '#C45070',
+    shadowOpacity: 0.14,
+    shadowRadius: 18,
+    shadowOffset: { width: 0, height: 8 },
+  },
+  paywallLock: { fontSize: 24, marginBottom: 6 },
+  paywallTitle: { fontSize: 20, fontWeight: '800', color: '#3D1A1A', textAlign: 'center' },
+  paywallDescription: { fontSize: 15, lineHeight: 22, color: '#7A6A6A', textAlign: 'center', marginTop: 8 },
+  paywallButton: { minHeight: 48, alignSelf: 'stretch', justifyContent: 'center', alignItems: 'center', backgroundColor: '#E8758A', borderRadius: 999, marginTop: 16, paddingHorizontal: 18 },
+  paywallButtonText: { color: '#FFFFFF', fontSize: 16, fontWeight: '800' },
+  paywallNote: { color: '#7A6A6A', fontSize: 13, marginTop: 9 },
+  paywallDummyLines: { marginTop: 24 },
+  paywallDummyLine: { height: 12, borderRadius: 6, backgroundColor: '#E8DCDD', marginBottom: 12 },
 
   musubiCard: { backgroundColor: '#FFF0F3', borderRadius: 18, padding: 20, marginTop: 16, borderWidth: 1, borderColor: '#F5C0CC' },
   musubiHeading: { fontSize: 16, color: '#C45070', textAlign: 'center' },
