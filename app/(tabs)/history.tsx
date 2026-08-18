@@ -52,7 +52,7 @@ export default function HistoryScreen() {
 
   if (isLoading) {
     return (
-      <LinearGradient colors={["#1A0A2E", "#2D1B4E"] as const} style={styles.container}>
+      <LinearGradient colors={["#FFFAF9", "#FDF1F3"] as const} style={styles.container}>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>読み込み中...</Text>
         </View>
@@ -61,7 +61,7 @@ export default function HistoryScreen() {
   }
 
   return (
-    <LinearGradient colors={["#1A0A2E", "#2D1B4E", "#1A0A2E"] as const} style={styles.container}>
+    <LinearGradient colors={["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const} style={styles.container}>
       <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
         <View style={styles.header}>
           <Text style={styles.pageTitle}>占い履歴</Text>
@@ -126,12 +126,12 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     marginBottom: 4,
   },
   pageSubtitle: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
   },
   emptyContainer: {
     flex: 1,
@@ -147,12 +147,12 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
   },
   emptySubtitle: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     lineHeight: 22,
     marginBottom: 8,
@@ -169,7 +169,7 @@ const styles = StyleSheet.create({
   drawButtonText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#2C1654",
+    color: "#3D1A1A",
   },
   listContent: {
     padding: 20,
@@ -178,11 +178,11 @@ const styles = StyleSheet.create({
     paddingBottom: 20,
   },
   historyCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 20,
     borderWidth: 1,
-    borderColor: "rgba(155,126,199,0.25)",
+    borderColor: "#F9C0CC",
   },
   historyCardHeader: {
     flexDirection: "row",
@@ -198,7 +198,7 @@ const styles = StyleSheet.create({
   },
   historyCardDate: {
     fontSize: 13,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     marginBottom: 2,
   },
   historyCardTheme: {
@@ -210,12 +210,12 @@ const styles = StyleSheet.create({
   historyCardTitle: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     marginBottom: 8,
   },
   historyCardMessage: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     lineHeight: 22,
     marginBottom: 12,
   },

@@ -10,6 +10,7 @@ import {
   Platform,
   Dimensions,
   Animated,
+  type ImageSourcePropType,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useRouter } from 'expo-router';
@@ -37,7 +38,7 @@ type Card = {
   musubi_attr: string;
   musubi_chikara: string;
   actions: string[];
-  img: ReturnType<typeof require>;
+  img: ImageSourcePropType;
 };
 
 const CARDS: Card[] = [

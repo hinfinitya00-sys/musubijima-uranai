@@ -10,12 +10,13 @@ import {
   ImageBackground,
   Platform,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import * as Linking from 'expo-linking';
 
 export default function RegisterScreen() {
+  const { next } = useLocalSearchParams<{ next?: string }>();
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [birthYear, setBirthYear] = useState('');
@@ -35,7 +36,7 @@ export default function RegisterScreen() {
       const birthDate = `${birthYear}-${birthMonth.padStart(2, '0')}-${birthDay.padStart(2, '0')}`;
 
       const redirectTo = Platform.OS === 'web'
-        ? `${window.location.origin}/musubijima-uranai/oauth/callback`
+        ? `${window.location.origin}/musubijima-uranai/oauth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`
         : Linking.createURL('/oauth/callback');
 
       const { error } = await supabase.auth.signInWithOtp({
@@ -64,7 +65,7 @@ export default function RegisterScreen() {
     setIsLoading(true);
     try {
       const redirectTo = Platform.OS === 'web'
-        ? `${window.location.origin}/musubijima-uranai/oauth/callback`
+        ? `${window.location.origin}/musubijima-uranai/oauth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`
         : Linking.createURL('/oauth/callback');
 
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -201,7 +202,7 @@ export default function RegisterScreen() {
           onPress={handleRegister}
           disabled={isLoading}
         >
-          <LinearGradient colors={['#4C1D95', '#6D28D9']} style={styles.buttonGradient}>
+          <LinearGradient colors={['#E8758A', '#C45070']} style={styles.buttonGradient}>
             <Text style={styles.buttonText}>
               {isLoading ? '送信中...' : '登録リンクを送信'}
             </Text>
@@ -212,7 +213,9 @@ export default function RegisterScreen() {
           パスワード不要。メールに届くリンクで登録できます
         </Text>
 
-        <TouchableOpacity onPress={() => router.push('/(auth)/login')}>
+        <TouchableOpacity
+          onPress={() => router.push({ pathname: '/(auth)/login', params: next ? { next } : {} } as never)}
+        >
           <Text style={styles.linkText}>すでにアカウントをお持ちの方はこちら</Text>
         </TouchableOpacity>
       </ScrollView>
@@ -222,8 +225,15 @@ export default function RegisterScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFFFF' },
-  scrollContent: { padding: 24, paddingTop: 60, paddingBottom: 40 },
-  title: { fontSize: 28, fontWeight: 'bold', color: '#4C1D95', textAlign: 'center', marginBottom: 8 },
+  scrollContent: {
+    width: '100%',
+    maxWidth: 600,
+    alignSelf: 'center',
+    padding: 24,
+    paddingTop: 60,
+    paddingBottom: 40,
+  },
+  title: { fontSize: 28, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 8 },
   subtitle: { fontSize: 14, color: '#6B7280', textAlign: 'center', marginBottom: 28 },
   inputGroup: { marginBottom: 16 },
   label: { fontSize: 14, color: '#374151', marginBottom: 8 },
@@ -260,9 +270,9 @@ const styles = StyleSheet.create({
   },
   googleIcon: { fontSize: 18, fontWeight: 'bold', color: '#4285F4', marginRight: 10 },
   googleText: { fontSize: 15, fontWeight: '600', color: '#374151' },
-  linkText: { color: '#6D28D9', textAlign: 'center', marginTop: 20, fontSize: 14 },
+  linkText: { color: '#C45070', textAlign: 'center', marginTop: 20, fontSize: 14 },
   sentContent: { flex: 1, padding: 24, justifyContent: 'center' },
   sentIcon: { fontSize: 48, textAlign: 'center', marginBottom: 16 },
-  sentTitle: { fontSize: 20, fontWeight: 'bold', color: '#4C1D95', textAlign: 'center', marginBottom: 12 },
+  sentTitle: { fontSize: 20, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 12 },
   sentDesc: { fontSize: 14, color: '#6B7280', textAlign: 'center', lineHeight: 24, marginBottom: 24 },
 });

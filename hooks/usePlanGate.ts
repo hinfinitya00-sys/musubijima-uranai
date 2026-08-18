@@ -17,7 +17,9 @@ export function usePlanGate() {
           .select('plan_type, trial_ends_at')
           .eq('id', session.user.id)
           .single();
-        if (data?.plan_type) setPlan(data.plan_type);
+        setPlan(data?.plan_type ?? 'free');
+        setIsTrialActive(false);
+        setTrialDaysLeft(0);
         if (data?.trial_ends_at) {
           const trialEnd = new Date(data.trial_ends_at);
           const now = new Date();
@@ -26,9 +28,24 @@ export function usePlanGate() {
             setTrialDaysLeft(Math.ceil((trialEnd.getTime() - now.getTime()) / (1000 * 60 * 60 * 24)));
           }
         }
+      } else {
+        setPlan('free');
+        setIsTrialActive(false);
+        setTrialDaysLeft(0);
       }
     };
     load();
+
+    const { data: authListener } = supabase.auth.onAuthStateChange(() => {
+      load();
+    });
+    const refresh = () => load();
+    if (typeof document !== 'undefined') document.addEventListener('visibilitychange', refresh);
+
+    return () => {
+      authListener.subscription.unsubscribe();
+      if (typeof document !== 'undefined') document.removeEventListener('visibilitychange', refresh);
+    };
   }, []);
 
   const effectivePlan = DEBUG_UNLOCK_ALL ? 'standard' : (isTrialActive && plan === 'free' ? 'light' : plan);

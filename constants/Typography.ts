@@ -5,29 +5,38 @@
  *
  * モバイル可読性のため全体を一回り拡大（本文16px以上 / 見出し20px以上）。
  */
-import type { ViewStyle } from 'react-native';
+import { Platform, type ViewStyle } from 'react-native';
 
-export const Fonts = {
-  serifBold: 'NotoSerifJP_700Bold',
-  serifMedium: 'NotoSerifJP_500Medium',
-  sansRegular: 'NotoSansJP_400Regular',
-  sansMedium: 'NotoSansJP_500Medium',
-  sansLight: 'NotoSansJP_300Light',
-} as const;
+export const Fonts = Platform.select({
+  web: {
+    serifBold: 'Noto Serif JP',
+    serifMedium: 'Noto Serif JP',
+    sansRegular: 'Noto Sans JP',
+    sansMedium: 'Noto Sans JP',
+    sansLight: 'Noto Sans JP',
+  },
+  default: {
+    serifBold: 'NotoSerifJP_700Bold',
+    serifMedium: 'NotoSerifJP_500Medium',
+    sansRegular: 'NotoSansJP_400Regular',
+    sansMedium: 'NotoSansJP_500Medium',
+    sansLight: 'NotoSansJP_300Light',
+  },
+})!;
 
 export const Typography = {
   // 見出し：Noto Serif JP
-  h1: { fontFamily: Fonts.serifBold, fontSize: 32, lineHeight: 48 },
-  h2: { fontFamily: Fonts.serifBold, fontSize: 26, lineHeight: 39 },
-  h3: { fontFamily: Fonts.serifMedium, fontSize: 22, lineHeight: 33 },
+  h1: { fontFamily: Fonts.serifBold, fontWeight: '700' as const, fontSize: 32, lineHeight: 48 },
+  h2: { fontFamily: Fonts.serifBold, fontWeight: '700' as const, fontSize: 26, lineHeight: 39 },
+  h3: { fontFamily: Fonts.serifMedium, fontWeight: '500' as const, fontSize: 22, lineHeight: 33 },
   // 本文：Noto Sans JP
-  body: { fontFamily: Fonts.sansRegular, fontSize: 16, lineHeight: 28 },
-  bodyLg: { fontFamily: Fonts.sansRegular, fontSize: 18, lineHeight: 30 },
-  caption: { fontFamily: Fonts.sansRegular, fontSize: 15, lineHeight: 23 },
-  label: { fontFamily: Fonts.sansMedium, fontSize: 16, lineHeight: 26 },
+  body: { fontFamily: Fonts.sansRegular, fontWeight: '400' as const, fontSize: 16, lineHeight: 28 },
+  bodyLg: { fontFamily: Fonts.sansRegular, fontWeight: '400' as const, fontSize: 18, lineHeight: 30 },
+  caption: { fontFamily: Fonts.sansRegular, fontWeight: '400' as const, fontSize: 15, lineHeight: 23 },
+  label: { fontFamily: Fonts.sansMedium, fontWeight: '500' as const, fontSize: 16, lineHeight: 26 },
   // ブランド表記
-  brand: { fontFamily: Fonts.serifBold, fontSize: 28, letterSpacing: 2 },
-  brandSub: { fontFamily: Fonts.sansLight, fontSize: 13, letterSpacing: 4 },
+  brand: { fontFamily: Fonts.serifBold, fontWeight: '700' as const, fontSize: 28, letterSpacing: 2 },
+  brandSub: { fontFamily: Fonts.sansLight, fontWeight: '300' as const, fontSize: 13, letterSpacing: 4 },
 } as const;
 
 export type TypographyToken = keyof typeof Typography;

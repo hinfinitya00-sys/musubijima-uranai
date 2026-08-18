@@ -57,12 +57,12 @@ export default function OnboardingScreen() {
   };
 
   const gradientColors = guide
-    ? groupColors[guide.groupEn] ?? ["#7B5EA7", "#9B7EC7"]
-    : ["#7B5EA7", "#9B7EC7"];
+    ? groupColors[guide.groupEn] ?? ["#E8758A", "#C45070"]
+    : ["#E8758A", "#C45070"];
 
   if (step === "result" && guide && groupInfo) {
     return (
-      <LinearGradient colors={["#1A0A2E", "#2D1B4E", "#1A0A2E"] as const} style={styles.container}>
+      <LinearGradient colors={["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const} style={styles.container}>
         <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
           {/* ヘッダー */}
           <View style={styles.header}>
@@ -124,7 +124,7 @@ export default function OnboardingScreen() {
   }
 
   return (
-    <LinearGradient colors={["#1A0A2E", "#2D1B4E", "#1A0A2E"] as const} style={styles.container}>
+    <LinearGradient colors={["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         {/* ロゴ・タイトル */}
         <View style={styles.logoSection}>
@@ -244,7 +244,7 @@ export default function OnboardingScreen() {
 
         {/* 占うボタン */}
         <TouchableOpacity style={styles.calculateButton} onPress={handleCalculate}>
-          <LinearGradient colors={["#7B5EA7", "#9B7EC7"] as const} style={styles.calculateButtonGradient}>
+          <LinearGradient colors={["#E8758A", "#C45070"] as const} style={styles.calculateButtonGradient}>
             <Text style={styles.calculateButtonText}>ガイドを見つける ✨</Text>
           </LinearGradient>
         </TouchableOpacity>
@@ -284,7 +284,7 @@ const styles = StyleSheet.create({
   appTitle: {
     fontSize: 36,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     letterSpacing: 4,
   },
   appSubtitle: {
@@ -295,13 +295,13 @@ const styles = StyleSheet.create({
   },
   appDescription: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     marginTop: 12,
     textAlign: "center",
     lineHeight: 20,
   },
   infoCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
@@ -316,7 +316,7 @@ const styles = StyleSheet.create({
   },
   infoText: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     lineHeight: 20,
     marginBottom: 12,
   },
@@ -327,7 +327,7 @@ const styles = StyleSheet.create({
   },
   exampleText: {
     fontSize: 13,
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     marginBottom: 4,
   },
   exampleCalc: {
@@ -342,17 +342,17 @@ const styles = StyleSheet.create({
     fontWeight: "700",
   },
   inputCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     marginBottom: 24,
     borderWidth: 1,
-    borderColor: "rgba(155,126,199,0.3)",
+    borderColor: "#F9C0CC",
   },
   inputTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     marginBottom: 20,
     textAlign: "center",
   },
@@ -361,7 +361,7 @@ const styles = StyleSheet.create({
   },
   pickerLabel: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     marginBottom: 8,
     fontWeight: "600",
   },
@@ -374,20 +374,20 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     paddingVertical: 10,
     borderRadius: 20,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderWidth: 1,
-    borderColor: "rgba(155,126,199,0.3)",
+    borderColor: "#F9C0CC",
   },
   pickerItemSelected: {
-    backgroundColor: "#7B5EA7",
+    backgroundColor: "#E8758A",
     borderColor: "#F2D06B",
   },
   pickerItemText: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
   },
   pickerItemTextSelected: {
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     fontWeight: "700",
   },
   selectedDateBox: {
@@ -415,7 +415,7 @@ const styles = StyleSheet.create({
   calculateButtonText: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#FFFFFF",
     letterSpacing: 1,
   },
   // Result screen styles
@@ -435,7 +435,7 @@ const styles = StyleSheet.create({
   },
   guideNumberLabel: {
     fontSize: 12,
-    color: "rgba(255,255,255,0.8)",
+    color: "#7A6A6A",
     fontWeight: "600",
   },
   guideNumber: {
@@ -444,7 +444,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   groupCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
     marginBottom: 16,
@@ -468,28 +468,28 @@ const styles = StyleSheet.create({
   },
   groupDescription: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     lineHeight: 22,
   },
   guideCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: "rgba(155,126,199,0.3)",
+    borderColor: "#F9C0CC",
   },
   guideLabel: {
     fontSize: 13,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     marginBottom: 4,
   },
   guideName: {
     fontSize: 28,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
     marginBottom: 16,
   },
@@ -509,13 +509,13 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     flex: 1,
     lineHeight: 20,
   },
   guideDescription: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     lineHeight: 22,
     textAlign: "center",
   },
@@ -553,7 +553,7 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#2C1654",
+    color: "#3D1A1A",
     letterSpacing: 1,
   },
 });

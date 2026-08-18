@@ -54,6 +54,23 @@ function getTodaySongIndex(): number {
 }
 
 export default function UtamikujiScreen() {
+  const [hydrated, setHydrated] = useState(false);
+  useEffect(() => setHydrated(true), []);
+
+  // expo-audio はサーバー描画に対応しないため、ブラウザでのマウント後にだけ
+  // 音声プレイヤーを持つコンポーネントを生成する。
+  if (!hydrated) {
+    return (
+      <View style={styles.loadingContainer}>
+        <Text style={styles.loadingText}>歌みくじを準備しています...</Text>
+      </View>
+    );
+  }
+
+  return <UtamikujiClient />;
+}
+
+function UtamikujiClient() {
   // Supabase(utamikuji)のテキスト列をローカルデータに number で上書き。失敗時はローカルのまま。
   const [songs, setSongs] = useState<Utamikuji[]>(UTAMIKUJI);
   useEffect(() => {
@@ -66,7 +83,14 @@ export default function UtamikujiScreen() {
 
   // iOSのサイレントスイッチでも再生
   useEffect(() => {
-    setAudioModeAsync({ playsInSilentMode: true }).catch(() => {});
+    setAudioModeAsync({
+      playsInSilentMode: true,
+      interruptionMode: 'mixWithOthers',
+      interruptionModeAndroid: 'duckOthers',
+      allowsRecording: false,
+      shouldPlayInBackground: false,
+      shouldRouteThroughEarpiece: false,
+    }).catch(() => {});
   }, []);
 
   const index = getTodaySongIndex();             // 0〜8
@@ -128,6 +152,13 @@ export default function UtamikujiScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
+  loadingContainer: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center',
+    backgroundColor: Colors.bg,
+  },
+  loadingText: { ...Typography.body, color: Colors.primaryDark },
   scrollContent: {
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.lg,

@@ -102,7 +102,7 @@ export default function CardReadingScreen() {
 
   if (step === "done") {
     return (
-      <LinearGradient colors={["#1A0A2E", "#2D1B4E", "#1A0A2E"] as const} style={styles.container}>
+      <LinearGradient colors={["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const} style={styles.container}>
         <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
           <View style={styles.doneContainer}>
             <Text style={styles.doneEmoji}>✨</Text>
@@ -126,7 +126,7 @@ export default function CardReadingScreen() {
   }
 
   return (
-    <LinearGradient colors={["#1A0A2E", "#2D1B4E", "#1A0A2E"] as const} style={styles.container}>
+    <LinearGradient colors={["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const} style={styles.container}>
       <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
         {/* ヘッダー */}
         <View style={styles.header}>
@@ -189,7 +189,7 @@ export default function CardReadingScreen() {
                 {/* カード */}
                 <View style={styles.revealCard}>
                   <LinearGradient
-                    colors={["rgba(242,208,107,0.2)", "rgba(123,94,167,0.3)"] as const}
+                    colors={["rgba(242,208,107,0.2)", "rgba(232,117,138,0.25)"] as const}
                     style={styles.revealCardGradient}
                   >
                     <Text style={styles.revealCardEmoji}>{card.emoji}</Text>
@@ -230,7 +230,7 @@ export default function CardReadingScreen() {
                 disabled={isSaving}
               >
                 <LinearGradient
-                  colors={["#7B5EA7", "#9B7EC7"] as const}
+                  colors={["#E8758A", "#C45070"] as const}
                   style={styles.saveButtonGradient}
                 >
                   <Text style={styles.saveButtonText}>
@@ -262,17 +262,17 @@ const styles = StyleSheet.create({
     height: 40,
     alignItems: "center",
     justifyContent: "center",
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#FDF1F3",
     borderRadius: 20,
   },
   closeBtnText: {
     fontSize: 16,
-    color: "#F5EFE6",
+    color: "#3D1A1A",
   },
   headerTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
   },
   content: {
     flex: 1,
@@ -291,13 +291,13 @@ const styles = StyleSheet.create({
   introTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
     lineHeight: 34,
   },
   introSubtitle: {
     fontSize: 15,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     lineHeight: 24,
     marginBottom: 8,
@@ -319,7 +319,7 @@ const styles = StyleSheet.create({
   drawButtonText: {
     fontSize: 20,
     fontWeight: "800",
-    color: "#2C1654",
+    color: "#3D1A1A",
   },
   drawingContainer: {
     alignItems: "center",
@@ -336,7 +336,7 @@ const styles = StyleSheet.create({
   cardBack: {
     width: 160,
     height: 240,
-    backgroundColor: "rgba(123,94,167,0.4)",
+    backgroundColor: "rgba(232,117,138,0.35)",
     borderRadius: 20,
     alignItems: "center",
     justifyContent: "center",
@@ -388,7 +388,7 @@ const styles = StyleSheet.create({
   revealCardTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
     marginBottom: 16,
   },
@@ -426,7 +426,7 @@ const styles = StyleSheet.create({
   luckySection: {
     flexDirection: "row",
     width: "100%",
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 12,
     padding: 12,
     gap: 8,
@@ -437,7 +437,7 @@ const styles = StyleSheet.create({
   },
   luckyLabel: {
     fontSize: 10,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     marginBottom: 4,
     textAlign: "center",
   },
@@ -449,7 +449,7 @@ const styles = StyleSheet.create({
   },
   luckyDivider: {
     width: 1,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#FDF1F3",
   },
   saveButton: {
     width: width - 80,
@@ -466,7 +466,7 @@ const styles = StyleSheet.create({
   saveButtonText: {
     fontSize: 17,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#FFFFFF",
   },
   doneContainer: {
     flex: 1,
@@ -481,12 +481,12 @@ const styles = StyleSheet.create({
   doneTitle: {
     fontSize: 22,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
   },
   doneSubtitle: {
     fontSize: 15,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     lineHeight: 24,
   },
@@ -503,6 +503,6 @@ const styles = StyleSheet.create({
   closeButtonText: {
     fontSize: 18,
     fontWeight: "800",
-    color: "#2C1654",
+    color: "#3D1A1A",
   },
 });

@@ -105,7 +105,7 @@ const KNOT_D =
 
 function MizuhikiMark() {
   return (
-    <Svg width={112} height={65} viewBox="0 0 120 70" accessibilitylabel="水引の結び目">
+    <Svg width={112} height={65} viewBox="0 0 120 70" accessibilityLabel="水引の結び目">
       <G transform="translate(0,3)">
         <Path d={KNOT_D} stroke={Colors.accent} strokeWidth={3} fill="none" strokeLinecap="round" strokeLinejoin="round" opacity={0.85} />
       </G>
@@ -680,7 +680,6 @@ const styles = StyleSheet.create({
     color: '#FFFFFF',
     fontSize: 14,
     fontFamily: Fonts.sansRegular,
-    whiteSpace: 'nowrap',
     paddingLeft: 16,
   },
   tickerUpdateText: {

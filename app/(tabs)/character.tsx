@@ -38,7 +38,7 @@ export default function CharacterScreen() {
   const attributeColor = ATTRIBUTE_COLORS[character.attribute] ?? '#888';
 
   return (
-    <LinearGradient colors={['#1A0A2E', '#2D1B4E', '#1A0A2E']} style={styles.container}>
+    <LinearGradient colors={['#FFFAF9', '#FDF1F3', '#FFFAF9']} style={styles.container}>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {/* キャラ画像プレースホルダー */}
         <View style={styles.imageContainer}>
@@ -104,8 +104,9 @@ const styles = StyleSheet.create({
     width: 160,
     height: 160,
     borderRadius: 80,
-    backgroundColor: 'rgba(255,255,255,0.05)',
+    backgroundColor: '#FFFFFF',
     borderWidth: 3,
+    borderColor: '#F9C0CC',
     justifyContent: 'center',
     alignItems: 'center',
   },
@@ -117,19 +118,19 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   attributeText: { color: '#fff', fontWeight: 'bold', fontSize: 14 },
-  characterName: { fontSize: 32, fontWeight: 'bold', color: '#F2D06B', marginBottom: 4 },
-  characterNameJa: { fontSize: 16, color: '#ccc', marginBottom: 20 },
+  characterName: { fontSize: 32, fontWeight: 'bold', color: '#C45070', marginBottom: 4 },
+  characterNameJa: { fontSize: 16, color: '#7A6A6A', marginBottom: 20 },
   descriptionCard: {
-    backgroundColor: 'rgba(255,255,255,0.08)',
+    backgroundColor: '#FFFFFF',
     borderRadius: 16,
     padding: 20,
     width: '100%',
     marginBottom: 16,
   },
-  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#F2D06B', marginBottom: 8 },
-  descriptionText: { fontSize: 15, color: '#ddd', lineHeight: 24 },
+  sectionTitle: { fontSize: 16, fontWeight: 'bold', color: '#C45070', marginBottom: 8 },
+  descriptionText: { fontSize: 15, color: '#3D1A1A', lineHeight: 24 },
   upgradeCard: { width: '100%', borderRadius: 16, overflow: 'hidden', marginTop: 8 },
   upgradeGradient: { padding: 20, alignItems: 'center' },
-  upgradeTitle: { fontSize: 18, fontWeight: 'bold', color: '#1A0A2E', marginBottom: 4 },
+  upgradeTitle: { fontSize: 18, fontWeight: 'bold', color: '#FFFAF9', marginBottom: 4 },
   upgradeSubtitle: { fontSize: 13, color: '#333' },
 });

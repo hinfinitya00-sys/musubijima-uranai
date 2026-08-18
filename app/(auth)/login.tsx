@@ -9,12 +9,13 @@ import {
   ImageBackground,
   Platform,
 } from 'react-native';
-import { router } from 'expo-router';
+import { router, useLocalSearchParams } from 'expo-router';
 import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import * as Linking from 'expo-linking';
 
 export default function LoginScreen() {
+  const { next } = useLocalSearchParams<{ next?: string }>();
   const [email, setEmail] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [magicLinkSent, setMagicLinkSent] = useState(false);
@@ -28,7 +29,7 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       const redirectTo = Platform.OS === 'web'
-        ? `${window.location.origin}/musubijima-uranai/oauth/callback`
+        ? `${window.location.origin}/musubijima-uranai/oauth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`
         : Linking.createURL('/oauth/callback');
 
       const { error } = await supabase.auth.signInWithOtp({
@@ -51,7 +52,7 @@ export default function LoginScreen() {
     setIsLoading(true);
     try {
       const redirectTo = Platform.OS === 'web'
-        ? `${window.location.origin}/musubijima-uranai/oauth/callback`
+        ? `${window.location.origin}/musubijima-uranai/oauth/callback${next ? `?next=${encodeURIComponent(next)}` : ''}`
         : Linking.createURL('/oauth/callback');
 
       const { data, error } = await supabase.auth.signInWithOAuth({
@@ -137,6 +138,12 @@ export default function LoginScreen() {
           パスワード不要。メールに届くリンクでログインできます
         </Text>
 
+        <TouchableOpacity
+          onPress={() => router.push({ pathname: '/(auth)/register', params: next ? { next } : {} } as never)}
+        >
+          <Text style={styles.registerLink}>初めての方は新規登録へ</Text>
+        </TouchableOpacity>
+
         {/* Divider */}
         <View style={styles.dividerRow}>
           <View style={styles.dividerLine} />
@@ -164,7 +171,14 @@ export default function LoginScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFAF9' },
-  content: { flex: 1, padding: 24, justifyContent: 'center' },
+  content: {
+    flex: 1,
+    width: '100%',
+    maxWidth: 560,
+    alignSelf: 'center',
+    padding: 24,
+    justifyContent: 'center',
+  },
   title: { fontSize: 32, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 4 },
   subtitle: { fontSize: 16, color: '#7A6A6A', textAlign: 'center', marginBottom: 40 },
   inputGroup: { marginBottom: 16 },
@@ -201,6 +215,7 @@ const styles = StyleSheet.create({
   },
   googleText: { fontSize: 15, fontWeight: '600', color: '#3D1A1A' },
   linkText: { color: '#C45070', textAlign: 'center', marginTop: 20, fontSize: 14 },
+  registerLink: { color: '#C45070', textAlign: 'center', marginTop: 18, fontSize: 14, fontWeight: '600' },
   skipText: { color: '#7A6A6A', textAlign: 'center', marginTop: 24, fontSize: 13 },
   sentIcon: { fontSize: 48, textAlign: 'center', marginBottom: 16 },
   sentTitle: { fontSize: 20, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 12 },

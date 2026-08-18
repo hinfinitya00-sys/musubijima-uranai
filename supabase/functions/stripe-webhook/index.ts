@@ -7,69 +7,82 @@ const stripe = new Stripe(Deno.env.get('STRIPE_SECRET_KEY')!, {
 });
 
 Deno.serve(async (req) => {
+  if (req.method !== 'POST') return new Response('Method not allowed', { status: 405 });
+
   const signature = req.headers.get('stripe-signature');
-  const body = await req.text();
+  if (!signature) return new Response('Missing Stripe signature', { status: 400 });
 
   let event: Stripe.Event;
   try {
     event = stripe.webhooks.constructEvent(
-      body,
-      signature!,
-      Deno.env.get('STRIPE_WEBHOOK_SECRET')!
+      await req.text(),
+      signature,
+      Deno.env.get('STRIPE_WEBHOOK_SECRET')!,
     );
-  } catch (err) {
-    return new Response(`Webhook Error: ${(err as Error).message}`, { status: 400 });
+  } catch (error) {
+    return new Response(`Webhook Error: ${(error as Error).message}`, { status: 400 });
   }
 
   const supabase = createClient(
     Deno.env.get('SUPABASE_URL')!,
-    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!,
+    { auth: { persistSession: false, autoRefreshToken: false } },
   );
 
-  switch (event.type) {
-    case 'checkout.session.completed': {
-      const session = event.data.object as Stripe.Checkout.Session;
-      const customerId = session.customer as string;
-      const subscription = await stripe.subscriptions.retrieve(
-        session.subscription as string
-      );
+  const updateByCustomer = async (customerId: string, values: Record<string, unknown>) => {
+    const { data, error } = await supabase
+      .from('profiles')
+      .update({ ...values, updated_at: new Date().toISOString() })
+      .eq('stripe_customer_id', customerId)
+      .select('id');
+    if (error) throw error;
+    if (!data?.length) throw new Error(`Profile not found for Stripe customer ${customerId}`);
+  };
 
-      await supabase
-        .from('profiles')
-        .update({
+  try {
+    switch (event.type) {
+      case 'checkout.session.completed': {
+        const session = event.data.object as Stripe.Checkout.Session;
+        if (!session.customer || !session.subscription) throw new Error('Checkout session is missing subscription data');
+        await updateByCustomer(session.customer as string, {
           plan_type: 'standard',
-          stripe_subscription_id: subscription.id,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('stripe_customer_id', customerId);
-      break;
-    }
+          stripe_subscription_id: session.subscription as string,
+        });
+        break;
+      }
 
-    case 'customer.subscription.deleted': {
-      const subscription = event.data.object as Stripe.Subscription;
-      await supabase
-        .from('profiles')
-        .update({
-          plan_type: 'free',
-          stripe_subscription_id: null,
-          updated_at: new Date().toISOString(),
-        })
-        .eq('stripe_subscription_id', subscription.id);
-      break;
-    }
+      case 'customer.subscription.created':
+      case 'customer.subscription.updated':
+      case 'customer.subscription.deleted': {
+        const subscription = event.data.object as Stripe.Subscription;
+        const hasAccess = ['active', 'trialing'].includes(subscription.status);
+        await updateByCustomer(subscription.customer as string, {
+          plan_type: hasAccess ? 'standard' : 'free',
+          stripe_subscription_id: subscription.status === 'canceled' ? null : subscription.id,
+        });
+        break;
+      }
 
-    case 'invoice.payment_failed': {
-      const invoice = event.data.object as Stripe.Invoice;
-      const customerId = invoice.customer as string;
-      await supabase
-        .from('profiles')
-        .update({
-          plan_type: 'free',
-          updated_at: new Date().toISOString(),
-        })
-        .eq('stripe_customer_id', customerId);
-      break;
+      case 'invoice.paid': {
+        const invoice = event.data.object as Stripe.Invoice;
+        if (invoice.customer && invoice.subscription) {
+          await updateByCustomer(invoice.customer as string, {
+            plan_type: 'standard',
+            stripe_subscription_id: invoice.subscription as string,
+          });
+        }
+        break;
+      }
+
+      case 'invoice.payment_failed': {
+        const invoice = event.data.object as Stripe.Invoice;
+        if (invoice.customer) await updateByCustomer(invoice.customer as string, { plan_type: 'free' });
+        break;
+      }
     }
+  } catch (error) {
+    console.error(`stripe-webhook ${event.id} failed`, error);
+    return new Response('Webhook processing failed', { status: 500 });
   }
 
   return new Response(JSON.stringify({ received: true }), {

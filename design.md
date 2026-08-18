@@ -5,6 +5,8 @@
 **作成者:** 其田彪（開発担当）  
 **ベースリポジトリ:** hinfinitya00-sys/arigajima-uranai → musubijima-uranai にリネーム
 
+> 2026-08-18更新: 旧複数プラン・旧テーマの記述を廃止。現行仕様はピンク／白、月額会員330円の単一有料プランです。
+
 ---
 
 ## 1. プロジェクト概要
@@ -16,9 +18,9 @@
 - メインユーザー：20〜40代女性（自己理解・スピリチュアルに関心のある層）
 - サブターゲット：既存の「むすび島」アプリユーザー・Instagram/SNSフォロワー
 
-### 収益目標
-- 月100万円（スタンダード700人 × ¥980 ＋ プレミアム80人 × ¥3,980）
-- 到達目標：12ヶ月以内
+### 収益指標
+- 月額売上 = 有料会員数 × ¥330（税込）
+- 登録者目標：まず全国1万人
 
 ### コアコンセプト
 - むすび族キャラクター（45体以上、火・水・風・土属性）が体験の中心
@@ -343,9 +345,9 @@ export const PLANS = {
   },
   standard: {
     id: 'standard',
-    name: 'スタンダード',
-    price: 980,
-    stripePriceId: 'price_xxxx',    // Stripeで作成後に入力
+    name: '月額会員',
+    price: 330,
+    stripePriceId: process.env.STRIPE_PRICE_ID,
     features: {
       characterReveal: true,
       omikuji: Infinity,            // 無制限
@@ -358,22 +360,6 @@ export const PLANS = {
       nineYearCycle: true,          // 9年サイクル
       aiChat: true,                 // AIチャット
       liveSession: false,
-    }
-  },
-  premium: {
-    id: 'premium',
-    name: 'プレミアム',
-    price: 3980,
-    stripePriceId: 'price_xxxx',    // Stripeで作成後に入力
-    maxUsers: 20,                   // 月20名限定
-    features: {
-      // スタンダードの全機能 +
-      liveSession: 1,               // LIVE鑑定（月1回）
-      aiConsult: 5,                 // AI個別相談（月5回）
-      familyReading: true,          // 家族・パートナー鑑定
-      yearlyCalendar: true,         // 年間数秘カレンダー
-      courseArchive: true,          // 占い講座動画アーカイブ
-      newCharacterEarly: true,      // 新キャラ先行解放
     }
   }
 };
@@ -616,7 +602,7 @@ chore: パッケージを更新
 - [ ] 認証フロー（メール + 生年月日登録）
 - [ ] 数秘術計算 → むすび族キャラ判定
 - [ ] フリー / スタンダード プラン分岐
-- [ ] Stripe 課金フロー（スタンダード ¥980/月）
+- [ ] Stripe 課金フロー（月額会員 ¥330/月）
 - [ ] 今日のおみくじ（スタンダード以上：毎日 / フリー：月3回）
 - [ ] キャラ詳細画面（スタンダード以上で全情報解放）
 - [ ] 管理画面（シンプル版：キャラ画像・テキスト編集）

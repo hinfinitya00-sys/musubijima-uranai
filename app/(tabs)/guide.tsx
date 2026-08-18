@@ -18,7 +18,7 @@ export default function GuideScreen() {
 
   if (isLoading) {
     return (
-      <LinearGradient colors={["#1A0A2E", "#2D1B4E"] as const} style={styles.container}>
+      <LinearGradient colors={["#FFFAF9", "#FDF1F3"] as const} style={styles.container}>
         <View style={styles.loadingContainer}>
           <Text style={styles.loadingText}>読み込み中...</Text>
         </View>
@@ -28,7 +28,7 @@ export default function GuideScreen() {
 
   if (!profile?.setupCompleted) {
     return (
-      <LinearGradient colors={["#1A0A2E", "#2D1B4E"] as const} style={styles.container}>
+      <LinearGradient colors={["#FFFAF9", "#FDF1F3"] as const} style={styles.container}>
         <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
           <View style={styles.emptyContainer}>
             <Text style={styles.emptyEmoji}>🏝️</Text>
@@ -37,7 +37,7 @@ export default function GuideScreen() {
               style={styles.setupButton}
               onPress={() => router.push("/(auth)/register")}
             >
-              <LinearGradient colors={["#7B5EA7", "#9B7EC7"] as const} style={styles.setupButtonGradient}>
+              <LinearGradient colors={["#E8758A", "#C45070"] as const} style={styles.setupButtonGradient}>
                 <Text style={styles.setupButtonText}>登録する</Text>
               </LinearGradient>
             </TouchableOpacity>
@@ -50,16 +50,7 @@ export default function GuideScreen() {
   const guide = profile.guide;
   const groupInfo = guide ? GROUP_DESCRIPTIONS[guide.group] : null;
 
-  const groupColors: Record<string, [string, string, string]> = {
-    earth: ["#1A0A00", "#3D2B00", "#8B6914"],
-    wind: ["#001A0A", "#002B1A", "#2E8B57"],
-    water: ["#00101A", "#001B3D", "#1E6FA8"],
-    fire: ["#1A0000", "#3D0000", "#C0392B"],
-  };
-
-  const bgColors = guide
-    ? (groupColors[guide.groupEn] ?? ["#1A0A2E", "#2D1B4E", "#7B5EA7"])
-    : ["#1A0A2E", "#2D1B4E", "#7B5EA7"];
+  const bgColors = ["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const;
 
   return (
     <LinearGradient colors={bgColors as [string, string, string]} style={styles.container}>
@@ -171,7 +162,7 @@ const styles = StyleSheet.create({
   emptyTitle: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
   },
   setupButton: {
@@ -187,7 +178,7 @@ const styles = StyleSheet.create({
   setupButtonText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#FFFFFF",
   },
   scrollContent: {
     padding: 20,
@@ -196,7 +187,7 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     marginBottom: 24,
     textAlign: "center",
   },
@@ -216,7 +207,7 @@ const styles = StyleSheet.create({
   },
   guideNumberLabel: {
     fontSize: 11,
-    color: "rgba(255,255,255,0.8)",
+    color: "#7A6A6A",
     fontWeight: "600",
   },
   guideNumber: {
@@ -225,7 +216,7 @@ const styles = StyleSheet.create({
     color: "#FFFFFF",
   },
   groupCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
     marginBottom: 16,
@@ -249,7 +240,7 @@ const styles = StyleSheet.create({
   },
   groupDescription: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     lineHeight: 22,
     marginBottom: 16,
@@ -274,36 +265,36 @@ const styles = StyleSheet.create({
     fontWeight: "600",
   },
   guideCard: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 20,
     padding: 24,
     marginBottom: 16,
     borderWidth: 1,
-    borderColor: "rgba(155,126,199,0.3)",
+    borderColor: "#F9C0CC",
   },
   guideCardLabel: {
     fontSize: 12,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
     marginBottom: 4,
   },
   guideName: {
     fontSize: 26,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     textAlign: "center",
     marginBottom: 12,
   },
   guideDescription: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     lineHeight: 22,
     textAlign: "center",
     marginBottom: 16,
   },
   divider: {
     height: 1,
-    backgroundColor: "rgba(255,255,255,0.1)",
+    backgroundColor: "#FDF1F3",
     marginBottom: 16,
   },
   featuresTitle: {
@@ -325,7 +316,7 @@ const styles = StyleSheet.create({
   },
   featureText: {
     fontSize: 14,
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     flex: 1,
     lineHeight: 20,
   },
@@ -352,35 +343,35 @@ const styles = StyleSheet.create({
     lineHeight: 28,
   },
   birthdayCard: {
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     alignItems: "center",
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "#FDF1F3",
     gap: 8,
   },
   birthdayLabel: {
     fontSize: 12,
-    color: "#A89BC2",
+    color: "#7A6A6A",
   },
   birthdayText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
   },
   changeButton: {
     marginTop: 4,
     paddingHorizontal: 20,
     paddingVertical: 8,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.15)",
+    borderColor: "#F9C0CC",
   },
   changeButtonText: {
     fontSize: 13,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     fontWeight: "600",
   },
 });

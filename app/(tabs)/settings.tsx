@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -6,18 +6,64 @@ import {
   ScrollView,
   StyleSheet,
   Alert,
+  Platform,
 } from "react-native";
 import { router } from "expo-router";
 import { LinearGradient } from "expo-linear-gradient";
 import { ScreenContainer } from "@/components/screen-container";
 import { useApp } from "@/lib/app-context";
+import { usePlanGate } from "@/hooks/usePlanGate";
+import { supabase } from "@/lib/supabase";
+import * as Linking from "expo-linking";
 
 export default function SettingsScreen() {
-  const { state, subscribe } = useApp();
-  const { profile, subscription } = state;
+  const { state } = useApp();
+  const { profile } = state;
+  const { isStandard, isTrialActive, trialDaysLeft } = usePlanGate();
+  const [isOpeningPortal, setIsOpeningPortal] = useState(false);
+  const [isSignedIn, setIsSignedIn] = useState(false);
 
-  const handleManageSubscription = () => {
-    router.push("/subscription");
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data }) => setIsSignedIn(Boolean(data.session)));
+    const { data } = supabase.auth.onAuthStateChange((_event, session) => setIsSignedIn(Boolean(session)));
+    return () => data.subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = async () => {
+    const { error } = await supabase.auth.signOut();
+    if (error) {
+      Alert.alert('エラー', 'ログアウトできませんでした。もう一度お試しください。');
+      return;
+    }
+    router.replace('/(auth)/login' as never);
+  };
+
+  const handleManageSubscription = async () => {
+    if (!isStandard) {
+      router.push('/subscription/plans' as never);
+      return;
+    }
+
+    setIsOpeningPortal(true);
+    try {
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        router.push({ pathname: '/(auth)/login', params: { next: '/settings' } } as never);
+        return;
+      }
+      const response = await fetch(
+        `${process.env.EXPO_PUBLIC_SUPABASE_URL}/functions/v1/create-customer-portal`,
+        { method: 'POST', headers: { Authorization: `Bearer ${session.access_token}` } },
+      );
+      const result = await response.json();
+      if (!response.ok || !result.url) throw new Error(result.error ?? '契約管理画面を開けませんでした。');
+      if (Platform.OS === 'web') window.location.href = result.url;
+      else await Linking.openURL(result.url);
+    } catch (error) {
+      Alert.alert('エラー', error instanceof Error ? error.message : '契約管理画面を開けませんでした。');
+    } finally {
+      setIsOpeningPortal(false);
+    }
   };
 
   const handleChangeProfile = () => {
@@ -32,7 +78,7 @@ export default function SettingsScreen() {
   };
 
   return (
-    <LinearGradient colors={["#1A0A2E", "#2D1B4E", "#1A0A2E"] as const} style={styles.container}>
+    <LinearGradient colors={["#FFFAF9", "#FDF1F3", "#FFFAF9"] as const} style={styles.container}>
       <ScreenContainer containerClassName="bg-transparent" edges={["top", "left", "right"]}>
         <ScrollView
           contentContainerStyle={styles.scrollContent}
@@ -79,38 +125,32 @@ export default function SettingsScreen() {
           <View style={styles.section}>
             <Text style={styles.sectionTitle}>サブスクリプション</Text>
             <View style={styles.card}>
-              {subscription.isSubscribed ? (
+              {isStandard ? (
                 <>
                   <View style={styles.subscribedBadge}>
                     <Text style={styles.subscribedBadgeEmoji}>✅</Text>
-                    <Text style={styles.subscribedBadgeText}>月額会員（¥980/月）</Text>
+                    <Text style={styles.subscribedBadgeText}>月額会員（¥330/月）</Text>
                   </View>
-                  {subscription.subscriptionStartDate && (
-                    <Text style={styles.subscriptionDate}>
-                      登録日：{new Date(subscription.subscriptionStartDate).toLocaleDateString("ja-JP")}
-                    </Text>
-                  )}
                   <TouchableOpacity
-                    style={styles.manageButton}
+                    style={[styles.manageButton, isOpeningPortal && { opacity: 0.5 }]}
                     onPress={handleManageSubscription}
+                    disabled={isOpeningPortal}
                   >
-                    <Text style={styles.manageButtonText}>サブスクリプションを管理</Text>
+                    <Text style={styles.manageButtonText}>{isOpeningPortal ? '読み込み中...' : '契約・支払い方法・解約を管理'}</Text>
                   </TouchableOpacity>
                 </>
               ) : (
                 <>
-                  {subscription.trialDaysRemaining > 0 ? (
+                  {isTrialActive ? (
                     <View style={styles.trialInfo}>
                       <Text style={styles.trialInfoEmoji}>⏱️</Text>
                       <Text style={styles.trialInfoText}>
-                        トライアル期間中（残り{subscription.trialDaysRemaining}日）
+                        トライアル期間中（残り{trialDaysLeft}日）
                       </Text>
                     </View>
                   ) : (
                     <View style={styles.trialExpired}>
-                      <Text style={styles.trialExpiredText}>
-                        トライアル期間が終了しました
-                      </Text>
+                      <Text style={styles.trialExpiredText}>無料プラン利用中</Text>
                     </View>
                   )}
                   <TouchableOpacity
@@ -118,10 +158,10 @@ export default function SettingsScreen() {
                     onPress={handleManageSubscription}
                   >
                     <LinearGradient
-                      colors={["#7B5EA7", "#9B7EC7"] as const}
+                      colors={["#E8758A", "#C45070"] as const}
                       style={styles.subscribeButtonGradient}
                     >
-                      <Text style={styles.subscribeButtonText}>月額980円で始める ✨</Text>
+                      <Text style={styles.subscribeButtonText}>月額330円で始める ✨</Text>
                     </LinearGradient>
                   </TouchableOpacity>
                 </>
@@ -167,6 +207,12 @@ export default function SettingsScreen() {
             </View>
           </View>
 
+          {isSignedIn && (
+            <TouchableOpacity style={styles.logoutButton} onPress={handleLogout}>
+              <Text style={styles.logoutButtonText}>ログアウト</Text>
+            </TouchableOpacity>
+          )}
+
           <View style={{ height: 20 }} />
         </ScrollView>
       </ScreenContainer>
@@ -185,7 +231,7 @@ const styles = StyleSheet.create({
   pageTitle: {
     fontSize: 24,
     fontWeight: "800",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     marginBottom: 24,
   },
   section: {
@@ -194,17 +240,17 @@ const styles = StyleSheet.create({
   sectionTitle: {
     fontSize: 14,
     fontWeight: "700",
-    color: "#A89BC2",
+    color: "#C45070",
     marginBottom: 10,
     letterSpacing: 1,
     textTransform: "uppercase",
   },
   card: {
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FFFFFF",
     borderRadius: 16,
     padding: 20,
     borderWidth: 1,
-    borderColor: "rgba(155,126,199,0.25)",
+    borderColor: "#F9C0CC",
     gap: 12,
   },
   infoRow: {
@@ -214,29 +260,29 @@ const styles = StyleSheet.create({
   },
   infoLabel: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#7A6A6A",
   },
   infoValue: {
     fontSize: 14,
-    color: "#F5EFE6",
+    color: "#3D1A1A",
     fontWeight: "600",
   },
   divider: {
     height: 1,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    backgroundColor: "#FDF1F3",
   },
   changeButton: {
     alignItems: "center",
     paddingVertical: 10,
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: "#FDF1F3",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "#F9C0CC",
     marginTop: 4,
   },
   changeButtonText: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#C45070",
     fontWeight: "600",
   },
   subscribedBadge: {
@@ -255,24 +301,24 @@ const styles = StyleSheet.create({
   subscribedBadgeText: {
     fontSize: 15,
     fontWeight: "700",
-    color: "#4ADE80",
+    color: "#16803A",
   },
   subscriptionDate: {
     fontSize: 13,
-    color: "#A89BC2",
+    color: "#7A6A6A",
     textAlign: "center",
   },
   manageButton: {
     alignItems: "center",
     paddingVertical: 10,
-    backgroundColor: "rgba(255,255,255,0.06)",
+    backgroundColor: "#FDF1F3",
     borderRadius: 12,
     borderWidth: 1,
-    borderColor: "rgba(255,255,255,0.1)",
+    borderColor: "#F9C0CC",
   },
   manageButtonText: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#C45070",
     fontWeight: "600",
   },
   trialInfo: {
@@ -317,7 +363,7 @@ const styles = StyleSheet.create({
   subscribeButtonText: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#FFFFFF",
   },
   appInfoHeader: {
     flexDirection: "row",
@@ -330,20 +376,20 @@ const styles = StyleSheet.create({
   appInfoTitle: {
     fontSize: 16,
     fontWeight: "700",
-    color: "#F5EFE6",
+    color: "#3D1A1A",
   },
   appInfoVersion: {
     fontSize: 13,
-    color: "#A89BC2",
+    color: "#7A6A6A",
   },
   appInfoDescription: {
     fontSize: 13,
-    color: "rgba(245,239,230,0.6)",
+    color: "#7A6A6A",
     lineHeight: 22,
   },
   copyrightText: {
     fontSize: 12,
-    color: "rgba(245,239,230,0.4)",
+    color: "#9C8A8A",
     lineHeight: 20,
   },
   linkRow: {
@@ -354,11 +400,21 @@ const styles = StyleSheet.create({
   },
   linkRowText: {
     fontSize: 14,
-    color: "#A89BC2",
+    color: "#C45070",
     fontWeight: "500",
   },
   linkRowArrow: {
     fontSize: 18,
-    color: "#A89BC2",
+    color: "#C45070",
   },
+  logoutButton: {
+    alignItems: 'center',
+    paddingVertical: 14,
+    borderRadius: 14,
+    borderWidth: 1,
+    borderColor: '#F9C0CC',
+    backgroundColor: '#FFFFFF',
+    marginBottom: 20,
+  },
+  logoutButtonText: { color: '#C45070', fontSize: 14, fontWeight: '600' },
 });

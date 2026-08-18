@@ -13,7 +13,7 @@ const TOKUTEI_ITEMS = [
   { label: '電話番号', value: '請求があり次第開示します' },
   { label: 'メールアドレス', value: 'sokeiraku@gmail.com' },
   { label: 'サービス名', value: 'むすび島' },
-  { label: '販売価格', value: 'ライトプラン：月額300円（税込）\nスタンダードプラン：月額980円（税込）' },
+  { label: '販売価格', value: '月額会員プラン：月額330円（税込）' },
   { label: '支払い方法', value: 'クレジットカード（Stripe決済）' },
   { label: 'サービス提供時期', value: '決済完了後、即時提供' },
   { label: '解約・退会', value: 'マイページからいつでも解約可能。解約後は次回請求日まで利用可能' },
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFFFF' },
   scrollContent: { padding: 20, paddingTop: 60, paddingBottom: 40 },
   title: {
-    fontSize: 20, fontWeight: 'bold', color: '#4C1D95',
+    fontSize: 20, fontWeight: 'bold', color: '#C45070',
     textAlign: 'center', marginBottom: 24,
   },
   card: {

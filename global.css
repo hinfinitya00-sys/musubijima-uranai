@@ -1,3 +1,14 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* react-native-web の ImageBackground が元画像幅を保持しても、
+   モバイル画面全体に不要な横スクロールを発生させない。 */
+html,
+body,
+#root {
+  width: 100%;
+  max-width: 100%;
+  min-height: 100%;
+  overflow-x: hidden;
+}

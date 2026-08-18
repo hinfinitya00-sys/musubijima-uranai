@@ -1,5 +1,4 @@
 import "@/global.css";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useMemo, useState } from "react";
@@ -16,18 +15,10 @@ import {
 } from "react-native-safe-area-context";
 import type { EdgeInsets, Metrics, Rect } from "react-native-safe-area-context";
 
-import { trpc, createTRPCClient } from "@/lib/trpc";
 import { initManusRuntime, subscribeSafeAreaInsets } from "@/lib/_core/manus-runtime";
 import { AppProvider } from "@/lib/app-context";
 import * as SplashScreen from "expo-splash-screen";
-import { useFonts } from "expo-font";
-
-// フォントファイルを直接参照（未使用ウェイトをバンドルから除外）
-const NotoSerifJP_500Medium = require("../node_modules/@expo-google-fonts/noto-serif-jp/500Medium/NotoSerifJP_500Medium.ttf");
-const NotoSerifJP_700Bold = require("../node_modules/@expo-google-fonts/noto-serif-jp/700Bold/NotoSerifJP_700Bold.ttf");
-const NotoSansJP_300Light = require("../node_modules/@expo-google-fonts/noto-sans-jp/300Light/NotoSansJP_300Light.ttf");
-const NotoSansJP_400Regular = require("../node_modules/@expo-google-fonts/noto-sans-jp/400Regular/NotoSansJP_400Regular.ttf");
-const NotoSansJP_500Medium = require("../node_modules/@expo-google-fonts/noto-sans-jp/500Medium/NotoSansJP_500Medium.ttf");
+import { useAppFonts } from "../hooks/use-app-fonts";
 
 // フォントのロードが終わるまでスプラッシュを保持
 SplashScreen.preventAutoHideAsync().catch(() => {});
@@ -47,13 +38,7 @@ export default function RootLayout() {
   const [frame, setFrame] = useState<Rect>(initialFrame);
 
   // Noto Serif JP（見出し）/ Noto Sans JP（本文）のロード
-  const [fontsLoaded, fontError] = useFonts({
-    NotoSerifJP_500Medium,
-    NotoSerifJP_700Bold,
-    NotoSansJP_300Light,
-    NotoSansJP_400Regular,
-    NotoSansJP_500Medium,
-  });
+  const [fontsLoaded, fontError] = useAppFonts();
 
   useEffect(() => {
     if (fontsLoaded || fontError) {
@@ -77,22 +62,6 @@ export default function RootLayout() {
     return () => unsubscribe();
   }, [handleSafeAreaUpdate]);
 
-  // Create clients once and reuse them
-  const [queryClient] = useState(
-    () =>
-      new QueryClient({
-        defaultOptions: {
-          queries: {
-            // Disable automatic refetching on window focus for mobile
-            refetchOnWindowFocus: false,
-            // Retry failed requests once
-            retry: 1,
-          },
-        },
-      }),
-  );
-  const [trpcClient] = useState(() => createTRPCClient());
-
   // Ensure minimum 8px padding for top and bottom on mobile
   const providerInitialMetrics = useMemo(() => {
     const metrics = initialWindowMetrics ?? { insets: initialInsets, frame: initialFrame };
@@ -114,8 +83,6 @@ export default function RootLayout() {
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppProvider>
-      <trpc.Provider client={trpcClient} queryClient={queryClient}>
-        <QueryClientProvider client={queryClient}>
           {/* Default to hiding native headers so raw route segments don't appear (e.g. "(tabs)", "products/[id]"). */}
           {/* If a screen needs the native header, explicitly enable it and set a human title via Stack.Screen options. */}
           {/* in order for ios apps tab switching to work properly, use presentation: "fullScreenModal" for login page, whenever you decide to use presentation: "modal*/}
@@ -126,8 +93,6 @@ export default function RootLayout() {
             <Stack.Screen name="subscription" options={{ presentation: "fullScreenModal" }} />
           </Stack>
           <StatusBar style="auto" />
-        </QueryClientProvider>
-      </trpc.Provider>
       </AppProvider>
     </GestureHandlerRootView>
   );

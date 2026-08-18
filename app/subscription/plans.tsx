@@ -13,7 +13,6 @@ import * as Linking from 'expo-linking';
 import { supabase } from '@/lib/supabase';
 
 const SUPABASE_URL = process.env.EXPO_PUBLIC_SUPABASE_URL!;
-const PRICE_ID = process.env.EXPO_PUBLIC_STRIPE_PRICE_ID ?? 'price_1TfVDg2IxNJHi9mCMfVQSHdT';
 
 // むすび島パレット
 const Colors = {
@@ -38,22 +37,27 @@ const FEATURES: FeatureRow[] = [
   { label: '歌みくじ', enabled: true },
 ];
 
-const PAYMENT_METHODS = ['💳 クレジットカード', '🍎 Apple Pay', 'G Google Pay'];
+const PAYMENT_METHODS = ['💳 クレジットカード', 'Link'];
 
 export default function PlansScreen() {
   const [currentPlan, setCurrentPlan] = useState('free');
   const [isLoading, setIsLoading] = useState(false);
+  const [isPlanLoading, setIsPlanLoading] = useState(true);
 
   useEffect(() => {
     const loadCurrentPlan = async () => {
       const { data: { session } } = await supabase.auth.getSession();
-      if (session) {
-        const { data } = await supabase
-          .from('profiles')
-          .select('plan_type')
-          .eq('id', session.user.id)
-          .single();
-        if (data?.plan_type) setCurrentPlan(data.plan_type);
+      try {
+        if (session) {
+          const { data } = await supabase
+            .from('profiles')
+            .select('plan_type')
+            .eq('id', session.user.id)
+            .single();
+          if (data?.plan_type) setCurrentPlan(data.plan_type);
+        }
+      } finally {
+        setIsPlanLoading(false);
       }
     };
     loadCurrentPlan();
@@ -63,7 +67,10 @@ export default function PlansScreen() {
     const { data: { session } } = await supabase.auth.getSession();
 
     if (!session) {
-      router.push('/(auth)/login' as never);
+      router.push({
+        pathname: '/(auth)/login',
+        params: { next: '/subscription/plans' },
+      } as never);
       return;
     }
 
@@ -77,17 +84,13 @@ export default function PlansScreen() {
             'Content-Type': 'application/json',
             'Authorization': `Bearer ${session.access_token}`,
           },
-          body: JSON.stringify({
-            priceId: PRICE_ID,
-            userId: session.user.id,
-            email: session.user.email,
-          }),
+          body: JSON.stringify({}),
         }
       );
 
       const { url, error } = await response.json();
 
-      if (error) throw new Error(error);
+      if (!response.ok || error) throw new Error(error ?? '決済の開始に失敗しました。');
 
       if (url) {
         if (Platform.OS === 'web') {
@@ -136,13 +139,13 @@ export default function PlansScreen() {
         </View>
 
         <TouchableOpacity
-          style={[styles.subscribeButton, (isLoading || isSubscribed) && styles.buttonDisabled]}
+          style={[styles.subscribeButton, (isLoading || isPlanLoading || isSubscribed) && styles.buttonDisabled]}
           onPress={handleSubscribe}
-          disabled={isLoading || isSubscribed}
+          disabled={isLoading || isPlanLoading || isSubscribed}
           activeOpacity={0.85}
         >
           <Text style={styles.subscribeButtonText}>
-            {isSubscribed ? 'ご利用中です' : isLoading ? '処理中...' : '会員登録する'}
+            {isSubscribed ? 'ご利用中です' : isLoading || isPlanLoading ? '確認中...' : '会員登録する'}
           </Text>
         </TouchableOpacity>
 

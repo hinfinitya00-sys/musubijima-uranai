@@ -25,7 +25,7 @@ export function PlanGate({ locked, children }: PlanGateProps) {
           activeOpacity={0.8}
         >
           <LinearGradient
-            colors={['#4C1D95', '#6D28D9']}
+            colors={['#E8758A', '#C45070']}
             style={styles.buttonGradient}
           >
             <Text style={styles.buttonText}>プランを見る</Text>
@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
   },
   lockText: {
     fontSize: 14,
-    color: '#4C1D95',
+    color: '#C45070',
     fontWeight: '500',
     marginBottom: 12,
   },
