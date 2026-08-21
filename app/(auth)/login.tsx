@@ -14,6 +14,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import * as Linking from 'expo-linking';
 
+const isGoogleAuthEnabled = process.env.EXPO_PUBLIC_GOOGLE_AUTH_ENABLED === 'true';
+
 export default function LoginScreen() {
   const { next } = useLocalSearchParams<{ next?: string }>();
   const [email, setEmail] = useState('');
@@ -144,22 +146,24 @@ export default function LoginScreen() {
           <Text style={styles.registerLink}>初めての方は新規登録へ</Text>
         </TouchableOpacity>
 
-        {/* Divider */}
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>または</Text>
-          <View style={styles.dividerLine} />
-        </View>
+        {isGoogleAuthEnabled && (
+          <>
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>または</Text>
+              <View style={styles.dividerLine} />
+            </View>
 
-        {/* Google OAuth */}
-        <TouchableOpacity
-          style={[styles.googleButton, isLoading && styles.buttonDisabled]}
-          onPress={handleGoogleLogin}
-          disabled={isLoading}
-        >
-          <Text style={styles.googleIcon}>G</Text>
-          <Text style={styles.googleText}>Googleでログイン</Text>
-        </TouchableOpacity>
+            <TouchableOpacity
+              style={[styles.googleButton, isLoading && styles.buttonDisabled]}
+              onPress={handleGoogleLogin}
+              disabled={isLoading}
+            >
+              <Text style={styles.googleIcon}>G</Text>
+              <Text style={styles.googleText}>Googleでログイン</Text>
+            </TouchableOpacity>
+          </>
+        )}
 
         <TouchableOpacity onPress={() => router.push('/(tabs)' as never)}>
           <Text style={styles.skipText}>ログインせずに使う</Text>

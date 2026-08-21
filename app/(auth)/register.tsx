@@ -15,6 +15,8 @@ import { LinearGradient } from 'expo-linear-gradient';
 import { supabase } from '@/lib/supabase';
 import * as Linking from 'expo-linking';
 
+const isGoogleAuthEnabled = process.env.EXPO_PUBLIC_GOOGLE_AUTH_ENABLED === 'true';
+
 export default function RegisterScreen() {
   const { next } = useLocalSearchParams<{ next?: string }>();
   const [name, setName] = useState('');
@@ -120,22 +122,24 @@ export default function RegisterScreen() {
         <Text style={styles.title}>むすび島に登録</Text>
         <Text style={styles.subtitle}>生年月日であなたのむすび族キャラを発見しましょう</Text>
 
-        {/* Google OAuth */}
-        <TouchableOpacity
-          style={[styles.googleButton, isLoading && styles.buttonDisabled]}
-          onPress={handleGoogleRegister}
-          disabled={isLoading}
-        >
-          <Text style={styles.googleIcon}>G</Text>
-          <Text style={styles.googleText}>Googleで登録</Text>
-        </TouchableOpacity>
+        {isGoogleAuthEnabled && (
+          <>
+            <TouchableOpacity
+              style={[styles.googleButton, isLoading && styles.buttonDisabled]}
+              onPress={handleGoogleRegister}
+              disabled={isLoading}
+            >
+              <Text style={styles.googleIcon}>G</Text>
+              <Text style={styles.googleText}>Googleで登録</Text>
+            </TouchableOpacity>
 
-        {/* Divider */}
-        <View style={styles.dividerRow}>
-          <View style={styles.dividerLine} />
-          <Text style={styles.dividerText}>またはメールで登録</Text>
-          <View style={styles.dividerLine} />
-        </View>
+            <View style={styles.dividerRow}>
+              <View style={styles.dividerLine} />
+              <Text style={styles.dividerText}>またはメールで登録</Text>
+              <View style={styles.dividerLine} />
+            </View>
+          </>
+        )}
 
         <View style={styles.inputGroup}>
           <Text style={styles.label}>お名前</Text>

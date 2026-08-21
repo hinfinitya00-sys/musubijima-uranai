@@ -45,4 +45,12 @@ describe('release guardrails', () => {
     expect(callback).toContain('exchangeCodeForSession');
     expect(callback).toContain("next.startsWith('/')");
   });
+
+  it('does not expose Google auth before the provider is configured', () => {
+    for (const file of ['app/(auth)/login.tsx', 'app/(auth)/register.tsx']) {
+      const source = read(file);
+      expect(source).toContain("process.env.EXPO_PUBLIC_GOOGLE_AUTH_ENABLED === 'true'");
+      expect(source).toContain('isGoogleAuthEnabled &&');
+    }
+  });
 });
