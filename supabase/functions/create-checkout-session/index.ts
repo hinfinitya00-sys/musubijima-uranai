@@ -33,8 +33,8 @@ Deno.serve(async (req) => {
     const { data: { user }, error: authError } = await supabase.auth.getUser(token);
     if (authError || !user) return json({ error: 'ログイン情報を確認できませんでした。' }, 401);
 
-    const priceId = Deno.env.get('STRIPE_PRICE_ID');
-    if (!priceId) throw new Error('STRIPE_PRICE_ID is not configured');
+    const priceId = Deno.env.get('STRIPE_PRICE_STANDARD');
+    if (!priceId) throw new Error('STRIPE_PRICE_STANDARD is not configured');
 
     const { data: profile, error: profileError } = await supabase
       .from('profiles')

@@ -16,7 +16,7 @@ describe('release guardrails', () => {
   it('derives checkout identity and price on the server', () => {
     const checkout = read('supabase/functions/create-checkout-session/index.ts');
     expect(checkout).toContain('supabase.auth.getUser(token)');
-    expect(checkout).toContain("Deno.env.get('STRIPE_PRICE_ID')");
+    expect(checkout).toContain("Deno.env.get('STRIPE_PRICE_STANDARD')");
     expect(checkout).not.toContain('const { priceId, userId, email }');
     expect(checkout).toContain('hasLiveSubscription');
   });

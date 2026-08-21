@@ -2,7 +2,16 @@
 
 ## 判定
 
-現時点は **条件付きリリース保留**。フロントエンドの修正と回帰試験は合格しているが、Supabase本番へのDB migration／Edge Functions反映と、330円の実決済試験が未完了。未完了のまま正式リリース判定は出さない。
+現時点は **条件付きリリース保留**。フロントエンドの修正と回帰試験、Supabase本番DB migration／Edge Functions反映は合格しているが、330円の実決済試験と本番フロントの最終回帰が未完了。未完了のまま正式リリース判定は出さない。
+
+## 2026-08-20〜21 本番基盤検証
+
+- Supabaseプロジェクトが `INACTIVE` で、APIドメインもDNS `NXDOMAIN` だったことを検出。オーナー操作で復元し、`ACTIVE_HEALTHY` とAPI応答を確認した。
+- migration `20260818000100_profiles_subscription_security.sql` をドライラン後に本番適用した。
+- `create-checkout-session` v4、`stripe-webhook` v3、`create-customer-portal` v1 を本番配備した。
+- 本番異常系スモーク試験：未認証Checkout 401、未認証Customer Portal 401、署名なしWebhook 400を確認した。
+- 本番登録・実決済試験前に、型検査、32件のVitest、本番Webビルド34ルートを再実行し合格した。
+- Free Planの休止は公開サービスに不適合。正式公開前にPro化または休止防止を必須とする。
 
 ## 自動試験
 
@@ -54,12 +63,10 @@
 
 ## 本番反映前の必須作業
 
-1. `supabase login` を完了する。
-2. migration `20260818000100_profiles_subscription_security.sql` を本番DBへ反映する。
-3. `STRIPE_PRICE_ID`、`STRIPE_SECRET_KEY`、`STRIPE_WEBHOOK_SECRET` を確認する。
-4. `create-checkout-session`、`stripe-webhook`、`create-customer-portal` をデプロイする。
-5. Stripe Webhook購読イベントをコードの5系統と一致させる。
-6. 新規メール登録、Google登録、ログイン復帰、330円実決済、有料解放、Customer Portal解約、解約後状態を実機確認する。
+1. Stripe Dashboardで `STRIPE_PRICE_STANDARD` が税込330円／月であることをCheckout表示と照合する。
+2. Stripe Webhook購読イベントをコードの5系統と一致させる。
+3. 新規メール登録、Google登録、ログイン復帰、330円実決済、有料解放、Customer Portal解約、解約後状態を実機確認する。
+4. Supabaseを公開運用向けプランへ変更し、自動休止を防ぐ。
 7. 上記が合格後にのみdevelopをpushし、GitHub Pages本番を再検査する。
 
 ## 実決済試験の合格条件
