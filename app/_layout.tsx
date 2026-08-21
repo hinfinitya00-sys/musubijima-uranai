@@ -26,10 +26,6 @@ SplashScreen.preventAutoHideAsync().catch(() => {});
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
 
-export const unstable_settings = {
-  anchor: "(tabs)",
-};
-
 export default function RootLayout() {
   // 静的HTML生成時とブラウザ初回描画時の値を一致させる。
   // WebでinitialWindowMetricsを直接使うと実画面サイズだけがクライアント側へ入り、

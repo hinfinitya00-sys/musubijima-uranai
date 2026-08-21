@@ -60,4 +60,9 @@ describe('release guardrails', () => {
     expect(layout).toContain('? DEFAULT_WEB_INSETS');
     expect(layout).toContain('? DEFAULT_WEB_FRAME');
   });
+
+  it('does not render the tab home behind every direct route', () => {
+    const layout = read('app/_layout.tsx');
+    expect(layout).not.toContain('anchor: "(tabs)"');
+  });
 });

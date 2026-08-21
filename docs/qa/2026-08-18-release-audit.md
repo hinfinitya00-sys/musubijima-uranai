@@ -16,6 +16,7 @@
 - Site URLをGitHub Pages本番URLへ変更し、`/oauth/callback` を許可Redirect URLへ追加した。
 - Google OAuth資格情報が未設定の間は壊れたGoogleボタンを表示しない機能フラグを追加。再検証は型検査、33件のVitest、本番Webビルド34ルートに合格した。
 - 初回本番確認で全ルートにReact hydrationエラー `#419` を検出。WebのSafe Area初期値をSSR／ブラウザで0固定し、描画後に更新するよう修正。型検査、34件のVitest、本番Webビルド34ルートに合格した。
+- Rootのtab anchorがログイン・占い直リンクの背面にもホーム画面を描画していたため撤去。静的ルートは約8KBずつ縮小し、不要な背景画面・画像読込を除去。型検査、35件のVitest、本番Webビルド34ルートに合格した。
 
 ## 自動試験
 
