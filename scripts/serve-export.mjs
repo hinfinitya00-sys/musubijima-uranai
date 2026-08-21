@@ -3,7 +3,7 @@ import { createServer } from 'node:http';
 import { extname, join, normalize } from 'node:path';
 
 const port = Number(process.env.PORT ?? 4173);
-const root = join(process.cwd(), 'dist');
+const root = process.env.STATIC_ROOT ?? join(process.cwd(), 'dist');
 const basePath = '/musubijima-uranai';
 const contentTypes = {
   '.css': 'text/css; charset=utf-8',
@@ -35,6 +35,7 @@ createServer((req, res) => {
     join(root, safeRelative),
     join(root, `${safeRelative}.html`),
     join(root, safeRelative, 'index.html'),
+    ...(process.env.SPA_FALLBACK === '1' ? [join(root, 'index.html')] : []),
   ];
   const file = candidates.find((candidate) => existsSync(candidate) && statSync(candidate).isFile());
   if (!file) {
