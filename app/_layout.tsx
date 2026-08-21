@@ -31,8 +31,15 @@ export const unstable_settings = {
 };
 
 export default function RootLayout() {
-  const initialInsets = initialWindowMetrics?.insets ?? DEFAULT_WEB_INSETS;
-  const initialFrame = initialWindowMetrics?.frame ?? DEFAULT_WEB_FRAME;
+  // 静的HTML生成時とブラウザ初回描画時の値を一致させる。
+  // WebでinitialWindowMetricsを直接使うと実画面サイズだけがクライアント側へ入り、
+  // 全ルートでHydrationが失敗するため、初回は0固定してuseEffectで更新する。
+  const initialInsets = Platform.OS === "web"
+    ? DEFAULT_WEB_INSETS
+    : initialWindowMetrics?.insets ?? DEFAULT_WEB_INSETS;
+  const initialFrame = Platform.OS === "web"
+    ? DEFAULT_WEB_FRAME
+    : initialWindowMetrics?.frame ?? DEFAULT_WEB_FRAME;
 
   const [insets, setInsets] = useState<EdgeInsets>(initialInsets);
   const [frame, setFrame] = useState<Rect>(initialFrame);
@@ -64,7 +71,9 @@ export default function RootLayout() {
 
   // Ensure minimum 8px padding for top and bottom on mobile
   const providerInitialMetrics = useMemo(() => {
-    const metrics = initialWindowMetrics ?? { insets: initialInsets, frame: initialFrame };
+    const metrics = Platform.OS === "web"
+      ? { insets: initialInsets, frame: initialFrame }
+      : initialWindowMetrics ?? { insets: initialInsets, frame: initialFrame };
     return {
       ...metrics,
       insets: {

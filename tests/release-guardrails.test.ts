@@ -53,4 +53,11 @@ describe('release guardrails', () => {
       expect(source).toContain('isGoogleAuthEnabled &&');
     }
   });
+
+  it('keeps web safe-area metrics deterministic during hydration', () => {
+    const layout = read('app/_layout.tsx');
+    expect(layout).toContain('Platform.OS === "web"');
+    expect(layout).toContain('? DEFAULT_WEB_INSETS');
+    expect(layout).toContain('? DEFAULT_WEB_FRAME');
+  });
 });
