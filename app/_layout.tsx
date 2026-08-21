@@ -1,5 +1,5 @@
 import "@/global.css";
-import { Stack } from "expo-router";
+import { Slot, Stack } from "expo-router";
 import { StatusBar } from "expo-status-bar";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
@@ -85,18 +85,21 @@ export default function RootLayout() {
     return null;
   }
 
+  const navigation = Platform.OS === "web" ? (
+    <Slot />
+  ) : (
+    <Stack screenOptions={{ headerShown: false }}>
+      <Stack.Screen name="(tabs)" />
+      <Stack.Screen name="oauth/callback" />
+      <Stack.Screen name="card-reading" options={{ presentation: "fullScreenModal" }} />
+      <Stack.Screen name="subscription" options={{ presentation: "fullScreenModal" }} />
+    </Stack>
+  );
+
   const content = (
     <GestureHandlerRootView style={{ flex: 1 }}>
       <AppProvider>
-          {/* Default to hiding native headers so raw route segments don't appear (e.g. "(tabs)", "products/[id]"). */}
-          {/* If a screen needs the native header, explicitly enable it and set a human title via Stack.Screen options. */}
-          {/* in order for ios apps tab switching to work properly, use presentation: "fullScreenModal" for login page, whenever you decide to use presentation: "modal*/}
-          <Stack screenOptions={{ headerShown: false }}>
-            <Stack.Screen name="(tabs)" />
-            <Stack.Screen name="oauth/callback" />
-            <Stack.Screen name="card-reading" options={{ presentation: "fullScreenModal" }} />
-            <Stack.Screen name="subscription" options={{ presentation: "fullScreenModal" }} />
-          </Stack>
+          {navigation}
           <StatusBar style="auto" />
       </AppProvider>
     </GestureHandlerRootView>

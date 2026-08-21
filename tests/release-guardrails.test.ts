@@ -65,4 +65,10 @@ describe('release guardrails', () => {
     const layout = read('app/_layout.tsx');
     expect(layout).not.toContain('anchor: "(tabs)"');
   });
+
+  it('uses a synchronous root slot for static web routes', () => {
+    const layout = read('app/_layout.tsx');
+    expect(layout).toContain('Platform.OS === "web" ? (');
+    expect(layout).toContain('<Slot />');
+  });
 });
