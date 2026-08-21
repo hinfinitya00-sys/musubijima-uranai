@@ -20,8 +20,11 @@ import { AppProvider } from "@/lib/app-context";
 import * as SplashScreen from "expo-splash-screen";
 import { useAppFonts } from "../hooks/use-app-fonts";
 
-// フォントのロードが終わるまでスプラッシュを保持
-SplashScreen.preventAutoHideAsync().catch(() => {});
+// Webは静的HTMLから描画するため、ネイティブ専用のスプラッシュ制御を実行しない。
+// SSR中に起動制御を走らせるとSuspense境界が完了せず、hydrationエラーになる。
+if (Platform.OS !== "web") {
+  SplashScreen.preventAutoHideAsync().catch(() => {});
+}
 
 const DEFAULT_WEB_INSETS: EdgeInsets = { top: 0, right: 0, bottom: 0, left: 0 };
 const DEFAULT_WEB_FRAME: Rect = { x: 0, y: 0, width: 0, height: 0 };
@@ -44,7 +47,7 @@ export default function RootLayout() {
   const [fontsLoaded, fontError] = useAppFonts();
 
   useEffect(() => {
-    if (fontsLoaded || fontError) {
+    if (Platform.OS !== "web" && (fontsLoaded || fontError)) {
       SplashScreen.hideAsync().catch(() => {});
     }
   }, [fontsLoaded, fontError]);
