@@ -251,8 +251,10 @@ const styles = StyleSheet.create({
     borderColor: '#D1D5DB',
   },
   dateRow: { flexDirection: 'row', alignItems: 'center' },
-  dateInput: { flex: 2 },
-  dateInputSmall: { flex: 1, marginLeft: 8 },
+  // TextInputはWebで内容由来の最小幅を持つため、320px端末では日付欄が
+  // 画面外へ押し出される。minWidth: 0でflex幅まで安全に縮める。
+  dateInput: { flex: 2, minWidth: 0 },
+  dateInputSmall: { flex: 1, minWidth: 0, marginLeft: 8 },
   dateSeparator: { color: '#6B7280', marginHorizontal: 4, fontSize: 14 },
   button: { marginTop: 16, borderRadius: 12, overflow: 'hidden' },
   buttonDisabled: { opacity: 0.6 },

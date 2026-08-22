@@ -18,7 +18,7 @@ export function TrialBanner() {
 
 const styles = StyleSheet.create({
   banner: {
-    backgroundColor: '#EDE9FE',
+    backgroundColor: '#FFF0F3',
     paddingVertical: 8,
     paddingHorizontal: 16,
     borderRadius: 8,
@@ -26,7 +26,7 @@ const styles = StyleSheet.create({
   },
   text: {
     fontSize: 12,
-    color: '#5B21B6',
+    color: '#C94F70',
     textAlign: 'center',
     fontWeight: '500',
   },

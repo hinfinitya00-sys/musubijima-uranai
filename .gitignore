@@ -53,6 +53,10 @@ app-example
 logs
 *.log
 
+# Playwright generated reports (release evidence screenshots are kept in artifacts/)
+test-results/
+playwright-report/
+
 # OS
 Thumbs.db
 
