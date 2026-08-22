@@ -21,6 +21,7 @@
 - 最新bundle `entry-5fb4a02b...js` の本番反映をHTTP応答と実ブラウザの両方で確認したが、React error #419は1件残存した。Webでは不要なネイティブSplashScreen起動制御を分離し、再配備後に再判定する。
 - 非圧縮の静的本番相当で#419を再現し、Expo Routerが生成するルート`Suspense`境界のSSR／初回クライアント差分であることを特定した。SplashScreen分離、Web Slot分離、React Compiler無効化比較、`expo-router`／Expo SDK 54最新パッチ比較でも残存。画面固有コードではなく静的Router境界の問題として、正式リリース判定は引き続き保留する。
 - `expo-doctor`で欠落していた`expo-asset`、重複`expo-font`、SDK 54内へ混入していたSDK 55版`expo-linear-gradient`、各Expoモジュールのパッチ不一致を検出・是正。React NavigationはExpo Router内と同版へ統一し、公式診断18/18合格を確認した。
+- 本番110件監査で、Supabaseを使う一部ルートの静的HTMLがCI上だけ空の中断済みSuspense境界になり、React error #419を出すことを再現。CIのNode 20をローカルと同じNode 24へ統一し、中断済みSSRを1件でも含むとデプロイを失敗させる`verify:static-export`を追加した。
 
 ## 自動試験
 
@@ -35,6 +36,7 @@
 | AUTO-007 | 旧価格全検索 | 実装・設定の旧価格0件 |
 | AUTO-008 | 文字化けパターン全検索 | `�`、代表的なUTF-8誤変換パターン0件 |
 | AUTO-009 | `npx expo-doctor` | 合格（18/18、ネイティブ重複・SDK不一致0） |
+| AUTO-010 | `pnpm verify:static-export` | 合格（中断済みSuspense境界0） |
 
 回帰防止テスト `tests/release-guardrails.test.ts` では、旧デモ課金の復活、クライアント指定price/userの信用、Webhookイベント不足、profiles保護不足、認証callback不足を検知する。
 

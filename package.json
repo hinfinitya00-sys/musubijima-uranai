@@ -16,6 +16,7 @@
     "format": "prettier --write .",
     "test": "vitest run tests",
     "test:e2e:visual": "playwright test e2e/release-visual-audit.spec.ts",
+    "verify:static-export": "node scripts/verify-static-export.mjs",
     "db:push": "drizzle-kit push",
     "android": "expo start --android",
     "ios": "expo start --ios",
