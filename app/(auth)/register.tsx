@@ -217,6 +217,14 @@ export default function RegisterScreen() {
           パスワード不要。メールに届くリンクで登録できます
         </Text>
 
+        <Text style={styles.consentText}>
+          登録リンクを送信すると、
+          <Text style={styles.legalLink} onPress={() => router.push('/legal/terms' as never)}>利用規約</Text>
+          と
+          <Text style={styles.legalLink} onPress={() => router.push('/legal/privacy' as never)}>プライバシーポリシー</Text>
+          に同意したものとみなされます。
+        </Text>
+
         <TouchableOpacity
           onPress={() => router.push({ pathname: '/(auth)/login', params: next ? { next } : {} } as never)}
         >
@@ -258,6 +266,8 @@ const styles = StyleSheet.create({
   dateSeparator: { color: '#6B7280', marginHorizontal: 4, fontSize: 14 },
   button: { marginTop: 16, borderRadius: 12, overflow: 'hidden' },
   buttonDisabled: { opacity: 0.6 },
+  consentText: { fontSize: 11, color: '#6B7280', textAlign: 'center', lineHeight: 18, marginBottom: 16 },
+  legalLink: { color: '#C45070', textDecorationLine: 'underline' },
   buttonGradient: { paddingVertical: 16, alignItems: 'center' },
   buttonText: { fontSize: 16, fontWeight: 'bold', color: '#FFFFFF' },
   magicLinkHint: { fontSize: 12, color: '#9CA3AF', textAlign: 'center', marginTop: 12 },

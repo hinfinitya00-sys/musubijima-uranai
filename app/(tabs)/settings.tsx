@@ -204,6 +204,16 @@ export default function SettingsScreen() {
                 <Text style={styles.linkRowText}>特定商取引法に基づく表記</Text>
                 <Text style={styles.linkRowArrow}>›</Text>
               </TouchableOpacity>
+              <View style={styles.divider} />
+              <TouchableOpacity style={styles.linkRow} onPress={() => router.push('/legal/privacy' as never)}>
+                <Text style={styles.linkRowText}>プライバシーポリシー</Text>
+                <Text style={styles.linkRowArrow}>›</Text>
+              </TouchableOpacity>
+              <View style={styles.divider} />
+              <TouchableOpacity style={styles.linkRow} onPress={() => router.push('/legal/terms' as never)}>
+                <Text style={styles.linkRowText}>利用規約</Text>
+                <Text style={styles.linkRowArrow}>›</Text>
+              </TouchableOpacity>
             </View>
           </View>
 

@@ -39,15 +39,29 @@ Deno.serve(async (req) => {
     if (!data?.length) throw new Error(`Profile not found for Stripe customer ${customerId}`);
   };
 
+  // StripeはWebhookの到着順を保証しない。イベントのpayloadだけで状態を
+  // 上書きせず、Stripe上の現在値を取得してから権限を同期する。
+  const syncCurrentSubscription = async (customerId: string) => {
+    const subscriptions = await stripe.subscriptions.list({
+      customer: customerId,
+      status: 'all',
+      limit: 10,
+    });
+    const activeSubscription = subscriptions.data.find((subscription) =>
+      ['active', 'trialing'].includes(subscription.status)
+    );
+    await updateByCustomer(customerId, {
+      plan_type: activeSubscription ? 'standard' : 'free',
+      stripe_subscription_id: activeSubscription?.id ?? null,
+    });
+  };
+
   try {
     switch (event.type) {
       case 'checkout.session.completed': {
         const session = event.data.object as Stripe.Checkout.Session;
         if (!session.customer || !session.subscription) throw new Error('Checkout session is missing subscription data');
-        await updateByCustomer(session.customer as string, {
-          plan_type: 'standard',
-          stripe_subscription_id: session.subscription as string,
-        });
+        await syncCurrentSubscription(session.customer as string);
         break;
       }
 
@@ -55,28 +69,19 @@ Deno.serve(async (req) => {
       case 'customer.subscription.updated':
       case 'customer.subscription.deleted': {
         const subscription = event.data.object as Stripe.Subscription;
-        const hasAccess = ['active', 'trialing'].includes(subscription.status);
-        await updateByCustomer(subscription.customer as string, {
-          plan_type: hasAccess ? 'standard' : 'free',
-          stripe_subscription_id: subscription.status === 'canceled' ? null : subscription.id,
-        });
+        await syncCurrentSubscription(subscription.customer as string);
         break;
       }
 
       case 'invoice.paid': {
         const invoice = event.data.object as Stripe.Invoice;
-        if (invoice.customer && invoice.subscription) {
-          await updateByCustomer(invoice.customer as string, {
-            plan_type: 'standard',
-            stripe_subscription_id: invoice.subscription as string,
-          });
-        }
+        if (invoice.customer) await syncCurrentSubscription(invoice.customer as string);
         break;
       }
 
       case 'invoice.payment_failed': {
         const invoice = event.data.object as Stripe.Invoice;
-        if (invoice.customer) await updateByCustomer(invoice.customer as string, { plan_type: 'free' });
+        if (invoice.customer) await syncCurrentSubscription(invoice.customer as string);
         break;
       }
     }

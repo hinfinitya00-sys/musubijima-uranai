@@ -28,6 +28,8 @@ describe('release guardrails', () => {
     expect(webhook).toContain("case 'customer.subscription.deleted'");
     expect(webhook).toContain("case 'invoice.paid'");
     expect(webhook).toContain("case 'invoice.payment_failed'");
+    expect(webhook).toContain('stripe.subscriptions.list');
+    expect(webhook).toContain('syncCurrentSubscription');
     expect(webhook).toContain("status: 500");
   });
 

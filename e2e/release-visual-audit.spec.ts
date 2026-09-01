@@ -16,6 +16,8 @@ const routes = [
   "/profile",
   "/hajimete",
   "/legal/tokutei",
+  "/legal/privacy",
+  "/legal/terms",
   "/oauth/callback",
   "/fortune/omikuji",
   "/fortune/mitama",

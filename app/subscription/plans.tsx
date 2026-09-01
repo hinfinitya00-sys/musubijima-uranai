@@ -116,7 +116,7 @@ export default function PlansScreen() {
   return (
     <ScrollView style={styles.container} contentContainerStyle={styles.scrollContent}>
       <View style={styles.card}>
-        <Text style={styles.header}>結び島 会員プラン</Text>
+        <Text style={styles.header}>むすび島 会員プラン</Text>
 
         <Text style={styles.price}>
           月額<Text style={styles.priceNum}>330</Text>円<Text style={styles.priceTax}>（税込）</Text>
@@ -152,6 +152,17 @@ export default function PlansScreen() {
         <TouchableOpacity style={styles.freeLink} onPress={handleFreePlan} activeOpacity={0.7}>
           <Text style={styles.freeLinkText}>このまま無料で使う</Text>
         </TouchableOpacity>
+
+        <Text style={styles.renewalNote}>
+          月額330円（税込）の自動更新です。設定からいつでも解約でき、解約後も次回請求日前日まで利用できます。
+        </Text>
+        <View style={styles.legalLinks}>
+          <Text style={styles.legalLink} onPress={() => router.push('/legal/terms' as never)}>利用規約</Text>
+          <Text style={styles.legalSeparator}>・</Text>
+          <Text style={styles.legalLink} onPress={() => router.push('/legal/privacy' as never)}>プライバシーポリシー</Text>
+          <Text style={styles.legalSeparator}>・</Text>
+          <Text style={styles.legalLink} onPress={() => router.push('/legal/tokutei' as never)}>特商法表記</Text>
+        </View>
       </View>
     </ScrollView>
   );
@@ -249,4 +260,8 @@ const styles = StyleSheet.create({
     color: '#9C8A8A',
     textDecorationLine: 'underline',
   },
+  renewalNote: { fontSize: 11, color: '#6B7280', textAlign: 'center', lineHeight: 18, marginTop: 12 },
+  legalLinks: { flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center', marginTop: 8 },
+  legalLink: { fontSize: 11, color: Colors.primaryDark, textDecorationLine: 'underline' },
+  legalSeparator: { fontSize: 11, color: '#9C8A8A', marginHorizontal: 3 },
 });
