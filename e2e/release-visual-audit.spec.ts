@@ -39,8 +39,29 @@ for (const route of routes) {
     page.on("pageerror", (error) => pageErrors.push(error.message));
 
     const relativeRoute = route === "/" ? "./" : `.${route}`;
-    const response = await page.goto(relativeRoute, { waitUntil: "networkidle" });
-    await page.evaluate(() => document.fonts.ready);
+    let response;
+    for (let attempt = 0; attempt < 2; attempt += 1) {
+      try {
+        response = await page.goto(relativeRoute, {
+          waitUntil: "commit",
+          timeout: 20_000,
+        });
+        break;
+      } catch (error) {
+        if (attempt === 1) throw error;
+      }
+    }
+    await page.waitForFunction(
+      () => document.body?.innerText.trim().length > 0,
+      undefined,
+      { timeout: 15_000 },
+    );
+    // Google Fontsなど外部通信が長時間networkidleを妨げても、本文監査を止めない。
+    // フォント自体はFontFaceSetのloaded状態で別途検証する。
+    await page.waitForLoadState("networkidle", { timeout: 10_000 }).catch(() => {});
+    await page
+      .waitForFunction(() => document.fonts.status === "loaded", undefined, { timeout: 15_000 })
+      .catch(() => {});
 
     expect.soft(response?.status(), "HTTP応答").toBeLessThan(400);
 

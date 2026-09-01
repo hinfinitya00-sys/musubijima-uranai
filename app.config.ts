@@ -83,7 +83,8 @@ const config: ExpoConfig = {
   web: {
     bundler: "metro",
     output: "static",
-    favicon: "https://d2xsxph8kpxj0f.cloudfront.net/310519663461903953/jt3aebbKf6VPyyB8W9VSJZ/favicon_1cbfe645.png",
+    // 公開ビルドが外部CDN停止の影響を受けないよう、本番と同じfaviconを同梱する。
+    favicon: "./assets/images/favicon.png",
   },
   plugins: [
     "expo-router",
