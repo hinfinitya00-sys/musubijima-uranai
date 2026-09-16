@@ -163,7 +163,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: Spacing.md,
     paddingTop: Spacing.lg,
     paddingBottom: Spacing.section,
-    maxWidth: 600,
+    maxWidth: 760,
     width: '100%',
     alignSelf: 'center',
   },

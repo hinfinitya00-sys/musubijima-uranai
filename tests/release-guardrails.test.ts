@@ -33,6 +33,20 @@ describe('release guardrails', () => {
     expect(webhook).toContain("status: 500");
   });
 
+  it('keeps the requested fortunes free and gates only premium continuations', () => {
+    const gate = read('hooks/usePlanGate.ts');
+    const omikuji = read('app/fortune/omikuji.tsx');
+    const membershipContinuation = read('components/MembershipContinuation.tsx');
+    expect(gate).toContain('omikuji: true');
+    expect(gate).toContain('musubian: true');
+    expect(gate).toContain('utamikuji: true');
+    expect(omikuji).not.toContain('usePlanGate');
+    expect(membershipContinuation).toContain('この続きは会員限定です。');
+    for (const file of ['app/fortune/mitama.tsx', 'app/fortune/life-rhythm.tsx', 'app/fortune/negative-god.tsx']) {
+      expect(read(file)).toContain('<MembershipContinuation locked={isFree}>');
+    }
+  });
+
   it('creates a profile for every authenticated user and protects billing fields', () => {
     const migration = read('supabase/migrations/20260818000100_profiles_subscription_security.sql');
     expect(migration).toContain('create trigger on_auth_user_created');

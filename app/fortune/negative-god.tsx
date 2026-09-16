@@ -6,6 +6,8 @@ import {
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { fetchOverlay } from '../../lib/cms';
+import { usePlanGate } from '../../hooks/usePlanGate';
+import { MembershipContinuation } from '../../components/MembershipContinuation';
 
 function reduceToRange(n: number, max: number): number {
   let num = Math.abs(n);
@@ -232,6 +234,7 @@ const NEGATIVE_GODS = [
 type Phase = 'intro' | 'input' | 'result';
 
 export default function NegativeGodScreen() {
+  const { isFree } = usePlanGate();
   const { width } = useWindowDimensions();
   const [phase, setPhase] = useState<Phase>('intro');
   const [birthYear, setBirthYear] = useState('');
@@ -393,21 +396,23 @@ export default function NegativeGodScreen() {
               <Text style={styles.negCardTag}>ネガティブ神</Text>
               <Text style={styles.negCardName}>【{result.name}】</Text>
             </View>
-            <Text style={styles.negCardDesc}>{result.negDesc}</Text>
+            <Text style={styles.negCardDesc} numberOfLines={isFree ? 2 : undefined}>{result.negDesc}</Text>
           </View>
 
-          <View style={styles.guardianCard}>
-            <View style={styles.guardianCardHeader}>
-              <Text style={styles.guardianCardTag}>エジプト守護神</Text>
-              <Text style={styles.guardianCardName}>【{result.guardianName}】</Text>
+          <MembershipContinuation locked={isFree}>
+            <View style={styles.guardianCard}>
+              <View style={styles.guardianCardHeader}>
+                <Text style={styles.guardianCardTag}>エジプト守護神</Text>
+                <Text style={styles.guardianCardName}>【{result.guardianName}】</Text>
+              </View>
+              <Text style={styles.guardianCardDesc}>{result.guardianDesc}</Text>
             </View>
-            <Text style={styles.guardianCardDesc}>{result.guardianDesc}</Text>
-          </View>
 
-          <View style={styles.handleCard}>
-            <Text style={styles.handleTitle}>✦ 対処法 ✦</Text>
-            <Text style={styles.handleText}>{result.handle}</Text>
-          </View>
+            <View style={styles.handleCard}>
+              <Text style={styles.handleTitle}>✦ 対処法 ✦</Text>
+              <Text style={styles.handleText}>{result.handle}</Text>
+            </View>
+          </MembershipContinuation>
 
           <TouchableOpacity style={styles.resetButton} onPress={handleReset} activeOpacity={0.85}>
             <Text style={styles.resetButtonText}>最初に戻る</Text>
@@ -420,7 +425,7 @@ export default function NegativeGodScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1, backgroundColor: '#FFFAF9' },
-  scrollContent: { padding: 20, paddingTop: 48, paddingBottom: 60, alignItems: 'center', maxWidth: 600, alignSelf: 'center' as any, width: '100%' },
+  scrollContent: { padding: 20, paddingTop: 48, paddingBottom: 60, alignItems: 'center', maxWidth: 760, alignSelf: 'center' as any, width: '100%' },
 
   introHeader: { alignItems: 'center', marginBottom: 24 },
   introTitle: { fontSize: 26, fontWeight: '800', color: '#3D1A1A', textAlign: 'center', lineHeight: 36, letterSpacing: 1 },

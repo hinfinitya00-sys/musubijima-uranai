@@ -29,12 +29,9 @@ interface FeatureRow {
 }
 
 const FEATURES: FeatureRow[] = [
-  { label: '導カード（毎日）', enabled: true },
-  { label: 'むすび族占い', enabled: true },
-  { label: '今年の運勢（9年全部）', enabled: true },
-  { label: 'み・たまカード（毎日）', enabled: true },
-  { label: 'ネガティブ神占い', enabled: true },
-  { label: '歌みくじ', enabled: true },
+  { label: 'み・たまカードの全文', enabled: true },
+  { label: '今年の運勢の全文', enabled: true },
+  { label: 'ネガティブ神・守護神・対処法の全文', enabled: true },
 ];
 
 const PAYMENT_METHODS = ['💳 クレジットカード', 'Link'];
@@ -122,6 +119,7 @@ export default function PlansScreen() {
           月額<Text style={styles.priceNum}>330</Text>円<Text style={styles.priceTax}>（税込）</Text>
         </Text>
         <Text style={styles.priceSub}>1日わずか11円</Text>
+        <Text style={styles.freeContentNote}>導カード・結び族・歌みくじは無料で全文楽しめます</Text>
 
         <View style={styles.paymentRow}>
           {PAYMENT_METHODS.map((m) => (
@@ -211,6 +209,7 @@ const styles = StyleSheet.create({
     marginTop: 4,
     marginBottom: 20,
   },
+  freeContentNote: { fontSize: 12, color: Colors.ink, textAlign: 'center', lineHeight: 19, marginBottom: 16 },
 
   paymentRow: {
     flexDirection: 'row',

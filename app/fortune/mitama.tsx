@@ -20,6 +20,7 @@ import {
 } from '../../constants/mitama-cards';
 import type { MitamaCard } from '../../constants/mitama-cards';
 import { fetchOverlay } from '../../lib/cms';
+import { MembershipContinuation } from '../../components/MembershipContinuation';
 
 const MITAMA_INTRO = `み・たまカードは、今の悩みや迷いの奥にある「本当の自分の声」に気づくためのカードです。
 私たちは日々の生活の中で、知らず知らずのうちに心を我慢させたり、本当の気持ちにふたをしてしまうことがあります。
@@ -70,6 +71,7 @@ export default function MitamaScreen() {
       toValue: 1,
       friction: 5,
       tension: 40,
+      overshootClamping: true,
       useNativeDriver: true,
     }).start();
   };
@@ -168,20 +170,22 @@ export default function MitamaScreen() {
               {/* 4セクションを枠分けで表示 */}
               <View style={styles.block}>
                 <Text style={styles.blockTitle}>〈み・たまの導き〉</Text>
-                <Text style={styles.blockBody}>{selectedCard.guidance}</Text>
+                <Text style={styles.blockBody} numberOfLines={isFree ? 2 : undefined}>{selectedCard.guidance}</Text>
               </View>
-              <View style={styles.block}>
-                <Text style={styles.blockTitle}>〈言霊のひらき〉</Text>
-                <Text style={styles.blockBody}>{selectedCard.kotodamaOpen}</Text>
-              </View>
-              <View style={styles.block}>
-                <Text style={styles.blockTitle}>〈み・たまからの言葉〉</Text>
-                <Text style={styles.blockBody}>{selectedCard.message}</Text>
-              </View>
-              <View style={[styles.block, styles.blockKey]}>
-                <Text style={styles.blockTitle}>〈ひらく鍵〉</Text>
-                <Text style={styles.blockBody}>{selectedCard.keyQuestion}</Text>
-              </View>
+              <MembershipContinuation locked={isFree}>
+                <View style={styles.block}>
+                  <Text style={styles.blockTitle}>〈言霊のひらき〉</Text>
+                  <Text style={styles.blockBody}>{selectedCard.kotodamaOpen}</Text>
+                </View>
+                <View style={styles.block}>
+                  <Text style={styles.blockTitle}>〈み・たまからの言葉〉</Text>
+                  <Text style={styles.blockBody}>{selectedCard.message}</Text>
+                </View>
+                <View style={[styles.block, styles.blockKey]}>
+                  <Text style={styles.blockTitle}>〈ひらく鍵〉</Text>
+                  <Text style={styles.blockBody}>{selectedCard.keyQuestion}</Text>
+                </View>
+              </MembershipContinuation>
             </View>
 
             {/* Share Buttons */}
@@ -261,7 +265,7 @@ const styles = StyleSheet.create({
     paddingTop: 32,
     paddingBottom: 40,
     alignItems: 'center',
-    maxWidth: 600,
+    maxWidth: 760,
     width: '100%',
     alignSelf: 'center',
   },
@@ -334,7 +338,7 @@ const styles = StyleSheet.create({
   },
   cardContainer: {
     width: '100%',
-    maxWidth: 560,
+    maxWidth: 720,
     backgroundColor: '#FFFFFF',
     borderRadius: 20,
     padding: 16,

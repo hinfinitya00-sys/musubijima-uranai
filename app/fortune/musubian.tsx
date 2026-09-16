@@ -250,7 +250,7 @@ export default function MusubianScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { paddingBottom: 80, paddingTop: 32, paddingHorizontal: 20, maxWidth: 600, width: '100%', alignSelf: 'center' },
+  scrollContent: { paddingBottom: 80, paddingTop: 32, paddingHorizontal: 20, maxWidth: 760, width: '100%', alignSelf: 'center' },
 
   introWrap: { width: '100%' },
   header: { alignItems: 'center', marginBottom: 24 },

@@ -20,6 +20,8 @@ import {
 } from '@/constants/year-fortune';
 import type { YearFortune } from '@/constants/year-fortune';
 import { fetchOverlay } from '@/lib/cms';
+import { usePlanGate } from '@/hooks/usePlanGate';
+import { MembershipContinuation } from '@/components/MembershipContinuation';
 
 const months = Array.from({ length: 12 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}月` }));
 const days = Array.from({ length: 31 }, (_, i) => ({ value: String(i + 1), label: `${i + 1}日` }));
@@ -79,6 +81,7 @@ function SectionBlock({ text }: { text: string }) {
 }
 
 export default function LifeRhythmScreen() {
+  const { isFree } = usePlanGate();
   // 今年の運勢は currentYear を自動使用するため、入力は「月・日」のみ。
   // ホーム画面から month・day が渡された場合はそれを初期値にする。
   const params = useLocalSearchParams<{ month?: string; day?: string }>();
@@ -201,23 +204,23 @@ export default function LifeRhythmScreen() {
 
             {/* 本文 */}
             <View style={styles.section}>
-              <Text style={styles.sectionBody}>{result.description}</Text>
+              <Text style={styles.sectionBody} numberOfLines={isFree ? 2 : undefined}>{result.description}</Text>
             </View>
 
-            {/* ラッキーカラー */}
-            <View style={styles.luckyCard}>
-              <Text style={styles.luckyLabel}>◆ ラッキーカラー</Text>
-              <Text style={styles.luckyColors}>{luckyColorName}</Text>
-              {luckyColorDesc ? <Text style={styles.luckyDesc}>{luckyColorDesc}</Text> : null}
-            </View>
+            <MembershipContinuation locked={isFree}>
+              <View style={styles.luckyCard}>
+                <Text style={styles.luckyLabel}>◆ ラッキーカラー</Text>
+                <Text style={styles.luckyColors}>{luckyColorName}</Text>
+                {luckyColorDesc ? <Text style={styles.luckyDesc}>{luckyColorDesc}</Text> : null}
+              </View>
 
-            {/* 今年のテーマ・開運アクション・サイン・控えたいこと・開運空間・お守りメッセージ */}
-            <SectionBlock text={result.yearTheme} />
-            <SectionBlock text={result.actions} />
-            <SectionBlock text={result.signs} />
-            <SectionBlock text={result.caution} />
-            <SectionBlock text={result.space} />
-            <SectionBlock text={result.message} />
+              <SectionBlock text={result.yearTheme} />
+              <SectionBlock text={result.actions} />
+              <SectionBlock text={result.signs} />
+              <SectionBlock text={result.caution} />
+              <SectionBlock text={result.space} />
+              <SectionBlock text={result.message} />
+            </MembershipContinuation>
 
             {/* 戻るボタン */}
             <TouchableOpacity style={styles.retryButton} onPress={() => setResultNum(null)} activeOpacity={0.7}>
@@ -232,7 +235,7 @@ export default function LifeRhythmScreen() {
 
 const styles = StyleSheet.create({
   container: { flex: 1 },
-  scrollContent: { paddingBottom: 80, paddingTop: 32, paddingHorizontal: 20, maxWidth: 600, width: '100%', alignSelf: 'center' },
+  scrollContent: { paddingBottom: 80, paddingTop: 32, paddingHorizontal: 20, maxWidth: 760, width: '100%', alignSelf: 'center' },
 
   introWrap: { width: '100%' },
   header: { alignItems: 'center', marginBottom: 24 },

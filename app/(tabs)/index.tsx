@@ -18,13 +18,11 @@ import {
   type ViewStyle,
 } from "react-native";
 import { router } from "expo-router";
-import { LinearGradient } from "expo-linear-gradient";
 import Svg, { Path, G } from "react-native-svg";
 import * as Haptics from "expo-haptics";
 import { ScreenContainer } from "@/components/screen-container";
 import { useApp } from "@/lib/app-context";
 import { supabase } from "@/lib/supabase";
-import { usePlanGate } from "@/hooks/usePlanGate";
 import { TrialBanner } from "@/components/TrialBanner";
 import { Colors } from "@/constants/Colors";
 import { Typography, Fonts } from "@/constants/Typography";
@@ -300,8 +298,7 @@ function TodayMessage() {
 
 export default function HomeScreen() {
   const { state } = useApp();
-  const { canUse, isFree } = usePlanGate();
-  const { subscription, isLoading } = state;
+  const { isLoading } = state;
 
   const reduced = useReducedMotion();
 
@@ -323,10 +320,6 @@ export default function HomeScreen() {
   const [bDay, setBDay] = useState("");
 
   const goMusubian = () => {
-    if (!canUse.musubian) {
-      router.push("/subscription/plans" as never);
-      return;
-    }
     router.push({ pathname: "/fortune/musubian", params: { year: bYear, month: bMonth, day: bDay } } as never);
   };
 
@@ -466,7 +459,7 @@ export default function HomeScreen() {
                 </View>
               </View>
               <AnimatedPressable style={styles.pinkButton} onPress={goMusubian}>
-                <Text style={styles.pinkButtonText}>鑑定する{!canUse.musubian ? "　🔒" : ""}</Text>
+                <Text style={styles.pinkButtonText}>鑑定する</Text>
               </AnimatedPressable>
             </RevealBlock>
 
@@ -514,15 +507,9 @@ export default function HomeScreen() {
               <Text style={[styles.negDesc, styles.textCenter]}>心の影やブロックを見つめ、手放し、新しい自分へ{"\n"}生まれ変わるサポートをいたします。</Text>
               <AnimatedPressable
                 style={styles.pinkButton}
-                onPress={() => {
-                  if (!canUse.negativeGod) {
-                    router.push("/subscription/plans" as never);
-                    return;
-                  }
-                  router.push("/fortune/negative-god" as never);
-                }}
+                onPress={() => router.push("/fortune/negative-god" as never)}
               >
-                <Text style={styles.pinkButtonText}>影を知り光へ変える{isFree && !canUse.negativeGod ? "　🔒" : ""}</Text>
+                <Text style={styles.pinkButtonText}>影を知り光へ変える</Text>
               </AnimatedPressable>
             </RevealBlock>
 
@@ -535,18 +522,6 @@ export default function HomeScreen() {
                 <Text style={styles.pinkButtonText}>今日の歌を聴く</Text>
               </AnimatedPressable>
             </RevealBlock>
-
-            {/* ⑨ CTAバナー（未課金時のみ） */}
-            {!subscription.isSubscribed && (
-              <RevealBlock index={8} {...revealProps}>
-                <AnimatedPressable style={styles.ctaSection} onPress={() => router.push("/subscription/plans" as never)}>
-                  <LinearGradient colors={[Colors.primary, Colors.primaryDark]} start={{ x: 0, y: 0 }} end={{ x: 1, y: 1 }} style={styles.ctaGradient}>
-                    <Text style={styles.ctaTitle}>月額330円で全機能解放</Text>
-                    <Text style={styles.ctaSubtitle}>7日間無料トライアル実施中</Text>
-                  </LinearGradient>
-                </AnimatedPressable>
-              </RevealBlock>
-            )}
 
             {/* プロフィール */}
             <TouchableOpacity style={styles.profileBtn} onPress={() => router.push('/profile' as never)}>
@@ -810,12 +785,4 @@ const styles = StyleSheet.create({
   },
   birthSep: { ...Typography.caption, color: Colors.muted, marginHorizontal: Spacing.xs },
 
-  // ⑧ CTA
-  ctaSection: { borderRadius: 16, overflow: "hidden", shadowColor: Colors.primaryDark, shadowOpacity: 0.3, shadowRadius: 10, shadowOffset: { width: 0, height: 5 }, elevation: 3 },
-  ctaGradient: {
-    paddingVertical: Spacing.md, paddingHorizontal: Spacing.lg,
-    flexDirection: "row", alignItems: "center", justifyContent: "space-between",
-  },
-  ctaTitle: { fontFamily: Fonts.sansMedium, fontSize: 20, color: Colors.surface },
-  ctaSubtitle: { ...Typography.caption, color: Colors.bg, marginTop: Spacing.xs },
 });
