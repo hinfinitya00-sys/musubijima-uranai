@@ -1,9 +1,13 @@
 import { expect, test, type Locator, type Page, type TestInfo } from "@playwright/test";
 
 async function expectResultLayout(page: Page, testInfo: TestInfo, expectGate = false) {
+  // 本番CDNでは結果描画後に画像転送が続くため、通信中を破損扱いせずロード完了を待つ。
+  await page.waitForFunction(() => [...document.images].every((image) => image.complete), null, { timeout: 15_000 });
   const layout = await page.evaluate(() => {
     const root = document.documentElement;
-    const brokenImages = [...document.images].filter((image) => !image.complete || image.naturalWidth === 0);
+    const brokenImages = [...document.images]
+      .filter((image) => image.complete && image.naturalWidth === 0)
+      .map((image) => image.currentSrc || image.src);
     const clipped = [...document.querySelectorAll("img, input, button, a, [role='button']")]
       .filter((element) => {
         const rect = element.getBoundingClientRect();
@@ -26,10 +30,10 @@ async function expectResultLayout(page: Page, testInfo: TestInfo, expectGate = f
         const rect = element.getBoundingClientRect();
         return `${element.tagName}:${element.getAttribute("aria-label") ?? element.textContent?.trim().slice(0, 30) ?? ""} (${rect.left.toFixed(1)}..${rect.right.toFixed(1)})`;
       });
-    return { viewportWidth: window.innerWidth, scrollWidth: root.scrollWidth, brokenImages: brokenImages.length, clipped };
+    return { viewportWidth: window.innerWidth, scrollWidth: root.scrollWidth, brokenImages, clipped };
   });
   expect(layout.scrollWidth).toBeLessThanOrEqual(layout.viewportWidth + 1);
-  expect(layout.brokenImages).toBe(0);
+  expect(layout.brokenImages, layout.brokenImages.join("\n")).toHaveLength(0);
   expect(layout.clipped, layout.clipped.join("\n")).toHaveLength(0);
 
   if (expectGate) {
