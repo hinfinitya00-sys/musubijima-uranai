@@ -67,6 +67,32 @@ test("ログインと新規登録を相互に移動できる", async ({ page }) 
   await expect(page).toHaveURL(/\/login(?:\?|$)/);
 });
 
+test("ホームの導カードとみ・たま画像が主役サイズで表示される", async ({ page }, testInfo) => {
+  await page.goto("./", { waitUntil: "networkidle" });
+
+  for (const { id, aspectRatio } of [
+    { id: "#home-shirube-logo", aspectRatio: 1200 / 284 },
+    { id: "#home-mitama-logo", aspectRatio: 1434 / 436 },
+  ]) {
+    const logo = page.locator(id);
+    await logo.scrollIntoViewIfNeeded();
+    await expect(logo).toBeVisible();
+    const size = await logo.evaluate((element) => {
+      const rect = element.getBoundingClientRect();
+      const card = element.parentElement?.getBoundingClientRect();
+      return { width: rect.width, height: rect.height, cardWidth: card?.width ?? 0, viewportWidth: window.innerWidth };
+    });
+    expect(size.width).toBeGreaterThanOrEqual(size.cardWidth * 0.8);
+    expect(size.width).toBeLessThanOrEqual(size.viewportWidth);
+    expect(size.width / size.height).toBeCloseTo(aspectRatio, 1);
+    if (["mobile-390", "desktop-1440"].includes(testInfo.project.name)) {
+      await logo.locator("..").screenshot({
+        path: `artifacts/release-screenshots/${testInfo.project.name}-${id.slice(1)}-prominent.png`,
+      });
+    }
+  }
+});
+
 test("導カードは無料で全文を読める", async ({ page }, testInfo) => {
   await page.goto("./fortune/omikuji", { waitUntil: "networkidle" });
   await page.getByText("今日のカードを引く").click();

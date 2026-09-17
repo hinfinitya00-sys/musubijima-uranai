@@ -10,7 +10,7 @@ import {
   Image,
   Animated,
   TextInput,
-  Dimensions,
+  useWindowDimensions,
   Platform,
   AccessibilityInfo,
   type LayoutChangeEvent,
@@ -299,6 +299,7 @@ function TodayMessage() {
 export default function HomeScreen() {
   const { state } = useApp();
   const { isLoading } = state;
+  const { width: viewportWidth, height: viewportHeight } = useWindowDimensions();
 
   const reduced = useReducedMotion();
 
@@ -312,7 +313,7 @@ export default function HomeScreen() {
 
   // スクロールリビール用の共有スクロール量
   const scrollY = useRef(new Animated.Value(0)).current;
-  const winH = Dimensions.get("window").height || 800;
+  const winH = viewportHeight || 800;
 
   // 結び族セクションの生年月日フォーム
   const [bYear, setBYear] = useState("");
@@ -336,9 +337,10 @@ export default function HomeScreen() {
   const weekdays = ["日", "月", "火", "水", "木", "金", "土"];
   const weekday = weekdays[today.getDay()];
 
-  const winW = Math.min(Dimensions.get("window").width || 375, 600);
+  const winW = Math.min(viewportWidth || 375, 600);
   const hisaeW = winW * 0.44;
   const hisaeH = hisaeW * 1.15;
+  const homeCardImageWidth = Math.max(winW - (Spacing.md * 2) - (Spacing.lg * 2), 0);
 
   const revealProps = { scrollY, winH, reduced };
 
@@ -432,7 +434,14 @@ export default function HomeScreen() {
 
             {/* ③ 導カード — sectionPink・左寄せ／画像上 */}
             <RevealBlock index={2} {...revealProps} style={[styles.card, { backgroundColor: Colors.sectionPink }]}>
-              <Image source={require("../../assets/site/logo-shirube.jpg")} style={styles.sideImage} resizeMode="contain" />
+              <Image
+                source={require("../../assets/site/logo-shirube.jpg")}
+                style={[styles.shirubeLogo, { height: homeCardImageWidth / (1200 / 284) }]}
+                resizeMode="contain"
+                accessible
+                accessibilityLabel="導カード"
+                nativeID="home-shirube-logo"
+              />
               <Text style={styles.titleGold}>導カード</Text>
               <Text style={styles.roman}>SHIRUBE CARD</Text>
               <Text style={[styles.sectionDesc, styles.textLeft]}>今日の意気や心の流れ、気を付けたいこと、心が軽くなるアドバイスが受け取れます。</Text>
@@ -465,15 +474,20 @@ export default function HomeScreen() {
 
             {/* ⑤ み・たまカード — surface・右寄せ／画像左（③と逆） */}
             <RevealBlock index={4} {...revealProps} style={[styles.card, { backgroundColor: Colors.surface }]}>
-              <View style={[styles.rowLayout, { flexDirection: "row-reverse" }]}>
-                <View style={styles.colRight}>
-                  <Text style={[styles.mitamaHeading, styles.textRight]}>なぜ同じ悩みを繰り返す？</Text>
-                  <Text style={[styles.sectionDesc, styles.textRight]}>心の奥にある想いやブロックに気づき、次の一歩のヒントが分かります。</Text>
-                  <AnimatedPressable style={[styles.pinkButton, styles.btnRight]} onPress={() => router.push("/fortune/mitama" as never)}>
-                    <Text style={styles.pinkButtonText}>無料で引く</Text>
-                  </AnimatedPressable>
-                </View>
-                <Image source={require("../../assets/site/logo-mitama.jpg")} style={styles.sideImage} resizeMode="contain" />
+              <Image
+                source={require("../../assets/site/logo-mitama.jpg")}
+                style={[styles.mitamaLogo, { height: homeCardImageWidth / (1434 / 436) }]}
+                resizeMode="contain"
+                accessible
+                accessibilityLabel="み・たまカード"
+                nativeID="home-mitama-logo"
+              />
+              <View style={styles.mitamaContent}>
+                <Text style={[styles.mitamaHeading, styles.textCenter]}>なぜ同じ悩みを繰り返す？</Text>
+                <Text style={[styles.sectionDesc, styles.textCenter]}>心の奥にある想いやブロックに気づき、次の一歩のヒントが分かります。</Text>
+                <AnimatedPressable style={styles.pinkButton} onPress={() => router.push("/fortune/mitama" as never)}>
+                  <Text style={styles.pinkButtonText}>無料で引く</Text>
+                </AnimatedPressable>
               </View>
             </RevealBlock>
 
@@ -695,16 +709,19 @@ const styles = StyleSheet.create({
     fontWeight: '700',
   },
 
-  // 編集的レイアウト用
-  rowLayout: { flexDirection: "row", alignItems: "center", gap: Spacing.md },
-  colLeft: { flex: 1, alignItems: "flex-start" },
-  colRight: { flex: 1, alignItems: "flex-end" },
-  sideImage: { width: 116, height: 116 },
+  shirubeLogo: {
+    width: '100%',
+    marginBottom: Spacing.md,
+  },
+  mitamaLogo: {
+    width: '100%',
+    marginBottom: Spacing.md,
+  },
+  mitamaContent: { width: '100%', alignItems: 'center' },
   textLeft: { textAlign: "left" },
   textRight: { textAlign: "right" },
   textCenter: { textAlign: "center" },
   btnLeft: { alignSelf: "flex-start" },
-  btnRight: { alignSelf: "flex-end" },
 
   sectionLogo: { width: "100%", height: 150, marginBottom: Spacing.sm },
   sectionLogoLarge: {
