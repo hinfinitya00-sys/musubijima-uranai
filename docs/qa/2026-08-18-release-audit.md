@@ -142,3 +142,4 @@ UI-008で320px幅の新規登録画面における生年月日入力欄の横欠
 - `pnpm check`、`pnpm lint`（エラー0、既存warning 27）、`pnpm test`（38/38）、`pnpm build:web`（静的36ルート）、`pnpm verify:static-export`、`git diff --check` はすべて合格した。
 - 本番相当の静的配信で、主要9フロー×5表示条件を45/45件合格。決済プランと特商法画面は320px、390px、768px、1440px、PC 200%相当の視覚監査10/10件に合格し、横はみ出し、文字・操作要素の欠け、文字化け、壊れた画像、console errorを検出しなかった。
 - Apple Pay／Google Payの実表示は、Stripe本番設定に加えて対応ブラウザ・Wallet登録済み実機が必要なため、最終の330円実決済試験で確認する。
+- GitHub PagesとSupabase Edge Functionへの本番反映後、公開URLで主要フロー45/45件、決済プラン・特商法画面の視覚監査10/10件に合格。Checkout関数は本番バージョン5がACTIVEで、未認証リクエストはHTTP 401となることを確認した。
