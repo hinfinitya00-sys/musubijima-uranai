@@ -21,6 +21,18 @@ describe('release guardrails', () => {
     expect(checkout).toContain('hasLiveSubscription');
   });
 
+  it('lets Stripe optimize recurring payment methods for each eligible device', () => {
+    const checkout = read('supabase/functions/create-checkout-session/index.ts');
+    const plans = read('app/subscription/plans.tsx');
+    expect(checkout).toContain("mode: 'subscription'");
+    expect(checkout).not.toContain('payment_method_types:');
+    expect(plans).toContain("'Apple Pay'");
+    expect(plans).toContain("'Google Pay'");
+    expect(plans).toContain("'Link'");
+    expect(plans).toContain('ご利用の端末に対応した決済方法が自動で表示されます');
+    expect(read('app/legal/tokutei.tsx')).toContain('Apple Pay・Google Pay・Link');
+  });
+
   it('keeps paid access synchronized across Stripe lifecycle events', () => {
     const webhook = read('supabase/functions/stripe-webhook/index.ts');
     expect(webhook).toContain("case 'checkout.session.completed'");

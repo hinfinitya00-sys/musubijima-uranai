@@ -14,7 +14,7 @@ const TOKUTEI_ITEMS = [
   { label: 'メールアドレス', value: 'sokeiraku@gmail.com' },
   { label: 'サービス名', value: 'むすび島' },
   { label: '販売価格', value: '月額会員プラン：月額330円（税込）' },
-  { label: '支払い方法', value: 'クレジットカード（Stripe決済）' },
+  { label: '支払い方法', value: 'クレジットカード・デビットカード・Apple Pay・Google Pay・Link（Stripe決済。利用端末に対応する方法を表示）' },
   { label: 'サービス提供時期', value: '決済完了後、即時提供' },
   { label: '解約・退会', value: 'マイページからいつでも解約可能。解約後は次回請求日まで利用可能' },
   { label: '返金ポリシー', value: 'デジタルコンテンツの性質上、決済完了後の返金は原則承っておりません' },

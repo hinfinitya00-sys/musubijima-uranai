@@ -71,7 +71,9 @@ Deno.serve(async (req) => {
       customer: customerId,
       client_reference_id: user.id,
       metadata: { supabase_user_id: user.id },
-      payment_method_types: ['card', 'link'],
+      // 決済手段をコードで固定せず、Stripe Dashboardの設定と購入者の
+      // 端末・地域・通貨・subscription対応状況からCheckoutに動的選択させる。
+      // cardを基盤にApple Pay / Google Pay、加えてLinkが適格端末へ表示される。
       line_items: [{ price: priceId, quantity: 1 }],
       mode: 'subscription',
       success_url: 'https://hinfinitya00-sys.github.io/musubijima-uranai/subscription/success?session_id={CHECKOUT_SESSION_ID}',

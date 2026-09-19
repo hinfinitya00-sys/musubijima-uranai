@@ -34,7 +34,7 @@ const FEATURES: FeatureRow[] = [
   { label: 'ネガティブ神・守護神・対処法の全文', enabled: true },
 ];
 
-const PAYMENT_METHODS = ['💳 クレジットカード', 'Link'];
+const PAYMENT_METHODS = ['カード', 'Apple Pay', 'Google Pay', 'Link'];
 
 export default function PlansScreen() {
   const [currentPlan, setCurrentPlan] = useState('free');
@@ -126,6 +126,7 @@ export default function PlansScreen() {
             <Text key={m} style={styles.paymentItem}>{m}</Text>
           ))}
         </View>
+        <Text style={styles.paymentNote}>ご利用の端末に対応した決済方法が自動で表示されます</Text>
 
         <View style={styles.featureList}>
           {FEATURES.map((feat) => (
@@ -216,8 +217,9 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'center',
     gap: 8,
-    marginBottom: 24,
+    marginBottom: 8,
   },
+  paymentNote: { fontSize: 11, color: Colors.ink, opacity: 0.72, textAlign: 'center', lineHeight: 17, marginBottom: 16 },
   paymentItem: {
     fontSize: 12,
     color: Colors.ink,

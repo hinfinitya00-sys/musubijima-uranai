@@ -170,6 +170,11 @@ test("会員プランは有料対象と無料対象を正しく案内する", as
   await expect(page.getByText("今年の運勢の全文")).toBeVisible();
   await expect(page.getByText("ネガティブ神・守護神・対処法の全文")).toBeVisible();
   await expect(page.getByText("導カード・結び族・歌みくじは無料で全文楽しめます")).toBeVisible();
+  await expect(page.getByText("カード", { exact: true })).toBeVisible();
+  await expect(page.getByText("Apple Pay", { exact: true })).toBeVisible();
+  await expect(page.getByText("Google Pay", { exact: true })).toBeVisible();
+  await expect(page.getByText("Link", { exact: true })).toBeVisible();
+  await expect(page.getByText("ご利用の端末に対応した決済方法が自動で表示されます")).toBeVisible();
   await expect(page.getByText(/980/)).toHaveCount(0);
 });
 
