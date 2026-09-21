@@ -67,6 +67,21 @@ test("ログインと新規登録を相互に移動できる", async ({ page }) 
   await expect(page).toHaveURL(/\/login(?:\?|$)/);
 });
 
+test("登録メール送信後に正しいメールの案内と再送導線が表示される", async ({ page }) => {
+  await page.route("**/auth/v1/otp**", async (route) => {
+    await route.fulfill({ status: 200, contentType: "application/json", body: "{}" });
+  });
+  await page.goto("./register", { waitUntil: "networkidle" });
+  await page.getByPlaceholder("mail@example.com").fill("release-test@example.com");
+  await page.getByPlaceholder("1990", { exact: true }).fill("1990");
+  await page.getByPlaceholder("1", { exact: true }).nth(0).fill("1");
+  await page.getByPlaceholder("1", { exact: true }).nth(1).fill("1");
+  await page.getByText("登録リンクを送信", { exact: true }).click();
+  await expect(page.getByText("メールを送信しました")).toBeVisible();
+  await expect(page.getByText(/GitHub Actionsなど、別サービスの通知メールでは登録できません/)).toBeVisible();
+  await expect(page.getByText("同じメールアドレスに再送", { exact: true })).toBeVisible();
+});
+
 test("ホームの導カードとみ・たま画像が主役サイズで表示される", async ({ page }, testInfo) => {
   await page.goto("./", { waitUntil: "networkidle" });
 

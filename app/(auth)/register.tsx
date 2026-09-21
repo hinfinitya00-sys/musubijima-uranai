@@ -104,6 +104,22 @@ export default function RegisterScreen() {
             {email} に登録リンクを送信しました。{'\n'}
             メール内のリンクをクリックして登録を完了してください。
           </Text>
+          <View style={styles.mailGuide}>
+            <Text style={styles.mailGuideTitle}>開くメールをご確認ください</Text>
+            <Text style={styles.mailGuideText}>
+              むすび島の認証メールを開いてください。GitHub Actionsなど、別サービスの通知メールでは登録できません。
+            </Text>
+            <Text style={styles.mailGuideText}>
+              見つからない場合は、迷惑メール・プロモーションもご確認ください。
+            </Text>
+          </View>
+          <TouchableOpacity
+            style={[styles.resendButton, isLoading && styles.buttonDisabled]}
+            onPress={handleRegister}
+            disabled={isLoading}
+          >
+            <Text style={styles.resendButtonText}>{isLoading ? '再送中...' : '同じメールアドレスに再送'}</Text>
+          </TouchableOpacity>
           <TouchableOpacity onPress={() => setMagicLinkSent(false)}>
             <Text style={styles.linkText}>別のメールアドレスで試す</Text>
           </TouchableOpacity>
@@ -290,5 +306,10 @@ const styles = StyleSheet.create({
   sentContent: { flex: 1, padding: 24, justifyContent: 'center' },
   sentIcon: { fontSize: 48, textAlign: 'center', marginBottom: 16 },
   sentTitle: { fontSize: 20, fontWeight: 'bold', color: '#C45070', textAlign: 'center', marginBottom: 12 },
-  sentDesc: { fontSize: 14, color: '#6B7280', textAlign: 'center', lineHeight: 24, marginBottom: 24 },
+  sentDesc: { fontSize: 14, color: '#6B7280', textAlign: 'center', lineHeight: 24, marginBottom: 16 },
+  mailGuide: { backgroundColor: '#FFF4F6', borderColor: '#F9C0CC', borderWidth: 1, borderRadius: 12, padding: 14 },
+  mailGuideTitle: { color: '#C45070', fontSize: 14, fontWeight: '700', textAlign: 'center', marginBottom: 6 },
+  mailGuideText: { color: '#6B7280', fontSize: 12, lineHeight: 19, textAlign: 'center', marginTop: 2 },
+  resendButton: { borderColor: '#E8758A', borderWidth: 1, borderRadius: 12, paddingVertical: 13, marginTop: 18 },
+  resendButtonText: { color: '#C45070', fontSize: 14, fontWeight: '700', textAlign: 'center' },
 });

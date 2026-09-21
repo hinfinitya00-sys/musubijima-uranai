@@ -1,4 +1,20 @@
 project_id = "aymjfldowdyxlypdnxok"
 
+[auth]
+site_url = "https://hinfinitya00-sys.github.io/musubijima-uranai"
+additional_redirect_urls = [
+  "https://hinfinitya00-sys.github.io/musubijima-uranai/oauth/callback",
+]
+
+# 本番の認証セキュリティ設定。config push時にCLI既定値へ戻さない。
+[auth.email]
+enable_confirmations = true
+max_frequency = "1m0s"
+otp_length = 8
+
+[auth.mfa.totp]
+enroll_enabled = true
+verify_enabled = true
+
 [functions.stripe-webhook]
 verify_jwt = false

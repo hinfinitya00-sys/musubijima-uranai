@@ -74,6 +74,21 @@ describe('release guardrails', () => {
     expect(callback).toContain("next.startsWith('/')");
   });
 
+  it('keeps production magic links on the deployed callback route', () => {
+    const config = read('supabase/config.toml');
+    const callbackUrl = 'https://hinfinitya00-sys.github.io/musubijima-uranai/oauth/callback';
+    expect(config).toContain('site_url = "https://hinfinitya00-sys.github.io/musubijima-uranai"');
+    expect(config).toContain(callbackUrl);
+    expect(config).toContain('enable_confirmations = true');
+    expect(config).toContain('otp_length = 8');
+    for (const file of ['app/(auth)/login.tsx', 'app/(auth)/register.tsx']) {
+      const source = read(file);
+      expect(source).toContain('/musubijima-uranai/oauth/callback');
+      expect(source).toContain('GitHub Actionsなど、別サービスの通知メールでは登録できません。');
+      expect(source).toContain('同じメールアドレスに再送');
+    }
+  });
+
   it('does not expose Google auth before the provider is configured', () => {
     for (const file of ['app/(auth)/login.tsx', 'app/(auth)/register.tsx']) {
       const source = read(file);
